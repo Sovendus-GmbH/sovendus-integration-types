@@ -1,3 +1,53 @@
+export type SovendusPluginSettings = {
+  voucherNetwork: {
+    countries: {
+      [country in Countries]: {
+        languages: {
+          [language in Languages]: {
+            enabled: boolean;
+            trafficSourceNumber: string;
+            trafficMediumNumber: string;
+          };
+        };
+      };
+    };
+  };
+  optimize: {
+    countries: {
+      [country in Countries]: {
+        enabled: boolean;
+        trafficSourceNumber: string;
+        trafficMediumNumber: string;
+      };
+    };
+  };
+  checkoutProducts: boolean;
+};
+
+interface Window {
+  sovPluginConfig: {
+    settings: SovendusPluginSettings;
+    sessionId: string;
+    timestamp: string;
+    orderId: string;
+    orderValue: string;
+    orderCurrency: string;
+    usedCouponCodes: string;
+    iframeContainerId: string;
+    integrationType: string;
+    consumerFirstName: string;
+    consumerLastName: string;
+    consumerEmail: string;
+    consumerStreet: string;
+    consumerStreetNumber: string;
+    consumerZipcode: string;
+    consumerCity: string;
+    consumerCountry: string;
+    consumerLanguage: string;
+    consumerPhone: string;
+  };
+}
+
 function sovendusThankYou() {
   const config = window.sovPluginConfig;
   let isActive = false;
@@ -29,8 +79,8 @@ function sovendusThankYou() {
       orderValue: config.netValue,
       orderCurrency: config.currency,
       usedCouponCode: config.usedCouponCode,
-      iframeContainerId: "sovendus-integration-container",
-      integrationType: "woocommerce-1.3.0",
+      iframeContainerId: config.iframeContainerId,
+      integrationType: config.integrationType,
     });
     window.sovConsumer = {
       consumerFirstName: config.first_name,
