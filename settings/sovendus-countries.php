@@ -9,6 +9,7 @@ enum CountryCodes: string
     case AT = 'AT';
     case BE = 'BE';
     case DK = 'DK';
+    case FI = 'FI';
     case FR = 'FR';
     case DE = 'DE';
     case IE = 'IE';
@@ -16,6 +17,7 @@ enum CountryCodes: string
     case NL = 'NL';
     case NO = 'NO';
     case PL = 'PL';
+    case PT = 'PT';
     case ES = 'ES';
     case SE = 'SE';
     case CH = 'CH';
@@ -25,6 +27,7 @@ enum CountryCodes: string
 enum LanguageCodes: string
 {
     case DA = "DA";
+    case FI = "FI";
     case FR = "FR";
     case DE = "DE";
     case EN = "EN";
@@ -32,6 +35,7 @@ enum LanguageCodes: string
     case NL = "NL";
     case NB = "NB";
     case PL = "PL";
+    case PT = "PT";
     case ES = "ES";
     case SV = "SV";
 }
@@ -40,6 +44,7 @@ define('COUNTRIES', [
     CountryCodes::AT->value => 'Austria',
     CountryCodes::BE->value => 'Belgium',
     CountryCodes::DK->value => 'Denmark',
+    CountryCodes::FI->value => 'Finland',
     CountryCodes::FR->value => 'France',
     CountryCodes::DE->value => 'Germany',
     CountryCodes::IE->value => 'Ireland',
@@ -47,6 +52,7 @@ define('COUNTRIES', [
     CountryCodes::NL->value => 'Netherlands',
     CountryCodes::NO->value => 'Norway',
     CountryCodes::PL->value => 'Poland',
+    CountryCodes::PT->value => 'Portugal',
     CountryCodes::ES->value => 'Spain',
     CountryCodes::SE->value => 'Sweden',
     CountryCodes::CH->value => 'Switzerland French',
@@ -60,6 +66,7 @@ define('LANGUAGES_BY_COUNTRIES', [
         LanguageCodes::NL->value => 'Belgium Dutch'
     ],
     CountryCodes::DK->value => [LanguageCodes::DA->value => 'Denmark'],
+    CountryCodes::FI->value => [LanguageCodes::FI->value => 'Finland'],
     CountryCodes::FR->value => [LanguageCodes::FR->value => 'France'],
     CountryCodes::DE->value => [LanguageCodes::DE->value => 'Germany'],
     CountryCodes::IE->value => [LanguageCodes::EN->value => 'Ireland'],
@@ -67,6 +74,7 @@ define('LANGUAGES_BY_COUNTRIES', [
     CountryCodes::NL->value => [LanguageCodes::NL->value => 'Netherlands'],
     CountryCodes::NO->value => [LanguageCodes::NB->value => 'Norway'],
     CountryCodes::PL->value => [LanguageCodes::PL->value => 'Poland'],
+    CountryCodes::PT->value => [LanguageCodes::PT->value => 'Portugal'],
     CountryCodes::ES->value => [LanguageCodes::ES->value => 'Spain'],
     CountryCodes::SE->value => [LanguageCodes::SV->value => 'Sweden'],
     CountryCodes::CH->value => [
