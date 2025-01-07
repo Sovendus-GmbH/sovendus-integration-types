@@ -4,11 +4,15 @@ import type { Dispatch, SetStateAction } from "react";
 import React from "react";
 
 import type {
-  SovendusFormDataType,
-  VoucherNetworkFormType,
-} from "../sovendus-app-types";
-import type { VoucherNetworkCountryCode } from "./form-types";
-import { voucherNetworkCountries } from "./form-types";
+  SovendusAppSettings,
+  VoucherNetworkLanguage,
+  VoucherNetworkSettings,
+} from "../../settings/app-settings";
+import type {
+  CountryCodes,
+  LanguageCodes,
+} from "../../settings/sovendus-countries";
+import { LANGUAGES_BY_COUNTRIES } from "../../settings/sovendus-countries";
 import {
   Accordion,
   AccordionContent,
@@ -24,11 +28,15 @@ export function CountryOptions({
   currentSettings,
   setCurrentSettings,
 }: {
-  currentSettings: VoucherNetworkFormType;
-  setCurrentSettings: Dispatch<SetStateAction<SovendusFormDataType>>;
+  currentSettings: VoucherNetworkSettings;
+  setCurrentSettings: Dispatch<SetStateAction<SovendusAppSettings>>;
 }): JSX.Element {
-  const getCountryStatus = (countryKey: VoucherNetworkCountryCode): string => {
-    const country = currentSettings[countryKey];
+  const getCountryStatus = (
+    countryKey: CountryCodes,
+    languageKey: LanguageCodes,
+  ): string => {
+    const country =
+      currentSettings.countries[countryKey].languages[languageKey];
     if (!country?.trafficMediumNumber || !country?.trafficSourceNumber) {
       return "Not configured";
     }
@@ -38,9 +46,7 @@ export function CountryOptions({
     return `Source: ${country.trafficSourceNumber}, Medium: ${country.trafficMediumNumber}`;
   };
 
-  const isCountryEnabled = (
-    country: VoucherNetworkFormType[VoucherNetworkCountryCode],
-  ): boolean => {
+  const isCountryEnabled = (country: VoucherNetworkLanguage): boolean => {
     return (
       (country?.isEnabled &&
         country.trafficSourceNumber &&
@@ -51,47 +57,74 @@ export function CountryOptions({
     );
   };
   const handleEnabledChange = (
-    countryKey: VoucherNetworkCountryCode,
+    countryKey: CountryCodes,
+    languageKey: LanguageCodes,
     checked: boolean,
   ): void => {
     setCurrentSettings((prevState) => {
+      const element =
+        prevState.voucherNetwork.countries[countryKey]?.languages?.[
+          languageKey
+        ];
       if (
-        prevState.voucherNetwork[countryKey]?.trafficMediumNumber &&
-        prevState.voucherNetwork[countryKey].trafficSourceNumber &&
-        checked !== prevState.voucherNetwork[countryKey].isEnabled
+        element?.trafficMediumNumber &&
+        element?.trafficSourceNumber &&
+        checked !== element.isEnabled
       ) {
         return {
           ...prevState,
           voucherNetwork: {
             ...prevState.voucherNetwork,
-            [countryKey]: {
-              ...prevState.voucherNetwork[countryKey],
-              isEnabled:
-                prevState.voucherNetwork[countryKey]?.trafficMediumNumber &&
-                prevState.voucherNetwork[countryKey].trafficSourceNumber &&
-                checked,
+            countries: {
+              [countryKey]: {
+                ...prevState.voucherNetwork.countries[countryKey],
+                languages: {
+                  ...prevState.voucherNetwork.countries[countryKey].languages,
+                  [languageKey]: {
+                    ...element,
+                    isEnabled:
+                      element.trafficMediumNumber &&
+                      element.trafficSourceNumber &&
+                      checked,
+                  },
+                },
+              },
             },
           },
-        };
+        } as SovendusAppSettings;
       }
       return prevState;
     });
   };
   const handleIdChange = (
-    countryKey: VoucherNetworkCountryCode,
+    countryKey: CountryCodes,
+    languageKey: LanguageCodes,
     field: "trafficSourceNumber" | "trafficMediumNumber",
-    value: number | string,
+    value: string,
   ): void => {
     setCurrentSettings((prevState) => {
-      const newValue = parseInt(`${value}`, 10);
-      if (prevState.voucherNetwork[countryKey] !== newValue) {
+      const newValue = String(parseInt(`${value}`, 10));
+      const element =
+        prevState.voucherNetwork.countries[countryKey]?.languages?.[
+          languageKey
+        ];
+      if (element?.[field] !== newValue) {
         const newState = {
           ...prevState,
           voucherNetwork: {
             ...prevState.voucherNetwork,
-            [countryKey]: {
-              ...prevState.voucherNetwork[countryKey],
-              [field]: String(parseInt(`${value}`, 10)),
+            countries: {
+              ...prevState.voucherNetwork.countries,
+              [countryKey]: {
+                ...prevState.voucherNetwork.countries[countryKey],
+                languages: {
+                  ...prevState.voucherNetwork.countries[countryKey].languages,
+                  [languageKey]: {
+                    ...element,
+                    [field]: newValue,
+                  },
+                },
+              },
             },
           },
         };
@@ -102,11 +135,12 @@ export function CountryOptions({
   };
   return (
     <Accordion type="single" collapsible className="w-full">
-      {Object.entries(voucherNetworkCountries).map(
-        ([countryKey, countryName]) => (
+      {Object.entries(LANGUAGES_BY_COUNTRIES).map(([countryKey, languages]) =>
+        Object.entries(languages).map(([languageKey, countryName]) => (
           <CountrySettings
             key={countryKey}
-            countryKey={countryKey as VoucherNetworkCountryCode}
+            countryKey={countryKey as CountryCodes}
+            languageKey={languageKey as LanguageCodes}
             countryName={countryName}
             currentSettings={currentSettings}
             getCountryStatus={getCountryStatus}
@@ -114,7 +148,7 @@ export function CountryOptions({
             handleEnabledChange={handleEnabledChange}
             handleIdChange={handleIdChange}
           />
-        ),
+        )),
       )}
     </Accordion>
   );
@@ -124,34 +158,41 @@ function CountrySettings({
   countryName,
   currentSettings,
   countryKey,
+  languageKey,
   getCountryStatus,
   isCountryEnabled,
   handleEnabledChange,
   handleIdChange,
 }: {
-  countryKey: VoucherNetworkCountryCode;
+  countryKey: CountryCodes;
+  languageKey: LanguageCodes;
   countryName: string;
-  currentSettings: VoucherNetworkFormType;
-  getCountryStatus: (countryKey: VoucherNetworkCountryCode) => string;
-  isCountryEnabled: (
-    country: VoucherNetworkFormType[VoucherNetworkCountryCode],
-  ) => boolean;
+  currentSettings: VoucherNetworkSettings;
+  getCountryStatus: (
+    countryKey: CountryCodes,
+    languageKey: LanguageCodes,
+  ) => string;
+  isCountryEnabled: (language: VoucherNetworkLanguage) => boolean;
   handleEnabledChange: (
-    countryKey: VoucherNetworkCountryCode,
+    countryKey: CountryCodes,
+    languageKey: LanguageCodes,
     checked: boolean,
   ) => void;
   handleIdChange: (
-    countryKey: VoucherNetworkCountryCode,
+    countryKey: CountryCodes,
+    languageKey: LanguageCodes,
     field: "trafficSourceNumber" | "trafficMediumNumber",
-    value: number | string,
+    value: string,
   ) => void;
 }): JSX.Element {
-  const isEnabled = isCountryEnabled(currentSettings[countryKey]);
+  const currentElement =
+    currentSettings.countries[countryKey]?.languages[languageKey];
+  const isEnabled = isCountryEnabled(currentElement);
   const trafficSourceNumber = parseInt(
-    currentSettings[countryKey]?.trafficSourceNumber || "",
+    currentElement?.trafficSourceNumber || "",
   );
   const trafficMediumNumber = parseInt(
-    currentSettings[countryKey]?.trafficMediumNumber || "",
+    currentElement?.trafficMediumNumber || "",
   );
   return (
     <AccordionItem value={countryKey} key={countryKey}>
@@ -160,7 +201,7 @@ function CountrySettings({
           <span>{countryName}</span>
           <div className="flex items-center space-x-2">
             <span className="text-sm text-muted-foreground">
-              {getCountryStatus(countryKey)}
+              {getCountryStatus(countryKey, languageKey)}
             </span>
             {isEnabled && (
               <Badge variant="outline" className="ml-2">
@@ -177,7 +218,7 @@ function CountrySettings({
               id={`${countryKey}-enabled`}
               checked={isEnabled}
               onCheckedChange={(checked) =>
-                handleEnabledChange(countryKey, checked)
+                handleEnabledChange(countryKey, languageKey, checked)
               }
             />
             <label htmlFor={`${countryKey}-enabled`}>
@@ -197,6 +238,7 @@ function CountrySettings({
                 onChange={(e) =>
                   handleIdChange(
                     countryKey,
+                    languageKey,
                     "trafficSourceNumber",
                     e.target.value,
                   )
@@ -216,6 +258,7 @@ function CountrySettings({
                 onChange={(e) =>
                   handleIdChange(
                     countryKey,
+                    languageKey,
                     "trafficMediumNumber",
                     e.target.value,
                   )

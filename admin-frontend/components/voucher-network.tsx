@@ -5,44 +5,21 @@ import type { Dispatch, SetStateAction } from "react";
 import React from "react";
 
 import type {
-  SovendusFormDataType,
-  VoucherNetworkFormType,
-} from "../sovendus-app-types";
-import type { VoucherNetworkCountryCode } from "./form-types";
-import { voucherNetworkCountries } from "./form-types";
+  SovendusAppSettings,
+  VoucherNetworkSettings,
+} from "../../settings/app-settings";
+import { EnabledVoucherNetworkCountries } from "../../settings/app-settings";
 import { CountryOptions } from "./voucher-network-country-options";
 
 interface SovendusVoucherNetworkProps {
-  currentSettings: VoucherNetworkFormType;
-  setCurrentSettings: Dispatch<SetStateAction<SovendusFormDataType>>;
+  currentSettings: VoucherNetworkSettings;
+  setCurrentSettings: Dispatch<SetStateAction<SovendusAppSettings>>;
 }
 
 export function SovendusVoucherNetwork({
   currentSettings,
   setCurrentSettings,
 }: SovendusVoucherNetworkProps): JSX.Element {
-  const getEnabledCountriesSummary = (): JSX.Element => {
-    const enabledCountries = Object.entries(currentSettings)
-      .filter(
-        ([countryKey, data]) =>
-          data.isEnabled &&
-          data.trafficMediumNumber &&
-          data.trafficSourceNumber &&
-          !!voucherNetworkCountries[countryKey as VoucherNetworkCountryCode],
-      )
-      .map(
-        ([country]) =>
-          voucherNetworkCountries[country as VoucherNetworkCountryCode],
-      );
-    return enabledCountries.length > 0 ? (
-      <>
-        <span className="text-lg">Enabled for: </span>
-        {enabledCountries.join(", ")}
-      </>
-    ) : (
-      <span className="text-lg">No countries enabled</span>
-    );
-  };
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -51,9 +28,7 @@ export function SovendusVoucherNetwork({
       className="space-y-4"
     >
       <h2 className="text-2xl font-semibold mb-4">Voucher Network Settings</h2>
-      <p className="text-md text-gray-500 mb-4">
-        {getEnabledCountriesSummary()}
-      </p>
+      <EnabledVoucherNetworkCountries currentSettings={currentSettings} />
       <h3 className="text-xl font-semibold mb-2">
         Getting Started with Sovendus Voucher Network
       </h3>

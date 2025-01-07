@@ -1,5 +1,7 @@
 <?php
-
+// ------------------------------------------------------------
+// IMPORTANT CHANGES HERE HAVE TO BE REPLICATED IN THE OTHER FILE
+// ------------------------------------------------------------
 class VoucherNetworkCountry
 {
     public array $languages;
@@ -13,8 +15,8 @@ class VoucherNetworkCountry
     {
         $languages = [];
         foreach ($data['languages'] as $lang => $langData) {
-            $languages[$lang] = new Language(
-                enabled: $langData['enabled'],
+            $languages[$lang] = new VoucherNetworkLanguage(
+                isEnabled: $langData['isEnabled'],
                 trafficSourceNumber: $langData['trafficSourceNumber'],
                 trafficMediumNumber: $langData['trafficMediumNumber'],
             );
@@ -25,40 +27,40 @@ class VoucherNetworkCountry
 
 class OptimizeCountry
 {
-    public bool $enabled;
+    public bool $isEnabled;
     public string $optimizeId;
 
 
     public function __construct(
-        bool $enabled,
+        bool $isEnabled,
         string $optimizeId,
     ) {
-        $this->active = $enabled;
+        $this->active = $isEnabled;
         $this->optimizeId = $optimizeId;
     }
 
     public static function fromJson(array $data): OptimizeCountry
     {
         return new OptimizeCountry(
-            enabled: $data['enabled'],
+            isEnabled: $data['isEnabled'],
             optimizeId: $data['optimizeId'],
         );
     }
 }
 
 
-class Language
+class VoucherNetworkLanguage
 {
-    public bool $enabled;
+    public bool $isEnabled;
     public string $trafficSourceNumber;
     public string $trafficMediumNumber;
 
     public function __construct(
-        bool $enabled,
+        bool $isEnabled,
         string $trafficSourceNumber,
         string $trafficMediumNumber,
     ) {
-        $this->enabled = $enabled;
+        $this->isEnabled = $isEnabled;
         $this->trafficSourceNumber = $trafficSourceNumber;
         $this->trafficMediumNumber = $trafficMediumNumber;
     }
@@ -69,11 +71,14 @@ class Language
 class VoucherNetwork
 {
     public array $countries = [];
+    public bool $anyCountryEnabled = false;
 
     public function __construct(
+        bool $anyCountryEnabled,
         ?array $countries = [],
     ) {
         $this->countries = $countries;
+        $this->anyCountryEnabled = $anyCountryEnabled;
 
     }
     public function addCountry(CountryCodes $countryCode, VoucherNetworkCountry $country): void
@@ -83,11 +88,12 @@ class VoucherNetwork
 
     public static function fromJson(array $data): VoucherNetwork
     {
+        $anyCountryEnabled = true; // TODO
         $countries = [];
         foreach ($data as $countryCode => $countryData) {
             $countries[$countryCode] = VoucherNetworkCountry::fromJson($countryData);
         }
-        return new VoucherNetwork($countries);
+        return new VoucherNetwork(anyCountryEnabled: $anyCountryEnabled, countries: $countries);
     }
 }
 
@@ -131,23 +137,29 @@ class Optimize
     }
 }
 
+enum Versions: string
+{
+    case ONE = '1';
+    case TWO = '2';
+}
+
 class Sovendus_App_Settings
 {
     public VoucherNetwork $voucherNetwork;
     public Optimize $optimize;
     public bool $checkoutProducts;
-    public bool $hasNewFormat;
+    public Versions $version;
 
     public function __construct(
         VoucherNetwork $voucherNetwork,
         Optimize $optimize,
         bool $checkoutProducts,
-        ?bool $hasNewFormat = false,
+        Versions $version,
     ) {
         $this->voucherNetwork = $voucherNetwork;
         $this->optimize = $optimize;
         $this->checkoutProducts = $checkoutProducts;
-        $this->hasNewFormat = $hasNewFormat;
+        $this->version = $version;
     }
 
     public function toJson(): string
@@ -163,7 +175,7 @@ class Sovendus_App_Settings
             VoucherNetwork::fromJson($data['voucherNetwork']),
             Optimize::fromJson($data['optimize']),
             $data['checkoutProducts'],
-            hasNewFormat: true
+            version: Versions::TWO
         );
     }
 

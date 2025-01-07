@@ -1,11 +1,9 @@
 import react from "@vitejs/plugin-react";
 import autoprefixer from "autoprefixer";
-import { execSync } from "child_process";
 import { Command } from "commander";
+import { rmSync } from "fs";
 import tailwindcss from "tailwindcss";
 import { build } from "vite";
-// execute me with:
-// npx ts-node build.ts build
 
 const program = new Command();
 
@@ -14,49 +12,67 @@ program
   .description("buildType: build")
   .action(async () => {
     console.log("Building started");
-
-    await compileToJsFilesWithVite();
+    const distFolder = "../dist";
+    cleanDistFolder(distFolder);
+    await compileToJsFilesWithVite(distFolder);
   });
 
-export async function compileToJsFilesWithVite(): Promise<void> {
-  await build({
-    root: "./",
-    base: "./",
-    plugins: [react()],
-    css: {
-      postcss: {
-        plugins: [tailwindcss, autoprefixer],
-      },
-    },
-    build: {
-      target: "es6",
-      outDir: "../dist",
-      emptyOutDir: true,
-      cssMinify: false,
-      cssCodeSplit: false,
-      sourcemap: true,
-      rollupOptions: {
-        input: "../admin-frontend/frontend_react_loader.ts",
-        output: {
-          entryFileNames: "frontend_react_loader.js",
-          exports: "none",
-          format: "iife",
+const filesToCompile = [
+  {
+    input: "../admin-frontend/frontend_react_loader.ts",
+    output: "frontend_react_loader.js",
+  },
+  {
+    input: "page-scripts/landing-page/sovendus-page.ts",
+    output: "sovendus-page.js",
+  },
+  {
+    input: "page-scripts/thankyou-page/thankyou-page.ts",
+    output: "thankyou-page.js",
+  },
+];
+
+async function compileToJsFilesWithVite(distFolder: string): Promise<void> {
+  filesToCompile.forEach(async (file) => {
+    await build({
+      root: "./",
+      base: "./",
+      plugins: [react()],
+      css: {
+        postcss: {
+          plugins: [tailwindcss, autoprefixer],
         },
-        // preserveEntrySignatures: "strict",
       },
-    },
+      build: {
+        target: "es6",
+        outDir: distFolder,
+        minify: false,
+        emptyOutDir: false,
+        cssMinify: false,
+        cssCodeSplit: false,
+        sourcemap: true,
+        rollupOptions: {
+          input: file.input,
+          output: {
+            entryFileNames: file.output,
+            exports: "none",
+            format: "iife",
+          },
+          // preserveEntrySignatures: "strict",
+        },
+      },
+    });
   });
 }
 
-export function runShellCommand(cmd: string): void {
+function cleanDistFolder(distDir: string): void {
+  console.log(`started dist folder cleaning (${distDir})`);
   try {
-    console.log(`Executing: ${cmd}`);
-    execSync(cmd, { stdio: "inherit" });
+    rmSync(distDir, { force: true, recursive: true });
+    console.log(`Done dist folder cleaning (${distDir})`);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    console.error(
-      `Error executing command: ${cmd} | error: ${(error as Error)?.message || (error as Error)}`,
-    );
-    process.exit(1);
+    console.log("No dist folder found to clean");
   }
 }
 

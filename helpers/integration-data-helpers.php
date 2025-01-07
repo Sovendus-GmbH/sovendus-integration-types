@@ -14,3 +14,8 @@ function splitStreetAndStreetNumber($street)
         return [$street, ""];
     }
 }
+
+function getIntegrationType(string $pluginName, string $pluginVersion): string
+{
+    return "{$pluginName}-{$pluginVersion}";
+}

@@ -3,13 +3,13 @@
 import { motion } from "framer-motion";
 import React, { type Dispatch, type SetStateAction } from "react";
 
-import type { SovendusFormDataType } from "../sovendus-app-types";
+import type { SovendusAppSettings } from "../../settings/app-settings";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 
 interface SovendusCheckoutProductsProps {
   enabled: boolean;
-  setCurrentSettings: Dispatch<SetStateAction<SovendusFormDataType>>;
+  setCurrentSettings: Dispatch<SetStateAction<SovendusAppSettings>>;
 }
 
 export function SovendusCheckoutProducts({

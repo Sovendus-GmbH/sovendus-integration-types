@@ -1,13 +1,11 @@
 <?php
 
+require_once plugin_dir_path(__FILE__) . '../../helpers/integration-data-helpers.php';
+require_once plugin_dir_path(__FILE__) . '../../settings/app-settings.php';
+
 /**
  * Display Sovendus banner on the thank you page
  */
-
-
-
-require_once plugin_dir_path(__FILE__) . '../../settings/app-settings.php';
-
 
 function sovendus_thankyou_page(
     Sovendus_App_Settings $settings,
@@ -37,23 +35,26 @@ function sovendus_thankyou_page(
     if ($consumerStreetAndNumber) {
         [$consumerStreet, $consumerStreetNumber] = splitStreetAndStreetNumber($consumerStreetAndNumber);
     }
-
-    $js_file_path = plugin_dir_path(__FILE__) . 'thankyou-page.js';
+    $js_file_path = plugin_dir_path(__FILE__) . '../../../dist/thankyou-page.js';
     $js_content = file_get_contents($js_file_path);
     $iframeContainerId = "sovendus-integration-container";
-    $integrationType = "{$pluginName}-{$pluginVersion}";
+    $integrationType = getIntegrationType(pluginName: $pluginName, pluginVersion: $pluginVersion);
     $encoded_settings = json_encode($settings);
+    $encoded_used_coupon_codes = json_encode($usedCouponCodes);
+    // ------------------------------------------------------------
+    // IMPORTANT CHANGES HERE HAVE TO BE REPLICATED IN THE OTHER FILE
+    // ------------------------------------------------------------
     return <<<EOD
             <div id="$iframeContainerId"></div>    
             <script type="text/javascript">
-                window.sovPluginConfig = {
+                window.sovThankyouConfig = {
                     settings: JSON.parse('$encoded_settings'),
                     sessionId: "$sessionId",
                     timestamp: "$timestamp",
                     orderId: "$orderId",
                     orderValue: "$orderValue",
                     orderCurrency: "$orderCurrency",
-                    usedCouponCodes: "$usedCouponCodes",
+                    usedCouponCodes: $encoded_used_coupon_codes,
                     iframeContainerId: "$iframeContainerId",
                     integrationType: "$integrationType",
                     consumerFirstName: "$consumerFirstName",
@@ -66,7 +67,7 @@ function sovendus_thankyou_page(
                     consumerCountry: "$consumerCountry",
                     consumerLanguage: "$consumerLanguage",
                     consumerPhone: "$consumerPhone",
-                }
+                };
                 $js_content
             </script>
             EOD;

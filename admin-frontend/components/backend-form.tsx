@@ -3,14 +3,13 @@
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import React, { useMemo, useState } from "react";
 
+import type { SovendusAppSettings } from "../../settings/app-settings";
+import {
+  EnabledOptimizeCountries,
+  EnabledVoucherNetworkCountries,
+} from "../../settings/app-settings";
 import { cn } from "../lib/utils";
-import type { SovendusFormDataType } from "../sovendus-app-types";
 import { SovendusCheckoutProducts } from "./checkout-products";
-import type {
-  OptimizeCountryCode,
-  VoucherNetworkCountryCode,
-} from "./form-types";
-import { optimizeCountries, voucherNetworkCountries } from "./form-types";
 import { SovendusOptimize } from "./optimize";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Button } from "./ui/button";
@@ -22,15 +21,15 @@ export default function SovendusBackendForm({
   currentStoredSettings,
   saveSettings,
 }: {
-  currentStoredSettings: SovendusFormDataType;
-  saveSettings: (data: SovendusFormDataType) => Promise<SovendusFormDataType>;
+  currentStoredSettings: SovendusAppSettings;
+  saveSettings: (data: SovendusAppSettings) => Promise<SovendusAppSettings>;
 }): JSX.Element {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [notification, setNotification] = useState<string | null>(null);
-  const [currentSettings, setCurrentSettings] = useState<SovendusFormDataType>(
+  const [currentSettings, setCurrentSettings] = useState<SovendusAppSettings>(
     currentStoredSettings,
   );
-  const [savedSettings, setSavedSettings] = useState<SovendusFormDataType>(
+  const [savedSettings, setSavedSettings] = useState<SovendusAppSettings>(
     currentStoredSettings,
   );
 
@@ -54,50 +53,6 @@ export default function SovendusBackendForm({
     }
   };
 
-  const getEnabledVoucherNetworkCountries = (): string => {
-    return Object.entries(savedSettings.voucherNetwork)
-      .filter(
-        ([countryKey, data]) =>
-          data.isEnabled &&
-          data.trafficSourceNumber &&
-          data.trafficMediumNumber &&
-          voucherNetworkCountries[countryKey as VoucherNetworkCountryCode],
-      )
-      .map(
-        ([countryKey]) =>
-          voucherNetworkCountries[countryKey as VoucherNetworkCountryCode],
-      )
-      .join(", ");
-  };
-
-  const getOptimizeStatus = (): string => {
-    if (
-      savedSettings.optimize.useGlobalId &&
-      savedSettings.optimize.globalEnabled
-    ) {
-      return `Global ID: ${savedSettings.optimize.globalId}`;
-    } else if (!savedSettings.optimize.useGlobalId) {
-      const enabledCountries = Object.entries(
-        savedSettings.optimize.countrySpecificIds,
-      )
-        .filter(
-          ([countryKey, data]) =>
-            data.isEnabled &&
-            data.id &&
-            optimizeCountries[countryKey as OptimizeCountryCode],
-        )
-        .map(
-          ([countryKey]) =>
-            optimizeCountries[countryKey as OptimizeCountryCode],
-        )
-        .join(", ");
-      return enabledCountries
-        ? `Enabled for: ${enabledCountries}`
-        : "No countries enabled";
-    }
-    return "No countries enabled";
-  };
-
   return (
     <div className="container mx-auto p-6 space-y-8 items-center">
       <div className="flex justify-between items-center">
@@ -106,11 +61,11 @@ export default function SovendusBackendForm({
           {hasUnsavedChanges && (
             <span className="text-yellow-600 font-medium">Unsaved changes</span>
           )}
-          {hasUnsavedChanges && (
-            <Button onClick={handleSave} disabled={isSaving}>
-              {isSaving ? "Saving..." : "Save Changes"}
-            </Button>
-          )}
+          {/* {hasUnsavedChanges && ( */}
+          <Button onClick={handleSave} disabled={isSaving}>
+            {isSaving ? "Saving..." : "Save Changes"}
+          </Button>
+          {/*  )} */}
         </div>
       </div>
 
@@ -126,43 +81,13 @@ export default function SovendusBackendForm({
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 gap-4">
-            <div>
-              <h4 className="text-md">Voucher Network</h4>
-              <p
-                className={cn(
-                  "text-sm",
-                  Object.values(savedSettings.voucherNetwork).some(
-                    (country) => country.isEnabled,
-                  )
-                    ? "text-green-600"
-                    : "text-red-600",
-                )}
-              >
-                {Object.values(savedSettings.voucherNetwork).some(
-                  (country) => country.isEnabled,
-                )
-                  ? `Enabled for: ${getEnabledVoucherNetworkCountries()}`
-                  : "No Countries Enabled"}
-              </p>
-            </div>
-            <div>
-              <h4 className="text-md">Optimize</h4>
-              <p
-                className={cn(
-                  "text-sm",
-                  (savedSettings.optimize.useGlobalId &&
-                    savedSettings.optimize.globalEnabled) ||
-                    (!savedSettings.optimize.useGlobalId &&
-                      Object.values(
-                        savedSettings.optimize.countrySpecificIds,
-                      ).some((country) => country.isEnabled))
-                    ? "text-green-600"
-                    : "text-red-600",
-                )}
-              >
-                {getOptimizeStatus()}
-              </p>
-            </div>
+            <EnabledVoucherNetworkCountries
+              currentSettings={savedSettings.voucherNetwork}
+            />
+            <EnabledOptimizeCountries
+              currentSettings={savedSettings.optimize}
+            />
+
             <div>
               <h4 className="text-md">Checkout Products</h4>
               <p

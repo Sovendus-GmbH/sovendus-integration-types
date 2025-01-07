@@ -1,5 +1,9 @@
 <?php
 
+// ------------------------------------------------------------
+// IMPORTANT CHANGES HERE HAVE TO BE REPLICATED IN THE OTHER FILE
+// ------------------------------------------------------------
+
 enum CountryCodes: string
 {
     case AT = 'AT';

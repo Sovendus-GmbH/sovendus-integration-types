@@ -4,11 +4,12 @@ import type { Dispatch, SetStateAction } from "react";
 import React from "react";
 
 import type {
-  OptimizeSettingsFormType,
-  SovendusFormDataType,
-} from "../sovendus-app-types";
-import type { OptimizeCountryCode } from "./form-types";
-import { optimizeCountries } from "./form-types";
+  OptimizeCountry,
+  OptimizeSettings,
+  SovendusAppSettings,
+} from "../../settings/app-settings";
+import type { CountryCodes } from "../../settings/sovendus-countries";
+import { COUNTRIES } from "../../settings/sovendus-countries";
 import {
   Accordion,
   AccordionContent,
@@ -21,39 +22,40 @@ import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 
 type CountryOptionsProps = {
-  currentSettings: OptimizeSettingsFormType;
-  setCurrentSettings: Dispatch<SetStateAction<SovendusFormDataType>>;
+  currentSettings: OptimizeSettings;
+  setCurrentSettings: Dispatch<SetStateAction<SovendusAppSettings>>;
 };
 
 export function CountryOptions({
   currentSettings,
   setCurrentSettings,
 }: CountryOptionsProps): JSX.Element {
-  const getCountryStatus = (countryKey: OptimizeCountryCode): string => {
+  const getCountryStatus = (countryKey: CountryCodes): string => {
     const country = currentSettings.countrySpecificIds[countryKey];
-    if (!country?.id) {
+    if (!country?.optimizeId) {
       return "Not configured";
     }
     if (!country.isEnabled) {
       return "Disabled";
     }
-    return `Optimize ID: ${country.id}`;
+    return `Optimize ID: ${country.optimizeId}`;
   };
 
-  const isCountryEnabled = (
-    country: OptimizeSettingsFormType["countrySpecificIds"][OptimizeCountryCode],
-  ): boolean => {
+  const isCountryEnabled = (country: OptimizeCountry): boolean => {
     return (
-      (country?.isEnabled && country.id && /^\d+$/.test(country.id)) || false
+      (country?.isEnabled &&
+        country.optimizeId &&
+        /^\d+$/.test(country.optimizeId)) ||
+      false
     );
   };
   const handleEnabledChange = (
-    countryKey: OptimizeCountryCode,
+    countryKey: CountryCodes,
     checked: boolean,
   ): void => {
     setCurrentSettings((prevState) => {
       if (
-        !!prevState.optimize.countrySpecificIds[countryKey]?.id &&
+        !!prevState.optimize.countrySpecificIds[countryKey]?.optimizeId &&
         prevState.optimize.countrySpecificIds[countryKey].isEnabled !== checked
       ) {
         return {
@@ -64,10 +66,12 @@ export function CountryOptions({
               ...prevState.optimize.countrySpecificIds,
               [countryKey]: {
                 ...prevState.optimize.countrySpecificIds[countryKey],
-                id: prevState.optimize.countrySpecificIds[countryKey]?.id || "",
+                id:
+                  prevState.optimize.countrySpecificIds[countryKey]
+                    ?.optimizeId || "",
                 isEnabled:
-                  !!prevState.optimize.countrySpecificIds[countryKey]?.id &&
-                  checked,
+                  !!prevState.optimize.countrySpecificIds[countryKey]
+                    ?.optimizeId && checked,
               },
             },
           },
@@ -78,12 +82,14 @@ export function CountryOptions({
   };
 
   const handleCountryChange = (
-    countryKey: OptimizeCountryCode,
-    field: "isEnabled" | "id",
-    value: boolean | string,
+    countryKey: CountryCodes,
+    newOptimizeId: boolean | string,
   ): void => {
     setCurrentSettings((prevState) => {
-      if (prevState.optimize.countrySpecificIds[countryKey] !== value) {
+      if (
+        prevState.optimize.countrySpecificIds[countryKey].optimizeId !==
+        newOptimizeId
+      ) {
         return {
           ...prevState,
           optimize: {
@@ -92,7 +98,7 @@ export function CountryOptions({
               ...prevState.optimize.countrySpecificIds,
               [countryKey]: {
                 ...prevState.optimize.countrySpecificIds[countryKey],
-                [field]: value,
+                optimizeId: newOptimizeId,
               },
             },
           },
@@ -103,18 +109,18 @@ export function CountryOptions({
   };
   return (
     <Accordion type="single" collapsible className="w-full">
-      {Object.entries(optimizeCountries).map(([countryKey, countryName]) => (
+      {Object.entries(COUNTRIES).map(([countryKey, countryName]) => (
         <AccordionItem value={countryKey} key={countryKey}>
           <AccordionTrigger>
             <div className="flex items-center justify-between w-full">
               <span>{countryName}</span>
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-muted-foreground">
-                  {getCountryStatus(countryKey as OptimizeCountryCode)}
+                  {getCountryStatus(countryKey as CountryCodes)}
                 </span>
                 {isCountryEnabled(
                   currentSettings.countrySpecificIds[
-                    countryKey as OptimizeCountryCode
+                    countryKey as CountryCodes
                   ],
                 ) && (
                   <Badge variant="outline" className="ml-2">
@@ -131,14 +137,11 @@ export function CountryOptions({
                   id={`${countryKey}-enabled`}
                   checked={
                     currentSettings.countrySpecificIds[
-                      countryKey as OptimizeCountryCode
+                      countryKey as CountryCodes
                     ]?.isEnabled || false
                   }
                   onCheckedChange={(checked) =>
-                    handleEnabledChange(
-                      countryKey as OptimizeCountryCode,
-                      checked,
-                    )
+                    handleEnabledChange(countryKey as CountryCodes, checked)
                   }
                 />
                 <label htmlFor={`${countryKey}-enabled`}>
@@ -151,13 +154,12 @@ export function CountryOptions({
                   id={`${countryKey}-id`}
                   value={
                     currentSettings.countrySpecificIds[
-                      countryKey as OptimizeCountryCode
-                    ]?.id || ""
+                      countryKey as CountryCodes
+                    ]?.optimizeId || ""
                   }
                   onChange={(e) =>
                     handleCountryChange(
-                      countryKey as OptimizeCountryCode,
-                      "id",
+                      countryKey as CountryCodes,
                       e.target.value,
                     )
                   }

@@ -2,12 +2,12 @@ import "./app.css";
 
 import React from "react";
 
+import type { SovendusAppSettings } from "../settings/app-settings";
 import SovendusBackendForm from "./components/backend-form";
-import type { SovendusFormDataType } from "./sovendus-app-types";
 
 interface SovendusSettingsProps {
-  currentStoredSettings: SovendusFormDataType;
-  saveSettings: (data: SovendusFormDataType) => Promise<SovendusFormDataType>;
+  currentStoredSettings: SovendusAppSettings;
+  saveSettings: (data: SovendusAppSettings) => Promise<SovendusAppSettings>;
 }
 
 export function SovendusSettings({

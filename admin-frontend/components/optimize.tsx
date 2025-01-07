@@ -4,13 +4,12 @@ import { motion } from "framer-motion";
 import type { Dispatch, SetStateAction } from "react";
 import React from "react";
 
-import { cn } from "../lib/utils";
 import type {
-  OptimizeSettingsFormType,
-  SovendusFormDataType,
-} from "../sovendus-app-types";
-import type { OptimizeCountryCode } from "./form-types";
-import { optimizeCountries } from "./form-types";
+  OptimizeSettings,
+  SovendusAppSettings,
+} from "../../settings/app-settings";
+import { EnabledOptimizeCountries } from "../../settings/app-settings";
+import { cn } from "../lib/utils";
 import { CountryOptions } from "./optimize-country-options";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -18,9 +17,9 @@ import { Switch } from "./ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 interface SovendusOptimizeProps {
-  currentOptimizeSettings: OptimizeSettingsFormType;
-  savedOptimizeSettings: OptimizeSettingsFormType;
-  setCurrentSettings: Dispatch<SetStateAction<SovendusFormDataType>>;
+  currentOptimizeSettings: OptimizeSettings;
+  savedOptimizeSettings: OptimizeSettings;
+  setCurrentSettings: Dispatch<SetStateAction<SovendusAppSettings>>;
 }
 
 export function SovendusOptimize({
@@ -52,25 +51,6 @@ export function SovendusOptimize({
     }));
   };
 
-  const getSettingsSummary = (): string => {
-    if (
-      currentOptimizeSettings.useGlobalId &&
-      currentOptimizeSettings.globalEnabled
-    ) {
-      return `Global Optimize ID: ${currentOptimizeSettings.globalId}`;
-    } else if (!currentOptimizeSettings.useGlobalId) {
-      const enabledCountries = Object.entries(
-        currentOptimizeSettings.countrySpecificIds,
-      )
-        .filter(([_, data]) => data.isEnabled)
-        .map(([country]) => optimizeCountries[country as OptimizeCountryCode]);
-
-      return enabledCountries.length > 0
-        ? `Enabled for: ${enabledCountries.join(", ")}`
-        : "No countries enabled";
-    }
-    return "No countries enabled";
-  };
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -79,7 +59,7 @@ export function SovendusOptimize({
       className="space-y-6"
     >
       <h2 className="text-2xl font-semibold mb-4">Optimize Settings</h2>
-      <p className="text-sm text-gray-500 mb-4">{getSettingsSummary()}</p>
+      <EnabledOptimizeCountries currentSettings={currentOptimizeSettings} />
 
       <h3 className="text-xl font-semibold mb-2">
         Getting Started with Sovendus Optimize
@@ -146,7 +126,7 @@ export function SovendusOptimize({
               <Label htmlFor="global-id">Global Optimize ID</Label>
               <Input
                 id="global-id"
-                value={currentOptimizeSettings.globalId}
+                value={currentOptimizeSettings.globalId || ""}
                 onChange={(e) => handleGlobalChange("globalId", e.target.value)}
                 placeholder="Enter Global Optimize ID"
               />

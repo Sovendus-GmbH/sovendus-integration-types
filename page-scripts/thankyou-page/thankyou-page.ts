@@ -1,32 +1,8 @@
-export type SovendusPluginSettings = {
-  voucherNetwork: {
-    countries: {
-      [country in Countries]: {
-        languages: {
-          [language in Languages]: {
-            enabled: boolean;
-            trafficSourceNumber: string;
-            trafficMediumNumber: string;
-          };
-        };
-      };
-    };
-  };
-  optimize: {
-    countries: {
-      [country in Countries]: {
-        enabled: boolean;
-        trafficSourceNumber: string;
-        trafficMediumNumber: string;
-      };
-    };
-  };
-  checkoutProducts: boolean;
-};
+import type { SovendusAppSettings } from "settings/app-settings";
 
-interface Window {
-  sovPluginConfig: {
-    settings: SovendusPluginSettings;
+interface ThankYouWindow extends Window {
+  sovThankyouConfig: {
+    settings: SovendusAppSettings;
     sessionId: string;
     timestamp: string;
     orderId: string;
@@ -48,8 +24,10 @@ interface Window {
   };
 }
 
+declare let window: ThankYouWindow;
+
 function sovendusThankYou() {
-  const config = window.sovPluginConfig;
+  const config = window.sovThankyouConfig;
   let isActive = false;
   let trafficSourceNumber = "";
   let trafficMediumNumber = "";
@@ -73,32 +51,32 @@ function sovendusThankYou() {
     window.sovIframes.push({
       trafficSourceNumber: trafficSourceNumber,
       trafficMediumNumber: trafficMediumNumber,
-      sessionId: config.cartHash,
-      timestamp: config.currentTime,
-      orderId: config.orderNumber,
-      orderValue: config.netValue,
-      orderCurrency: config.currency,
-      usedCouponCode: config.usedCouponCode,
+      sessionId: config.sessionId,
+      timestamp: config.timestamp,
+      orderId: config.orderId,
+      orderValue: config.orderValue,
+      orderCurrency: config.orderCurrency,
+      usedCouponCode: config.usedCouponCodes?.[0],
       iframeContainerId: config.iframeContainerId,
       integrationType: config.integrationType,
     });
     window.sovConsumer = {
-      consumerFirstName: config.first_name,
-      consumerLastName: config.last_name,
-      consumerEmail: config.email,
-      consumerStreet: config.streetName,
-      consumerStreetNumber: config.streetNumber,
-      consumerZipcode: config.postcode,
-      consumerCity: config.city,
-      consumerCountry: config.country,
+      consumerFirstName: config.consumerFirstName,
+      consumerLastName: config.consumerLastName,
+      consumerEmail: config.consumerEmail,
+      consumerStreet: config.consumerStreet,
+      consumerStreetNumber: config.consumerStreetNumber,
+      consumerZipcode: config.consumerZipcode,
+      consumerCity: config.consumerCity,
+      consumerCountry: config.consumerCountry,
       consumerPhone: config.consumerPhone,
     };
-    var script = document.createElement("script");
+    const script = document.createElement("script");
     script.type = "text/javascript";
     script.async = true;
-    script.src =
-      window.location.protocol +
-      "//api.sovendus.com/sovabo/common/js/flexibleIframe.js";
+    script.src = `${
+      window.location.protocol
+    }//api.sovendus.com/sovabo/common/js/flexibleIframe.js`;
     document.body.appendChild(script);
   }
 }
