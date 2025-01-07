@@ -4,7 +4,6 @@ import { useState, useMemo } from "react";
 
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 
-import type { SovendusFormDataType } from "~/sovendus-plugins-commons/admin-frontend/sovendus-app-types";
 import { Button } from "./ui/button";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -19,6 +18,7 @@ import {
   voucherNetworkCountries,
   VoucherNetworkCountryCode,
 } from "./form-types";
+import { SovendusFormDataType } from "../sovendus-app-types";
 
 export default function SovendusBackendForm({
   currentStoredSettings,
@@ -29,10 +29,12 @@ export default function SovendusBackendForm({
 }) {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [notification, setNotification] = useState<string | null>(null);
-  const [currentSettings, setCurrentSettings] =
-    useState<SovendusFormDataType>(currentStoredSettings);
-  const [savedSettings, setSavedSettings] =
-    useState<SovendusFormDataType>(currentStoredSettings);
+  const [currentSettings, setCurrentSettings] = useState<SovendusFormDataType>(
+    currentStoredSettings
+  );
+  const [savedSettings, setSavedSettings] = useState<SovendusFormDataType>(
+    currentStoredSettings
+  );
 
   const hasUnsavedChanges = useMemo(() => {
     return JSON.stringify(savedSettings) !== JSON.stringify(currentSettings);
