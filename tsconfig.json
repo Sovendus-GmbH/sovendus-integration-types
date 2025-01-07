@@ -46,7 +46,10 @@
     "noStrictGenericChecks": false
   },
   "include": [
-    "**/*.ts", "admin-frontend/sovendus-app-settings.tsx",
+    "**/*.ts",
+    "**/*.tsx",
+    "admin-frontend/**/*.ts",
+    "admin-frontend/**/*.tsx"
   ],
   "exclude": ["./node_modules"]
 }

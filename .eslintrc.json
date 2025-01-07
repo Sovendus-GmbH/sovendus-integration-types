@@ -26,6 +26,12 @@
     "import"
   ],
   "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["!./*", "!../*"]
+      }
+    ],
     // Import sorting and unused import rules
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
