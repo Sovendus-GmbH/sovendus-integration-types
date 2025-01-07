@@ -1,15 +1,13 @@
-import { Command } from "commander";
-import { rmSync } from "fs";
-import { build } from "vite";
-import { execSync } from "child_process";
 import react from "@vitejs/plugin-react";
-
+import autoprefixer from "autoprefixer";
+import { execSync } from "child_process";
+import { Command } from "commander";
+import tailwindcss from "tailwindcss";
+import { build } from "vite";
 // execute me with:
 // npx ts-node build.ts build
 
 const program = new Command();
-
-("sovendus-plugins-commons/builder/build.ts build");
 
 program
   .command("build")
@@ -17,20 +15,23 @@ program
   .action(async () => {
     console.log("Building started");
 
-    const buildRootDir = "../dist";
-    cleanDistFolder(buildRootDir);
-    await compileToJsFilesWithVite(buildRootDir);
+    await compileToJsFilesWithVite();
   });
 
-export async function compileToJsFilesWithVite(
-  buildRootDir: string
-): Promise<void> {
+export async function compileToJsFilesWithVite(): Promise<void> {
   await build({
+    root: "./",
+    base: "./",
     plugins: [react()],
+    css: {
+      postcss: {
+        plugins: [tailwindcss, autoprefixer],
+      },
+    },
     build: {
       target: "es6",
-      outDir: buildRootDir,
-      emptyOutDir: false,
+      outDir: "../dist",
+      emptyOutDir: true,
       cssMinify: false,
       cssCodeSplit: false,
       sourcemap: true,
@@ -38,22 +39,13 @@ export async function compileToJsFilesWithVite(
         input: "../admin-frontend/frontend_react_loader.ts",
         output: {
           entryFileNames: "frontend_react_loader.js",
+          exports: "none",
+          format: "iife",
         },
         // preserveEntrySignatures: "strict",
       },
     },
   });
-}
-
-export function cleanDistFolder(distDir: string): void {
-  console.log(`started dist folder cleaning (${distDir})`);
-  try {
-    rmSync(distDir, { force: true, recursive: true });
-    console.log(`Done dist folder cleaning (${distDir})`);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
-    console.log("No dist folder found to clean");
-  }
 }
 
 export function runShellCommand(cmd: string): void {
@@ -62,7 +54,7 @@ export function runShellCommand(cmd: string): void {
     execSync(cmd, { stdio: "inherit" });
   } catch (error) {
     console.error(
-      `Error executing command: ${cmd} | error: ${(error as Error)?.message || (error as Error)}`
+      `Error executing command: ${cmd} | error: ${(error as Error)?.message || (error as Error)}`,
     );
     process.exit(1);
   }

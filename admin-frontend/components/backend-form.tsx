@@ -1,24 +1,22 @@
 "use client";
 
-import { useState, useMemo } from "react";
-
 import { InfoCircledIcon } from "@radix-ui/react-icons";
+import React, { useMemo, useState } from "react";
 
-import { Button } from "./ui/button";
-import { Alert, AlertDescription } from "./ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { cn } from "../lib/utils";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { SovendusVoucherNetwork } from "./voucher-network";
-import { SovendusOptimize } from "./optimize";
+import type { SovendusFormDataType } from "../sovendus-app-types";
 import { SovendusCheckoutProducts } from "./checkout-products";
-import {
-  optimizeCountries,
+import type {
   OptimizeCountryCode,
-  voucherNetworkCountries,
   VoucherNetworkCountryCode,
 } from "./form-types";
-import { SovendusFormDataType } from "../sovendus-app-types";
+import { optimizeCountries, voucherNetworkCountries } from "./form-types";
+import { SovendusOptimize } from "./optimize";
+import { Alert, AlertDescription } from "./ui/alert";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { SovendusVoucherNetwork } from "./voucher-network";
 
 export default function SovendusBackendForm({
   currentStoredSettings,
@@ -26,21 +24,21 @@ export default function SovendusBackendForm({
 }: {
   currentStoredSettings: SovendusFormDataType;
   saveSettings: (data: SovendusFormDataType) => Promise<SovendusFormDataType>;
-}) {
+}): JSX.Element {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [notification, setNotification] = useState<string | null>(null);
   const [currentSettings, setCurrentSettings] = useState<SovendusFormDataType>(
-    currentStoredSettings
+    currentStoredSettings,
   );
   const [savedSettings, setSavedSettings] = useState<SovendusFormDataType>(
-    currentStoredSettings
+    currentStoredSettings,
   );
 
   const hasUnsavedChanges = useMemo(() => {
     return JSON.stringify(savedSettings) !== JSON.stringify(currentSettings);
   }, [currentSettings, savedSettings]);
 
-  const handleSave = async () => {
+  const handleSave = async (): Promise<void> => {
     setIsSaving(true);
     try {
       const confirmedSettings = await saveSettings(currentSettings);
@@ -48,7 +46,7 @@ export default function SovendusBackendForm({
       setNotification("Your Sovendus settings have been successfully updated.");
     } catch (error) {
       setNotification(
-        "An error occurred while saving your settings. Please try again."
+        "An error occurred while saving your settings. Please try again.",
       );
     } finally {
       setIsSaving(false);
@@ -56,23 +54,23 @@ export default function SovendusBackendForm({
     }
   };
 
-  const getEnabledVoucherNetworkCountries = () => {
+  const getEnabledVoucherNetworkCountries = (): string => {
     return Object.entries(savedSettings.voucherNetwork)
       .filter(
-        ([countryKey, data]: [string, any]) =>
+        ([countryKey, data]) =>
           data.isEnabled &&
           data.trafficSourceNumber &&
           data.trafficMediumNumber &&
-          voucherNetworkCountries[countryKey as VoucherNetworkCountryCode]
+          voucherNetworkCountries[countryKey as VoucherNetworkCountryCode],
       )
       .map(
         ([countryKey]) =>
-          voucherNetworkCountries[countryKey as VoucherNetworkCountryCode]
+          voucherNetworkCountries[countryKey as VoucherNetworkCountryCode],
       )
       .join(", ");
   };
 
-  const getOptimizeStatus = () => {
+  const getOptimizeStatus = (): string => {
     if (
       savedSettings.optimize.useGlobalId &&
       savedSettings.optimize.globalEnabled
@@ -80,24 +78,24 @@ export default function SovendusBackendForm({
       return `Global ID: ${savedSettings.optimize.globalId}`;
     } else if (!savedSettings.optimize.useGlobalId) {
       const enabledCountries = Object.entries(
-        savedSettings.optimize.countrySpecificIds
+        savedSettings.optimize.countrySpecificIds,
       )
         .filter(
-          ([countryKey, data]: [string, any]) =>
+          ([countryKey, data]) =>
             data.isEnabled &&
             data.id &&
-            optimizeCountries[countryKey as OptimizeCountryCode]
+            optimizeCountries[countryKey as OptimizeCountryCode],
         )
         .map(
-          ([countryKey]) => optimizeCountries[countryKey as OptimizeCountryCode]
+          ([countryKey]) =>
+            optimizeCountries[countryKey as OptimizeCountryCode],
         )
         .join(", ");
       return enabledCountries
         ? `Enabled for: ${enabledCountries}`
         : "No countries enabled";
-    } else {
-      return "No countries enabled";
     }
+    return "No countries enabled";
   };
 
   return (
@@ -134,14 +132,14 @@ export default function SovendusBackendForm({
                 className={cn(
                   "text-sm",
                   Object.values(savedSettings.voucherNetwork).some(
-                    (country: any) => country.isEnabled
+                    (country) => country.isEnabled,
                   )
                     ? "text-green-600"
-                    : "text-red-600"
+                    : "text-red-600",
                 )}
               >
                 {Object.values(savedSettings.voucherNetwork).some(
-                  (country: any) => country.isEnabled
+                  (country) => country.isEnabled,
                 )
                   ? `Enabled for: ${getEnabledVoucherNetworkCountries()}`
                   : "No Countries Enabled"}
@@ -156,10 +154,10 @@ export default function SovendusBackendForm({
                     savedSettings.optimize.globalEnabled) ||
                     (!savedSettings.optimize.useGlobalId &&
                       Object.values(
-                        savedSettings.optimize.countrySpecificIds
-                      ).some((country: any) => country.isEnabled))
+                        savedSettings.optimize.countrySpecificIds,
+                      ).some((country) => country.isEnabled))
                     ? "text-green-600"
-                    : "text-red-600"
+                    : "text-red-600",
                 )}
               >
                 {getOptimizeStatus()}
@@ -172,7 +170,7 @@ export default function SovendusBackendForm({
                   "text-sm",
                   savedSettings.checkoutProducts
                     ? "text-green-600"
-                    : "text-red-600"
+                    : "text-red-600",
                 )}
               >
                 {savedSettings.checkoutProducts ? "Enabled" : "Disabled"}

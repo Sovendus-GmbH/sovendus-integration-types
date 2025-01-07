@@ -1,8 +1,9 @@
-import React from "react";
-import SovendusBackendForm from "./components/backend-form";
-import { SovendusFormDataType } from "./sovendus-app-types";
+import "./app.css";
 
-export interface SovendusSettingsType {}
+import React from "react";
+
+import SovendusBackendForm from "./components/backend-form";
+import type { SovendusFormDataType } from "./sovendus-app-types";
 
 interface SovendusSettingsProps {
   currentStoredSettings: SovendusFormDataType;
@@ -12,7 +13,7 @@ interface SovendusSettingsProps {
 export function SovendusSettings({
   currentStoredSettings,
   saveSettings,
-}: SovendusSettingsProps) {
+}: SovendusSettingsProps): JSX.Element {
   console.log("sovendusSettings", currentStoredSettings);
   return (
     <SovendusBackendForm

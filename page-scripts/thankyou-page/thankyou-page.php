@@ -6,7 +6,7 @@
 
 
 
-require_once plugin_dir_path(__FILE__) . '../settings/app-settings.php';
+require_once plugin_dir_path(__FILE__) . '../../settings/app-settings.php';
 
 
 function sovendus_thankyou_page(
@@ -38,7 +38,7 @@ function sovendus_thankyou_page(
         [$consumerStreet, $consumerStreetNumber] = splitStreetAndStreetNumber($consumerStreetAndNumber);
     }
 
-    $js_file_path = plugin_dir_path(__FILE__) . 'sovendus-plugins-commons/sovendus-thankyou-page.js';
+    $js_file_path = plugin_dir_path(__FILE__) . 'thankyou-page.js';
     $js_content = file_get_contents($js_file_path);
     $iframeContainerId = "sovendus-integration-container";
     $integrationType = "{$pluginName}-{$pluginVersion}";

@@ -1,46 +1,45 @@
 "use client";
 
+import type { Dispatch, SetStateAction } from "react";
+import React from "react";
+
+import type {
+  SovendusFormDataType,
+  VoucherNetworkFormType,
+} from "../sovendus-app-types";
+import type { VoucherNetworkCountryCode } from "./form-types";
+import { voucherNetworkCountries } from "./form-types";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import { Switch } from "./ui/switch";
 import { Badge } from "./ui/badge";
-
-import type { Dispatch, SetStateAction } from "react";
-
-import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import {
-  voucherNetworkCountries,
-  VoucherNetworkCountryCode,
-} from "./form-types";
-import {
-  SovendusFormDataType,
-  VoucherNetworkFormType,
-} from "../sovendus-app-types";
-
-type CountryOptionsProps = {
-  currentSettings: VoucherNetworkFormType;
-  setCurrentSettings: Dispatch<SetStateAction<SovendusFormDataType>>;
-};
+import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
 
 export function CountryOptions({
   currentSettings,
   setCurrentSettings,
-}: CountryOptionsProps) {
-  const getCountryStatus = (countryKey: VoucherNetworkCountryCode) => {
+}: {
+  currentSettings: VoucherNetworkFormType;
+  setCurrentSettings: Dispatch<SetStateAction<SovendusFormDataType>>;
+}): JSX.Element {
+  const getCountryStatus = (countryKey: VoucherNetworkCountryCode): string => {
     const country = currentSettings[countryKey];
-    if (!country?.trafficMediumNumber || !country?.trafficSourceNumber)
+    if (!country?.trafficMediumNumber || !country?.trafficSourceNumber) {
       return "Not configured";
-    if (!country.isEnabled) return "Disabled";
+    }
+    if (!country.isEnabled) {
+      return "Disabled";
+    }
     return `Source: ${country.trafficSourceNumber}, Medium: ${country.trafficMediumNumber}`;
   };
 
   const isCountryEnabled = (
-    country: VoucherNetworkFormType[VoucherNetworkCountryCode]
+    country: VoucherNetworkFormType[VoucherNetworkCountryCode],
   ): boolean => {
     return (
       (country?.isEnabled &&
@@ -53,14 +52,14 @@ export function CountryOptions({
   };
   const handleEnabledChange = (
     countryKey: VoucherNetworkCountryCode,
-    checked: boolean
-  ) => {
+    checked: boolean,
+  ): void => {
     setCurrentSettings((prevState) => {
       if (
         prevState.voucherNetwork[countryKey]?.trafficMediumNumber &&
         prevState.voucherNetwork[countryKey].trafficSourceNumber &&
         checked !== prevState.voucherNetwork[countryKey].isEnabled
-      )
+      ) {
         return {
           ...prevState,
           voucherNetwork: {
@@ -74,14 +73,15 @@ export function CountryOptions({
             },
           },
         };
+      }
       return prevState;
     });
   };
   const handleIdChange = (
     countryKey: VoucherNetworkCountryCode,
     field: "trafficSourceNumber" | "trafficMediumNumber",
-    value: number | string
-  ) => {
+    value: number | string,
+  ): void => {
     setCurrentSettings((prevState) => {
       const newValue = parseInt(`${value}`, 10);
       if (prevState.voucherNetwork[countryKey] !== newValue) {
@@ -114,7 +114,7 @@ export function CountryOptions({
             handleEnabledChange={handleEnabledChange}
             handleIdChange={handleIdChange}
           />
-        )
+        ),
       )}
     </Accordion>
   );
@@ -134,26 +134,24 @@ function CountrySettings({
   currentSettings: VoucherNetworkFormType;
   getCountryStatus: (countryKey: VoucherNetworkCountryCode) => string;
   isCountryEnabled: (
-    country: VoucherNetworkFormType[VoucherNetworkCountryCode]
+    country: VoucherNetworkFormType[VoucherNetworkCountryCode],
   ) => boolean;
   handleEnabledChange: (
     countryKey: VoucherNetworkCountryCode,
-    checked: boolean
+    checked: boolean,
   ) => void;
   handleIdChange: (
     countryKey: VoucherNetworkCountryCode,
     field: "trafficSourceNumber" | "trafficMediumNumber",
-    value: number | string
+    value: number | string,
   ) => void;
 }): JSX.Element {
   const isEnabled = isCountryEnabled(currentSettings[countryKey]);
   const trafficSourceNumber = parseInt(
-    currentSettings[countryKey as VoucherNetworkCountryCode]
-      ?.trafficSourceNumber || ""
+    currentSettings[countryKey]?.trafficSourceNumber || "",
   );
   const trafficMediumNumber = parseInt(
-    currentSettings[countryKey as VoucherNetworkCountryCode]
-      ?.trafficMediumNumber || ""
+    currentSettings[countryKey]?.trafficMediumNumber || "",
   );
   return (
     <AccordionItem value={countryKey} key={countryKey}>
@@ -179,10 +177,7 @@ function CountrySettings({
               id={`${countryKey}-enabled`}
               checked={isEnabled}
               onCheckedChange={(checked) =>
-                handleEnabledChange(
-                  countryKey as VoucherNetworkCountryCode,
-                  checked
-                )
+                handleEnabledChange(countryKey, checked)
               }
             />
             <label htmlFor={`${countryKey}-enabled`}>
@@ -201,9 +196,9 @@ function CountrySettings({
                 }
                 onChange={(e) =>
                   handleIdChange(
-                    countryKey as VoucherNetworkCountryCode,
+                    countryKey,
                     "trafficSourceNumber",
-                    e.target.value
+                    e.target.value,
                   )
                 }
                 placeholder="Enter Traffic Source Number"
@@ -220,9 +215,9 @@ function CountrySettings({
                 }
                 onChange={(e) =>
                   handleIdChange(
-                    countryKey as VoucherNetworkCountryCode,
+                    countryKey,
                     "trafficMediumNumber",
-                    e.target.value
+                    e.target.value,
                   )
                 }
                 placeholder="Enter Traffic Medium Number"

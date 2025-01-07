@@ -7,7 +7,7 @@ interface Window {
   };
 }
 
-var script = document.createElement("script");
+const script = document.createElement("script");
 script.type = "text/javascript";
 script.async = true;
 script.src = "https://api.sovendus.com/js/landing.js";

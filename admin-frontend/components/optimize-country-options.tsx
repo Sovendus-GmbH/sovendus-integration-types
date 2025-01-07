@@ -1,20 +1,24 @@
 "use client";
 
+import type { Dispatch, SetStateAction } from "react";
+import React from "react";
+
+import type {
+  OptimizeSettingsFormType,
+  SovendusFormDataType,
+} from "../sovendus-app-types";
+import type { OptimizeCountryCode } from "./form-types";
+import { optimizeCountries } from "./form-types";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import { Switch } from "./ui/switch";
 import { Badge } from "./ui/badge";
-
-import type { Dispatch, SetStateAction } from "react";
-import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { OptimizeSettingsFormType, SovendusFormDataType } from "../sovendus-app-types";
-import { optimizeCountries, OptimizeCountryCode } from "./form-types";
-
+import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
 
 type CountryOptionsProps = {
   currentSettings: OptimizeSettingsFormType;
@@ -24,16 +28,20 @@ type CountryOptionsProps = {
 export function CountryOptions({
   currentSettings,
   setCurrentSettings,
-}: CountryOptionsProps) {
-  const getCountryStatus = (countryKey: OptimizeCountryCode) => {
+}: CountryOptionsProps): JSX.Element {
+  const getCountryStatus = (countryKey: OptimizeCountryCode): string => {
     const country = currentSettings.countrySpecificIds[countryKey];
-    if (!country?.id) return "Not configured";
-    if (!country.isEnabled) return "Disabled";
+    if (!country?.id) {
+      return "Not configured";
+    }
+    if (!country.isEnabled) {
+      return "Disabled";
+    }
     return `Optimize ID: ${country.id}`;
   };
 
   const isCountryEnabled = (
-    country: OptimizeSettingsFormType["countrySpecificIds"][OptimizeCountryCode]
+    country: OptimizeSettingsFormType["countrySpecificIds"][OptimizeCountryCode],
   ): boolean => {
     return (
       (country?.isEnabled && country.id && /^\d+$/.test(country.id)) || false
@@ -41,13 +49,13 @@ export function CountryOptions({
   };
   const handleEnabledChange = (
     countryKey: OptimizeCountryCode,
-    checked: boolean
-  ) => {
+    checked: boolean,
+  ): void => {
     setCurrentSettings((prevState) => {
       if (
         !!prevState.optimize.countrySpecificIds[countryKey]?.id &&
         prevState.optimize.countrySpecificIds[countryKey].isEnabled !== checked
-      )
+      ) {
         return {
           ...prevState,
           optimize: {
@@ -64,6 +72,7 @@ export function CountryOptions({
             },
           },
         };
+      }
       return prevState;
     });
   };
@@ -71,8 +80,8 @@ export function CountryOptions({
   const handleCountryChange = (
     countryKey: OptimizeCountryCode,
     field: "isEnabled" | "id",
-    value: boolean | string
-  ) => {
+    value: boolean | string,
+  ): void => {
     setCurrentSettings((prevState) => {
       if (prevState.optimize.countrySpecificIds[countryKey] !== value) {
         return {
@@ -106,7 +115,7 @@ export function CountryOptions({
                 {isCountryEnabled(
                   currentSettings.countrySpecificIds[
                     countryKey as OptimizeCountryCode
-                  ]
+                  ],
                 ) && (
                   <Badge variant="outline" className="ml-2">
                     Enabled
@@ -123,12 +132,12 @@ export function CountryOptions({
                   checked={
                     currentSettings.countrySpecificIds[
                       countryKey as OptimizeCountryCode
-                    ]?.isEnabled
+                    ]?.isEnabled || false
                   }
                   onCheckedChange={(checked) =>
                     handleEnabledChange(
                       countryKey as OptimizeCountryCode,
-                      checked
+                      checked,
                     )
                   }
                 />
@@ -149,7 +158,7 @@ export function CountryOptions({
                     handleCountryChange(
                       countryKey as OptimizeCountryCode,
                       "id",
-                      e.target.value
+                      e.target.value,
                     )
                   }
                   placeholder="Enter Optimize ID"

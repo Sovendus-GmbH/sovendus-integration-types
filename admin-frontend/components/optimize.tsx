@@ -1,19 +1,21 @@
 "use client";
 
-import type { SetStateAction, Dispatch } from "react";
+import { motion } from "framer-motion";
+import type { Dispatch, SetStateAction } from "react";
+import React from "react";
+
+import { cn } from "../lib/utils";
+import type {
+  OptimizeSettingsFormType,
+  SovendusFormDataType,
+} from "../sovendus-app-types";
+import type { OptimizeCountryCode } from "./form-types";
+import { optimizeCountries } from "./form-types";
+import { CountryOptions } from "./optimize-country-options";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { motion } from "framer-motion";
-
-import { cn } from "../lib/utils";
-import { CountryOptions } from "./optimize-country-options";
-import {
-  OptimizeSettingsFormType,
-  SovendusFormDataType,
-} from "../sovendus-app-types";
-import { optimizeCountries, OptimizeCountryCode } from "./form-types";
 
 interface SovendusOptimizeProps {
   currentOptimizeSettings: OptimizeSettingsFormType;
@@ -24,11 +26,11 @@ interface SovendusOptimizeProps {
 export function SovendusOptimize({
   currentOptimizeSettings,
   setCurrentSettings,
-}: SovendusOptimizeProps) {
+}: SovendusOptimizeProps): JSX.Element {
   const handleGlobalChange = (
     field: "globalId" | "globalEnabled",
-    value: string | boolean
-  ) => {
+    value: string | boolean,
+  ): void => {
     setCurrentSettings((prevState) => ({
       ...prevState,
       optimize: {
@@ -39,8 +41,8 @@ export function SovendusOptimize({
   };
 
   const handleGlobalOptimizeIdChange = (
-    value: "global" | "country-specific"
-  ) => {
+    value: "global" | "country-specific",
+  ): void => {
     setCurrentSettings((prevState) => ({
       ...prevState,
       optimize: {
@@ -50,7 +52,7 @@ export function SovendusOptimize({
     }));
   };
 
-  const getSettingsSummary = () => {
+  const getSettingsSummary = (): string => {
     if (
       currentOptimizeSettings.useGlobalId &&
       currentOptimizeSettings.globalEnabled
@@ -58,7 +60,7 @@ export function SovendusOptimize({
       return `Global Optimize ID: ${currentOptimizeSettings.globalId}`;
     } else if (!currentOptimizeSettings.useGlobalId) {
       const enabledCountries = Object.entries(
-        currentOptimizeSettings.countrySpecificIds
+        currentOptimizeSettings.countrySpecificIds,
       )
         .filter(([_, data]) => data.isEnabled)
         .map(([country]) => optimizeCountries[country as OptimizeCountryCode]);
@@ -66,9 +68,8 @@ export function SovendusOptimize({
       return enabledCountries.length > 0
         ? `Enabled for: ${enabledCountries.join(", ")}`
         : "No countries enabled";
-    } else {
-      return "No countries enabled";
     }
+    return "No countries enabled";
   };
   return (
     <motion.div
@@ -114,7 +115,7 @@ export function SovendusOptimize({
             value="global"
             className={cn(
               "data-[state=active]:bg-green-100 data-[state=active]:text-green-800",
-              "data-[state=active]:border-b-2"
+              "data-[state=active]:border-b-2",
             )}
           >
             Use Global Optimize ID
@@ -123,7 +124,7 @@ export function SovendusOptimize({
             value="country-specific"
             className={cn(
               "data-[state=active]:bg-green-100 data-[state=active]:text-green-800",
-              "data-[state=active]:border-b-2"
+              "data-[state=active]:border-b-2",
             )}
           >
             Country-specific Optimize ID's

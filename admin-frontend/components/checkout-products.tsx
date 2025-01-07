@@ -1,10 +1,11 @@
 "use client";
 
-import { Switch } from "./ui/switch";
-import { Label } from "./ui/label";
 import { motion } from "framer-motion";
-import type { Dispatch, SetStateAction } from "react";
-import { SovendusFormDataType } from "../sovendus-app-types";
+import React, { type Dispatch, type SetStateAction } from "react";
+
+import type { SovendusFormDataType } from "../sovendus-app-types";
+import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
 
 interface SovendusCheckoutProductsProps {
   enabled: boolean;
@@ -14,8 +15,8 @@ interface SovendusCheckoutProductsProps {
 export function SovendusCheckoutProducts({
   enabled,
   setCurrentSettings,
-}: SovendusCheckoutProductsProps) {
-  const onStateChange = (checked: boolean) => {
+}: SovendusCheckoutProductsProps): JSX.Element {
+  const onStateChange = (checked: boolean): void => {
     setCurrentSettings((prevState) => ({
       ...prevState,
       checkoutProducts: checked,

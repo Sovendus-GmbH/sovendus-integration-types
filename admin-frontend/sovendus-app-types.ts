@@ -1,4 +1,7 @@
-import { OptimizeCountryCode, VoucherNetworkCountryCode } from "./components/form-types";
+import type {
+  OptimizeCountryCode,
+  VoucherNetworkCountryCode,
+} from "./components/form-types";
 
 export type SovendusFormDataType = {
   voucherNetwork: VoucherNetworkFormType;
@@ -44,13 +47,13 @@ export type VoucherNetworkFormElementType = {
 
 export type StoredVNFormDataArray = [
   VoucherNetworkCountryCode,
-  [string | undefined, string | undefined, boolean | undefined]
+  [string | undefined, string | undefined, boolean | undefined],
 ];
 export type StoredVNFormData = {
   [key in VoucherNetworkCountryCode]?: [
     string | undefined,
     string | undefined,
-    boolean | undefined
+    boolean | undefined,
   ];
 };
 

@@ -1,16 +1,16 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
 import { motion } from "framer-motion";
-import { CountryOptions } from "./voucher-network-country-options";
-import {
+import type { Dispatch, SetStateAction } from "react";
+import React from "react";
+
+import type {
   SovendusFormDataType,
   VoucherNetworkFormType,
 } from "../sovendus-app-types";
-import {
-  voucherNetworkCountries,
-  VoucherNetworkCountryCode,
-} from "./form-types";
+import type { VoucherNetworkCountryCode } from "./form-types";
+import { voucherNetworkCountries } from "./form-types";
+import { CountryOptions } from "./voucher-network-country-options";
 
 interface SovendusVoucherNetworkProps {
   currentSettings: VoucherNetworkFormType;
@@ -20,19 +20,19 @@ interface SovendusVoucherNetworkProps {
 export function SovendusVoucherNetwork({
   currentSettings,
   setCurrentSettings,
-}: SovendusVoucherNetworkProps) {
-  const getEnabledCountriesSummary = () => {
+}: SovendusVoucherNetworkProps): JSX.Element {
+  const getEnabledCountriesSummary = (): JSX.Element => {
     const enabledCountries = Object.entries(currentSettings)
       .filter(
         ([countryKey, data]) =>
           data.isEnabled &&
           data.trafficMediumNumber &&
           data.trafficSourceNumber &&
-          !!voucherNetworkCountries[countryKey as VoucherNetworkCountryCode]
+          !!voucherNetworkCountries[countryKey as VoucherNetworkCountryCode],
       )
       .map(
         ([country]) =>
-          voucherNetworkCountries[country as VoucherNetworkCountryCode]
+          voucherNetworkCountries[country as VoucherNetworkCountryCode],
       );
     return enabledCountries.length > 0 ? (
       <>

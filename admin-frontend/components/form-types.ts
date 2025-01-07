@@ -39,8 +39,6 @@ export const voucherNetworkCountries: {
   "en-GB": "United Kingdom",
 };
 
-
-
 export type OptimizeCountryCode =
   | "AT"
   | "BE"
