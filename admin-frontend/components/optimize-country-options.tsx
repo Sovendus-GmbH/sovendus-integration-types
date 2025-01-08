@@ -1,6 +1,6 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
 
 import type {
@@ -87,7 +87,7 @@ export function CountryOptions({
   ): void => {
     setCurrentSettings((prevState) => {
       if (
-        prevState.optimize.countrySpecificIds[countryKey].optimizeId !==
+        prevState.optimize.countrySpecificIds[countryKey]?.optimizeId !==
         newOptimizeId
       ) {
         return {
@@ -119,7 +119,7 @@ export function CountryOptions({
                   {getCountryStatus(countryKey as CountryCodes)}
                 </span>
                 {isCountryEnabled(
-                  currentSettings.countrySpecificIds[
+                  currentSettings?.countrySpecificIds[
                     countryKey as CountryCodes
                   ],
                 ) && (
@@ -140,7 +140,7 @@ export function CountryOptions({
                       countryKey as CountryCodes
                     ]?.isEnabled || false
                   }
-                  onCheckedChange={(checked) =>
+                  onCheckedChange={(checked): void =>
                     handleEnabledChange(countryKey as CountryCodes, checked)
                   }
                 />
@@ -157,7 +157,7 @@ export function CountryOptions({
                       countryKey as CountryCodes
                     ]?.optimizeId || ""
                   }
-                  onChange={(e) =>
+                  onChange={(e): void =>
                     handleCountryChange(
                       countryKey as CountryCodes,
                       e.target.value,

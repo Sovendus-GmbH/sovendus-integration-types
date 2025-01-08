@@ -1,56 +1,125 @@
-import type { SovendusAppSettings } from "settings/app-settings";
+import type {
+  OptimizeSettings,
+  SovendusAppSettings,
+  VoucherNetworkLanguage,
+  VoucherNetworkSettings,
+} from "../../settings/app-settings";
+import type {
+  CountryCodes,
+  LanguageCodes,
+} from "../../settings/sovendus-countries";
+import { sovReqProductIdKey, sovReqTokenKey } from "../constants";
+
+export interface SovendusThankYouPageConfig {
+  settings: SovendusAppSettings;
+  sessionId: string | undefined;
+  timestamp: string | undefined;
+  orderId: string | undefined;
+  orderValue: string | undefined;
+  orderCurrency: string | undefined;
+  usedCouponCodes: string | undefined;
+  iframeContainerId: string;
+  integrationType: string;
+  consumerFirstName: string | undefined;
+  consumerLastName: string | undefined;
+  consumerEmail: string | undefined;
+  consumerStreet: string | undefined;
+  consumerStreetNumber: string | undefined;
+  consumerZipcode: string | undefined;
+  consumerCity: string | undefined;
+  consumerCountry: CountryCodes;
+  consumerLanguage: LanguageCodes | undefined;
+  consumerPhone: string | undefined;
+}
 
 interface ThankYouWindow extends Window {
-  sovThankyouConfig: {
-    settings: SovendusAppSettings;
-    sessionId: string;
-    timestamp: string;
-    orderId: string;
-    orderValue: string;
-    orderCurrency: string;
-    usedCouponCodes: string;
+  sovThankyouConfig: SovendusThankYouPageConfig;
+  sovIframes: {
+    trafficSourceNumber: string;
+    trafficMediumNumber: string;
+    sessionId: string | undefined;
+    timestamp: string | undefined;
+    orderId: string | undefined;
+    orderValue: string | undefined;
+    orderCurrency: string | undefined;
+    usedCouponCode: string | undefined;
     iframeContainerId: string;
     integrationType: string;
-    consumerFirstName: string;
-    consumerLastName: string;
-    consumerEmail: string;
-    consumerStreet: string;
-    consumerStreetNumber: string;
-    consumerZipcode: string;
-    consumerCity: string;
-    consumerCountry: string;
-    consumerLanguage: string;
-    consumerPhone: string;
+  }[];
+  sovConsumer: {
+    consumerFirstName: string | undefined;
+    consumerLastName: string | undefined;
+    consumerEmail: string | undefined;
+    consumerStreet: string | undefined;
+    consumerStreetNumber: string | undefined;
+    consumerZipcode: string | undefined;
+    consumerCity: string | undefined;
+    consumerCountry: CountryCodes;
+    consumerPhone: string | undefined;
+  };
+  sovPageStatus: {
+    loadedOptimize: boolean;
+    loadedVoucherNetwork: boolean;
+    executedCheckoutProducts: boolean;
+    sovThankyouConfigFound: boolean;
+    countryCodePassedOnByPlugin: boolean;
   };
 }
 
 declare let window: ThankYouWindow;
 
-function sovendusThankYou() {
+async function sovendusThankYou(): Promise<void> {
   const config = window.sovThankyouConfig;
-  let isActive = false;
-  let trafficSourceNumber = "";
-  let trafficMediumNumber = "";
-  const multiLangCountries = ["CH", "BE"];
-  if (multiLangCountries.includes(config.country)) {
-    const lang = document.documentElement.lang.split("-")[0];
-    isActive = JSON.parse(config.sovendusActive)[lang];
-    trafficSourceNumber = JSON.parse(config.trafficSourceNumber)[lang];
-    trafficMediumNumber = JSON.parse(config.trafficMediumNumber)[lang];
-  } else {
-    isActive = true;
-    trafficSourceNumber = config.trafficSourceNumber;
-    trafficMediumNumber = config.trafficMediumNumber;
+  if (!config) {
+    window.sovPageStatus.sovThankyouConfigFound = false;
+    // eslint-disable-next-line no-console
+    console.error("sovThankyouConfig is not defined");
+    return;
   }
+  window.sovPageStatus.sovThankyouConfigFound = true;
+  const { optimizeId, checkoutProducts, voucherNetwork } = getSovendusConfig(
+    config.settings,
+    config.consumerCountry,
+    config.consumerLanguage,
+  );
+  handleVoucherNetwork(voucherNetwork, config);
+  await handleCheckoutProductsConversion(
+    checkoutProducts,
+    getCookie,
+    setCookie,
+  );
+  handleOptimizeConversion(optimizeId, config);
+}
+
+function handleOptimizeConversion(
+  optimizeId: string | undefined,
+  config: SovendusThankYouPageConfig,
+): void {
+  if (optimizeId) {
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.async = true;
+    script.src = `https://www.sovopt.com/${optimizeId}/conversion/?ordervalue=${
+      config.orderValue
+    }&ordernumber=${config.orderId}&vouchercode=${
+      config.usedCouponCodes?.[0]
+    }&email=${config.consumerEmail}`;
+    window.sovPageStatus.loadedOptimize = true;
+  }
+}
+
+function handleVoucherNetwork(
+  voucherNetworkConfig: VoucherNetworkLanguage | undefined,
+  config: SovendusThankYouPageConfig,
+): void {
   if (
-    isActive &&
-    Number(trafficSourceNumber) > 0 &&
-    Number(trafficMediumNumber) > 0
+    voucherNetworkConfig?.trafficSourceNumber &&
+    voucherNetworkConfig.trafficMediumNumber
   ) {
     window.sovIframes = window.sovIframes || [];
     window.sovIframes.push({
-      trafficSourceNumber: trafficSourceNumber,
-      trafficMediumNumber: trafficMediumNumber,
+      trafficSourceNumber: voucherNetworkConfig.trafficSourceNumber,
+      trafficMediumNumber: voucherNetworkConfig.trafficMediumNumber,
       sessionId: config.sessionId,
       timestamp: config.timestamp,
       orderId: config.orderId,
@@ -78,7 +147,146 @@ function sovendusThankYou() {
       window.location.protocol
     }//api.sovendus.com/sovabo/common/js/flexibleIframe.js`;
     document.body.appendChild(script);
+    window.sovPageStatus.loadedVoucherNetwork = true;
   }
 }
 
-sovendusThankYou();
+export async function handleCheckoutProductsConversion(
+  checkoutProducts: boolean,
+  getCookie: (
+    name: string,
+  ) => Promise<string | undefined> | (string | undefined),
+  setCookie: (
+    name: string,
+    value?: string | undefined,
+  ) => Promise<string> | string,
+): Promise<void> {
+  if (checkoutProducts) {
+    const sovReqToken = await getCookie(sovReqTokenKey);
+    const sovReqProductId = await getCookie(sovReqProductIdKey);
+    if (sovReqToken && sovReqProductId) {
+      const pixel = document.createElement("img");
+      pixel.src = `https://press-order-api.sovendus.com/ext/${decodeURIComponent(
+        sovReqProductId,
+      )}/image?sovReqToken=${decodeURIComponent(sovReqToken)}`;
+
+      document.body.appendChild(pixel);
+      // remove the cookies
+      await setCookie(sovReqTokenKey, "");
+      await setCookie(sovReqProductIdKey, "");
+      window.sovPageStatus.executedCheckoutProducts = true;
+    }
+  }
+}
+
+const getCookie = (name: string): string | undefined => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop()?.split(";").shift();
+  }
+  return undefined;
+};
+
+const setCookie = (name: string): string => {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  return "";
+};
+
+interface ParsedThankYouPageConfig {
+  optimizeId: string | undefined;
+  voucherNetwork: VoucherNetworkLanguage | undefined;
+  checkoutProducts: boolean;
+}
+
+function getSovendusConfig(
+  settings: SovendusAppSettings,
+  country: CountryCodes,
+  language: LanguageCodes | undefined,
+): ParsedThankYouPageConfig {
+  return {
+    optimizeId: getOptimizeConfig(settings.optimize, country),
+    voucherNetwork: getVoucherNetworkConfig(
+      settings.voucherNetwork,
+      country,
+      language,
+    ),
+    checkoutProducts: settings.checkoutProducts,
+  };
+}
+
+function getVoucherNetworkConfig(
+  settings: VoucherNetworkSettings,
+  country: CountryCodes | undefined,
+  language: LanguageCodes | undefined,
+): VoucherNetworkLanguage | undefined {
+  const languageSettings = getLanguageSettings(settings, country, language);
+  if (
+    !languageSettings ||
+    !languageSettings.isEnabled ||
+    !languageSettings.trafficMediumNumber ||
+    !languageSettings.trafficSourceNumber
+  ) {
+    return undefined;
+  }
+  return languageSettings;
+}
+
+function getLanguageSettings(
+  settings: VoucherNetworkSettings,
+  country: CountryCodes | undefined,
+  language: LanguageCodes | undefined,
+): VoucherNetworkLanguage | undefined {
+  if (!country) {
+    window.sovPageStatus.countryCodePassedOnByPlugin = false;
+    return undefined;
+  }
+  window.sovPageStatus.countryCodePassedOnByPlugin = true;
+  const countrySettings = settings.countries[country];
+  const languagesSettings = countrySettings?.languages;
+  if (!languagesSettings) {
+    return undefined;
+  }
+  const languagesSettingsList = Object.values(languagesSettings);
+  if (languagesSettingsList?.length === 1) {
+    const languageSettings = languagesSettingsList[0];
+    return languageSettings;
+  }
+  if (languagesSettingsList?.length > 1) {
+    const languageKey = language || detectLanguageCode();
+    const languageSettings = languagesSettings[languageKey];
+    if (!languageSettings) {
+      return undefined;
+    }
+    return languageSettings;
+  }
+  return undefined;
+}
+
+function detectLanguageCode(): LanguageCodes {
+  const htmlLang = document.documentElement.lang.split("-")[0];
+  if (htmlLang) {
+    return htmlLang as LanguageCodes;
+  }
+  return navigator.language.split("-")[0] as LanguageCodes;
+}
+
+export function getOptimizeConfig(
+  settings: OptimizeSettings,
+  country: CountryCodes | undefined,
+): string | undefined {
+  if (
+    settings.globalEnabled !== false &&
+    settings.useGlobalId !== false &&
+    settings.globalId
+  ) {
+    return settings.globalId;
+  }
+  if (country && settings.countrySpecificIds) {
+    const countryElement = settings.countrySpecificIds[country];
+    return countryElement?.isEnabled ? countryElement?.optimizeId : undefined;
+  }
+  return undefined;
+}
+
+void sovendusThankYou();

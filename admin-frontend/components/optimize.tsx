@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
 
 import type {
@@ -85,7 +85,7 @@ export function SovendusOptimize({
         defaultValue={
           currentOptimizeSettings.useGlobalId ? "global" : "country-specific"
         }
-        onValueChange={(value) =>
+        onValueChange={(value): void =>
           handleGlobalOptimizeIdChange(value as "global" | "country-specific")
         }
         className="border rounded-md"
@@ -116,7 +116,7 @@ export function SovendusOptimize({
               <Switch
                 id="global-id-enabled"
                 checked={currentOptimizeSettings.globalEnabled}
-                onCheckedChange={(checked) =>
+                onCheckedChange={(checked): void =>
                   handleGlobalChange("globalEnabled", checked)
                 }
               />
@@ -127,7 +127,9 @@ export function SovendusOptimize({
               <Input
                 id="global-id"
                 value={currentOptimizeSettings.globalId || ""}
-                onChange={(e) => handleGlobalChange("globalId", e.target.value)}
+                onChange={(e): void =>
+                  handleGlobalChange("globalId", e.target.value)
+                }
                 placeholder="Enter Global Optimize ID"
               />
             </div>

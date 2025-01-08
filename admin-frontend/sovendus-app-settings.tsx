@@ -1,5 +1,6 @@
 import "./app.css";
 
+import type { JSX } from "react";
 import React from "react";
 
 import type { SovendusAppSettings } from "../settings/app-settings";
@@ -14,7 +15,6 @@ export function SovendusSettings({
   currentStoredSettings,
   saveSettings,
 }: SovendusSettingsProps): JSX.Element {
-  console.log("sovendusSettings", currentStoredSettings);
   return (
     <SovendusBackendForm
       currentStoredSettings={currentStoredSettings}

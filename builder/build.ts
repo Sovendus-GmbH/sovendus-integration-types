@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import react from "@vitejs/plugin-react";
 import autoprefixer from "autoprefixer";
 import { Command } from "commander";
@@ -33,36 +34,38 @@ const filesToCompile = [
 ];
 
 async function compileToJsFilesWithVite(distFolder: string): Promise<void> {
-  filesToCompile.forEach(async (file) => {
-    await build({
-      root: "./",
-      base: "./",
-      plugins: [react()],
-      css: {
-        postcss: {
-          plugins: [tailwindcss, autoprefixer],
-        },
-      },
-      build: {
-        target: "es6",
-        outDir: distFolder,
-        minify: false,
-        emptyOutDir: false,
-        cssMinify: false,
-        cssCodeSplit: false,
-        sourcemap: true,
-        rollupOptions: {
-          input: file.input,
-          output: {
-            entryFileNames: file.output,
-            exports: "none",
-            format: "iife",
+  await Promise.all(
+    filesToCompile.map(async (file) => {
+      await build({
+        root: "./",
+        base: "./",
+        plugins: [react()],
+        css: {
+          postcss: {
+            plugins: [tailwindcss, autoprefixer],
           },
-          // preserveEntrySignatures: "strict",
         },
-      },
-    });
-  });
+        build: {
+          target: "es6",
+          outDir: distFolder,
+          minify: false,
+          emptyOutDir: false,
+          cssMinify: false,
+          cssCodeSplit: false,
+          sourcemap: true,
+          rollupOptions: {
+            input: file.input,
+            output: {
+              entryFileNames: file.output,
+              exports: "none",
+              format: "iife",
+            },
+            // preserveEntrySignatures: "strict",
+          },
+        },
+      });
+    }),
+  );
 }
 
 function cleanDistFolder(distDir: string): void {

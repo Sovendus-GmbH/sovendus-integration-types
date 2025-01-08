@@ -1,6 +1,6 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
 
 import type {
@@ -36,7 +36,7 @@ export function CountryOptions({
     languageKey: LanguageCodes,
   ): string => {
     const country =
-      currentSettings.countries[countryKey].languages[languageKey];
+      currentSettings.countries[countryKey]?.languages[languageKey];
     if (!country?.trafficMediumNumber || !country?.trafficSourceNumber) {
       return "Not configured";
     }
@@ -46,7 +46,9 @@ export function CountryOptions({
     return `Source: ${country.trafficSourceNumber}, Medium: ${country.trafficMediumNumber}`;
   };
 
-  const isCountryEnabled = (country: VoucherNetworkLanguage): boolean => {
+  const isCountryEnabled = (
+    country: VoucherNetworkLanguage | undefined,
+  ): boolean => {
     return (
       (country?.isEnabled &&
         country.trafficSourceNumber &&
@@ -79,7 +81,7 @@ export function CountryOptions({
               [countryKey]: {
                 ...prevState.voucherNetwork.countries[countryKey],
                 languages: {
-                  ...prevState.voucherNetwork.countries[countryKey].languages,
+                  ...prevState.voucherNetwork.countries[countryKey]?.languages,
                   [languageKey]: {
                     ...element,
                     isEnabled:
@@ -118,7 +120,7 @@ export function CountryOptions({
               [countryKey]: {
                 ...prevState.voucherNetwork.countries[countryKey],
                 languages: {
-                  ...prevState.voucherNetwork.countries[countryKey].languages,
+                  ...prevState.voucherNetwork.countries[countryKey]?.languages,
                   [languageKey]: {
                     ...element,
                     [field]: newValue,
@@ -172,7 +174,7 @@ function CountrySettings({
     countryKey: CountryCodes,
     languageKey: LanguageCodes,
   ) => string;
-  isCountryEnabled: (language: VoucherNetworkLanguage) => boolean;
+  isCountryEnabled: (language: VoucherNetworkLanguage | undefined) => boolean;
   handleEnabledChange: (
     countryKey: CountryCodes,
     languageKey: LanguageCodes,
@@ -217,7 +219,7 @@ function CountrySettings({
             <Switch
               id={`${countryKey}-enabled`}
               checked={isEnabled}
-              onCheckedChange={(checked) =>
+              onCheckedChange={(checked): void =>
                 handleEnabledChange(countryKey, languageKey, checked)
               }
             />
@@ -235,7 +237,7 @@ function CountrySettings({
                 value={
                   isNaN(trafficSourceNumber) ? undefined : trafficSourceNumber
                 }
-                onChange={(e) =>
+                onChange={(e): void =>
                   handleIdChange(
                     countryKey,
                     languageKey,
@@ -255,7 +257,7 @@ function CountrySettings({
                 value={
                   isNaN(trafficMediumNumber) ? undefined : trafficMediumNumber
                 }
-                onChange={(e) =>
+                onChange={(e): void =>
                   handleIdChange(
                     countryKey,
                     languageKey,

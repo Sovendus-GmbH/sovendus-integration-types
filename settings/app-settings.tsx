@@ -2,7 +2,8 @@
 // IMPORTANT CHANGES HERE HAVE TO BE REPLICATED IN THE OTHER FILE
 // ------------------------------------------------------------
 
-import React, { JSX } from "react";
+import type { JSX } from "react";
+import React from "react";
 
 import { cn } from "../admin-frontend/lib/utils";
 import type { CountryCodes, LanguageCodes } from "./sovendus-countries";

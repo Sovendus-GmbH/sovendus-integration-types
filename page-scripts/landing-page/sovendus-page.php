@@ -10,7 +10,8 @@ function sovendus_landing_page(
     Sovendus_App_Settings $settings,
     string $pluginName,
     string $pluginVersion,
-
+    null|string $country,
+    null|string $language
 ): string {
     $js_file_path = plugin_dir_path(__FILE__) . '../../../dist/sovendus-page.js';
     $js_content = file_get_contents($js_file_path);
@@ -24,6 +25,9 @@ function sovendus_landing_page(
                 window.sovPageConfig = {
                     settings: JSON.parse('$encoded_settings'),
                     integrationType: "$integrationType",
+                    integrationType: "$integrationType",
+                    country: "$country",
+                    language: "$language",
                 };
                 $js_content
             </script>

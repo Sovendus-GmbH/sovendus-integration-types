@@ -1,6 +1,7 @@
 "use client";
 
 import { InfoCircledIcon } from "@radix-ui/react-icons";
+import type { JSX } from "react";
 import React, { useMemo, useState } from "react";
 
 import type { SovendusAppSettings } from "../../settings/app-settings";
@@ -61,11 +62,15 @@ export default function SovendusBackendForm({
           {hasUnsavedChanges && (
             <span className="text-yellow-600 font-medium">Unsaved changes</span>
           )}
-          {/* {hasUnsavedChanges && ( */}
-          <Button onClick={handleSave} disabled={isSaving}>
-            {isSaving ? "Saving..." : "Save Changes"}
-          </Button>
-          {/*  )} */}
+          {hasUnsavedChanges && (
+            <Button
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={handleSave}
+              disabled={isSaving}
+            >
+              {isSaving ? "Saving..." : "Save Changes"}
+            </Button>
+          )}
         </div>
       </div>
 

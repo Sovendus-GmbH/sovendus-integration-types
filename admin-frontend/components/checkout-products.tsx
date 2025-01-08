@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import React, { type Dispatch, type SetStateAction } from "react";
+import React, { type Dispatch, type JSX, type SetStateAction } from "react";
 
 import type { SovendusAppSettings } from "../../settings/app-settings";
 import { Label } from "./ui/label";
