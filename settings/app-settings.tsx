@@ -2,7 +2,7 @@
 // IMPORTANT CHANGES HERE HAVE TO BE REPLICATED IN THE OTHER FILE
 // ------------------------------------------------------------
 
-import React from "react";
+import React, { JSX } from "react";
 
 import { cn } from "../admin-frontend/lib/utils";
 import type { CountryCodes, LanguageCodes } from "./sovendus-countries";
@@ -115,7 +115,7 @@ export function EnabledOptimizeCountries({
 }
 
 export interface VoucherNetworkSettings {
-  countries: Record<CountryCodes, VoucherNetworkCountry>;
+  countries: { [key in CountryCodes]?: VoucherNetworkCountry };
   anyCountryEnabled: boolean;
 }
 
@@ -123,11 +123,11 @@ export interface OptimizeSettings {
   useGlobalId: boolean;
   globalId: string | null;
   globalEnabled: boolean;
-  countrySpecificIds: Record<CountryCodes, OptimizeCountry>;
+  countrySpecificIds: { [key in CountryCodes]?: OptimizeCountry };
 }
 
 export interface VoucherNetworkCountry {
-  languages: Record<LanguageCodes, VoucherNetworkLanguage>;
+  languages: { [key in LanguageCodes]?: VoucherNetworkLanguage };
 }
 
 export interface OptimizeCountry {
