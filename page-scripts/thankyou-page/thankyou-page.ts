@@ -1,5 +1,4 @@
 import type {
-  OptimizeSettings,
   SovendusAppSettings,
   VoucherNetworkLanguage,
   VoucherNetworkSettings,
@@ -8,7 +7,7 @@ import type {
   CountryCodes,
   LanguageCodes,
 } from "../../settings/sovendus-countries";
-import { sovReqProductIdKey, sovReqTokenKey } from "../constants";
+import { getOptimizeConfig, handleCheckoutProductsConversion } from "../utils";
 
 export interface SovendusThankYouPageConfig {
   settings: SovendusAppSettings;
@@ -83,11 +82,12 @@ async function sovendusThankYou(): Promise<void> {
     config.consumerLanguage,
   );
   handleVoucherNetwork(voucherNetwork, config);
-  await handleCheckoutProductsConversion(
-    checkoutProducts,
-    getCookie,
-    setCookie,
-  );
+  window.sovPageStatus.executedCheckoutProducts =
+    await handleCheckoutProductsConversion(
+      checkoutProducts,
+      getCookie,
+      setCookie,
+    );
   handleOptimizeConversion(optimizeId, config);
 }
 
@@ -148,34 +148,6 @@ function handleVoucherNetwork(
     }//api.sovendus.com/sovabo/common/js/flexibleIframe.js`;
     document.body.appendChild(script);
     window.sovPageStatus.loadedVoucherNetwork = true;
-  }
-}
-
-export async function handleCheckoutProductsConversion(
-  checkoutProducts: boolean,
-  getCookie: (
-    name: string,
-  ) => Promise<string | undefined> | (string | undefined),
-  setCookie: (
-    name: string,
-    value?: string | undefined,
-  ) => Promise<string> | string,
-): Promise<void> {
-  if (checkoutProducts) {
-    const sovReqToken = await getCookie(sovReqTokenKey);
-    const sovReqProductId = await getCookie(sovReqProductIdKey);
-    if (sovReqToken && sovReqProductId) {
-      const pixel = document.createElement("img");
-      pixel.src = `https://press-order-api.sovendus.com/ext/${decodeURIComponent(
-        sovReqProductId,
-      )}/image?sovReqToken=${decodeURIComponent(sovReqToken)}`;
-
-      document.body.appendChild(pixel);
-      // remove the cookies
-      await setCookie(sovReqTokenKey, "");
-      await setCookie(sovReqProductIdKey, "");
-      window.sovPageStatus.executedCheckoutProducts = true;
-    }
   }
 }
 
@@ -269,24 +241,6 @@ function detectLanguageCode(): LanguageCodes {
     return htmlLang as LanguageCodes;
   }
   return navigator.language.split("-")[0] as LanguageCodes;
-}
-
-export function getOptimizeConfig(
-  settings: OptimizeSettings,
-  country: CountryCodes | undefined,
-): string | undefined {
-  if (
-    settings.globalEnabled !== false &&
-    settings.useGlobalId !== false &&
-    settings.globalId
-  ) {
-    return settings.globalId;
-  }
-  if (country && settings.countrySpecificIds) {
-    const countryElement = settings.countrySpecificIds[country];
-    return countryElement?.isEnabled ? countryElement?.optimizeId : undefined;
-  }
-  return undefined;
 }
 
 void sovendusThankYou();

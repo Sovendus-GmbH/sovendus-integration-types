@@ -1,7 +1,6 @@
 import type { SovendusAppSettings } from "../../settings/app-settings";
 import type { CountryCodes } from "../../settings/sovendus-countries";
-import { sovReqProductIdKey, sovReqTokenKey } from "../constants";
-import { getOptimizeConfig } from "../thankyou-page/thankyou-page";
+import { getOptimizeConfig, handleCheckoutProductsPage } from "../utils";
 
 interface SovendusPageConfig {
   settings: SovendusAppSettings;
@@ -32,11 +31,12 @@ async function main(): Promise<void> {
     } = getSovendusConfig(pageSettings.settings, pageSettings.country);
     handleOptimizePageScript(optimizeId);
     handleVoucherNetworkSwitzerland(voucherNetworkSwitzerlandEnabled);
-    await handleCheckoutProductsPage(
-      checkoutProductsEnabled,
-      window.location.href,
-      setCookie,
-    );
+    window.sovPageStatus.executedCheckoutProducts =
+      await handleCheckoutProductsPage(
+        checkoutProductsEnabled,
+        window.location.href,
+        setCookie,
+      );
   } else {
     window.sovPageStatus.sovPageConfigFound = false;
     // eslint-disable-next-line no-console
@@ -64,29 +64,6 @@ function getSovendusConfig(
       vnSwitzerland?.IT?.isEnabled ||
       vnSwitzerland?.FR?.isEnabled,
   };
-}
-
-export async function handleCheckoutProductsPage(
-  checkoutProductsEnabled: boolean | undefined,
-  pageHref: string,
-  setCookie: (cookieOrName: string, value?: string) => Promise<string>,
-): Promise<void> {
-  if (checkoutProductsEnabled) {
-    const sovReqToken = getParamFromUrl(pageHref, sovReqTokenKey);
-    if (sovReqToken) {
-      const sovReqProductId = getParamFromUrl(pageHref, sovReqProductIdKey);
-      await setCookie(sovReqTokenKey, sovReqToken);
-      if (sovReqProductId) {
-        window.sovPageStatus.executedCheckoutProducts = true;
-        await setCookie(sovReqProductIdKey, sovReqProductId);
-      }
-    }
-  }
-}
-
-function getParamFromUrl(pageHref: string, key: string): string | undefined {
-  const url = new URL(pageHref);
-  return url.searchParams.get(key) || undefined;
 }
 
 // eslint-disable-next-line @typescript-eslint/require-await
