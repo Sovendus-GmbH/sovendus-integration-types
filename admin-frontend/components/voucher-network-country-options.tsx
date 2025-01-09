@@ -73,11 +73,12 @@ export function CountryOptions({
         element?.trafficSourceNumber &&
         checked !== element.isEnabled
       ) {
-        return {
+        const newState = {
           ...prevState,
           voucherNetwork: {
             ...prevState.voucherNetwork,
             countries: {
+              ...prevState.voucherNetwork.countries,
               [countryKey]: {
                 ...prevState.voucherNetwork.countries[countryKey],
                 languages: {
@@ -94,6 +95,9 @@ export function CountryOptions({
             },
           },
         } as SovendusAppSettings;
+        console.log("prevState", prevState);
+        console.log("newState", newState);
+        return newState;
       }
       return prevState;
     });

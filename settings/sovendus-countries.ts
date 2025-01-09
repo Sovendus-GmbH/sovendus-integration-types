@@ -18,7 +18,8 @@ export enum CountryCodes {
   ES = "ES",
   SE = "SE",
   CH = "CH",
-  UK = "UK",
+  GB = "GB",
+  // TODO handle UK CODE
 }
 
 export enum LanguageCodes {
@@ -64,7 +65,7 @@ export const COUNTRIES: CountryMap = {
   [CountryCodes.ES]: "Spain",
   [CountryCodes.SE]: "Sweden",
   [CountryCodes.CH]: "Switzerland French",
-  [CountryCodes.UK]: "United Kingdom",
+  [CountryCodes.GB]: "United Kingdom",
 };
 
 export const LANGUAGES_BY_COUNTRIES: CountryLanguageMap = {
@@ -90,5 +91,5 @@ export const LANGUAGES_BY_COUNTRIES: CountryLanguageMap = {
     [LanguageCodes.DE]: "Switzerland German",
     [LanguageCodes.IT]: "Switzerland Italian",
   },
-  [CountryCodes.UK]: { [LanguageCodes.EN]: "United Kingdom" },
+  [CountryCodes.GB]: { [LanguageCodes.EN]: "United Kingdom" },
 };

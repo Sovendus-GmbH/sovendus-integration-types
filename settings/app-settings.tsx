@@ -34,38 +34,36 @@ export function EnabledVoucherNetworkCountries({
         const countryName = LANGUAGES_BY_COUNTRIES[countryCode as CountryCodes][
           languageKey as LanguageCodes
         ] as string;
+
         enabledLocales.push(countryName);
       }
     }
   }
   return (
-    <div>
-      <h4 className="text-md">Voucher Network</h4>
-      <p
-        className={cn(
-          "text-sm",
-          Object.values(currentSettings.countries).some((country) =>
-            Object.values(country.languages)?.some(
-              (lang) =>
-                lang.isEnabled &&
-                lang.trafficMediumNumber &&
-                lang.trafficSourceNumber,
-            ),
-          )
-            ? "text-green-600"
-            : "text-red-600",
-        )}
-      >
-        {enabledLocales.length > 0 ? (
-          <>
-            <span className="text-lg">Enabled for: </span>
-            {enabledLocales.join(", ")}
-          </>
-        ) : (
-          <span className="text-lg">No countries enabled</span>
-        )}
-      </p>
-    </div>
+    <p
+      className={cn(
+        "text-sm",
+        Object.values(currentSettings.countries).some((country) =>
+          Object.values(country.languages)?.some(
+            (lang) =>
+              lang.isEnabled &&
+              lang.trafficMediumNumber &&
+              lang.trafficSourceNumber,
+          ),
+        )
+          ? "text-green-600"
+          : "text-red-600",
+      )}
+    >
+      {enabledLocales.length > 0 ? (
+        <>
+          <span>Enabled for: </span>
+          {enabledLocales.join(", ")}
+        </>
+      ) : (
+        <span>No countries enabled</span>
+      )}
+    </p>
   );
 }
 
@@ -95,23 +93,20 @@ export function EnabledOptimizeCountries({
   }
 
   return (
-    <div>
-      <h4 className="text-md">Optimize</h4>
-      <p
-        className={cn(
-          "text-sm",
-          (currentSettings.useGlobalId && currentSettings.globalEnabled) ||
-            (!currentSettings.useGlobalId &&
-              Object.values(currentSettings.countrySpecificIds).some(
-                (country) => country.isEnabled,
-              ))
-            ? "text-green-600"
-            : "text-red-600",
-        )}
-      >
-        {statusMessage}
-      </p>
-    </div>
+    <p
+      className={cn(
+        "text-sm",
+        (currentSettings.useGlobalId && currentSettings.globalEnabled) ||
+          (!currentSettings.useGlobalId &&
+            Object.values(currentSettings.countrySpecificIds).some(
+              (country) => country.isEnabled,
+            ))
+          ? "text-green-600"
+          : "text-red-600",
+      )}
+    >
+      {statusMessage}
+    </p>
   );
 }
 

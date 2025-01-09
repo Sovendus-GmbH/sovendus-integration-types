@@ -86,13 +86,18 @@ export default function SovendusBackendForm({
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 gap-4">
-            <EnabledVoucherNetworkCountries
-              currentSettings={savedSettings.voucherNetwork}
-            />
-            <EnabledOptimizeCountries
-              currentSettings={savedSettings.optimize}
-            />
-
+            <div>
+              <h4 className="text-md">Voucher Network</h4>
+              <EnabledVoucherNetworkCountries
+                currentSettings={savedSettings.voucherNetwork}
+              />
+            </div>
+            <div>
+              <h4 className="text-md">Optimize</h4>
+              <EnabledOptimizeCountries
+                currentSettings={savedSettings.optimize}
+              />
+            </div>
             <div>
               <h4 className="text-md">Checkout Products</h4>
               <p
