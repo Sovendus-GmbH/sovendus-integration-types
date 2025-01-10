@@ -1,10 +1,53 @@
 <?php
 
+
+
+
+class SettingsKeys
+{
+
+    public bool $uses_lower_case;
+    public string $newSettingsKey;
+    public string $active;
+    public string $trafficSourceNumber;
+    public string $trafficMediumNumber;
+    public string $multiLangCountryActive;
+    public string $multiLangCountryTrafficSourceNumber;
+    public string $multiLangCountryTrafficMediumNumber;
+
+
+
+    public function __construct(
+        bool $uses_lower_case = false,
+        string $newSettingsKey = "sovendus_settings",
+        string $active = "{country}_sovendus_activated",
+        string $trafficSourceNumber = "{country}_sovendus_trafficSourceNumber",
+        string $trafficMediumNumber = "{country}_sovendus_trafficMediumNumber",
+        string $multiLangCountryActive = "{lang}_{country}_sovendus_activated",
+        string $multiLangCountryTrafficSourceNumber = "{lang}_{country}_sovendus_trafficSourceNumber",
+        string $multiLangCountryTrafficMediumNumber = "{lang}_{country}_sovendus_trafficMediumNumber",
+
+
+    ) {
+        $this->uses_lower_case = $uses_lower_case;
+        $this->newSettingsKey = $newSettingsKey;
+        $this->active = $active;
+        $this->trafficSourceNumber = $trafficSourceNumber;
+        $this->trafficMediumNumber = $trafficMediumNumber;
+        $this->multiLangCountryActive = $multiLangCountryActive;
+        $this->multiLangCountryTrafficSourceNumber = $multiLangCountryTrafficSourceNumber;
+        $this->multiLangCountryTrafficMediumNumber = $multiLangCountryTrafficMediumNumber;
+    }
+}
+
 class Get_Settings_Helper
 {
-    public static function get_settings(string|null $countryCode, callable $get_option_callback ): Sovendus_App_Settings
-    {
-        $settingsJson = $get_option_callback(option: "sovendus_settings");
+    public static function get_settings(
+        string|null $countryCode,
+        callable $get_option_callback,
+        SettingsKeys $settings_keys
+    ): Sovendus_App_Settings {
+        $settingsJson = $get_option_callback(option: $settings_keys->newSettingsKey);
         if ($settingsJson) {
             $decodedSettings = json_decode($settingsJson, true);
             return Sovendus_App_Settings::fromJson($decodedSettings);
@@ -32,8 +75,18 @@ class Get_Settings_Helper
                     countryCode: CountryCodes::from($countryKey),
                     country: new VoucherNetworkCountry(
                         languages: count(LANGUAGES_BY_COUNTRIES[$countryKey]) > 1
-                        ? self::get_multilang_country_settings(countryCode: $countryKey, langs: $countriesLanguages, get_option_callback: $get_option_callback)
-                        : self::get_country_settings(countryCode: $countryKey, lang: $countriesLanguages[0], get_option_callback: $get_option_callback)
+                            ? self::get_multilang_country_settings(
+                                countryCode: $countryKey,
+                                langs: $countriesLanguages,
+                                get_option_callback: $get_option_callback,
+                                settings_keys: $settings_keys
+                            )
+                            : self::get_country_settings(
+                                countryCode: $countryKey,
+                                lang: $countriesLanguages[0],
+                                get_option_callback: $get_option_callback,
+                                settings_keys: $settings_keys
+                            )
                     )
                 );
             }
@@ -41,11 +94,27 @@ class Get_Settings_Helper
         }
     }
 
-    private static function get_country_settings($countryCode, $lang, callable $get_option_callback)
-    {
-        $sovendusActive = $get_option_callback(option: "{$countryCode}_sovendus_activated");
-        $trafficSourceNumber = (int) $get_option_callback(option: "{$countryCode}_sovendus_trafficSourceNumber");
-        $trafficMediumNumber = (int) $get_option_callback(option: "{$countryCode}_sovendus_trafficMediumNumber");
+    private static function get_country_settings(
+        $countryCode,
+        $lang,
+        callable $get_option_callback,
+        SettingsKeys $settings_keys
+    ) {
+        $sovendusActive = $get_option_callback(option: str_replace(
+            $settings_keys->active,
+            ["{country}", "{lang}"],
+            $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang]
+        ));
+        $trafficSourceNumber = (int) $get_option_callback(option: str_replace(
+            $settings_keys->trafficSourceNumber,
+            ["{country}", "{lang}"],
+            $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang]
+        ));
+        $trafficMediumNumber = (int) $get_option_callback(option: str_replace(
+            $settings_keys->trafficMediumNumber,
+            ["{country}", "{lang}"],
+            $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang]
+        ));
         return [
             $lang => new VoucherNetworkLanguage(
                 isEnabled: $sovendusActive === "yes" && $trafficSourceNumber && $trafficMediumNumber ? true : false,
@@ -55,14 +124,30 @@ class Get_Settings_Helper
         ];
     }
 
-    private static function get_multilang_country_settings($countryCode, $langs, callable $get_option_callback)
-    {
+    private static function get_multilang_country_settings(
+        $countryCode,
+        $langs,
+        callable $get_option_callback,
+        SettingsKeys $settings_keys
+    ) {
         $languageSettings = [];
         foreach ($langs as $lang) {
             $languageSettings[$lang] = new VoucherNetworkLanguage(
-                isEnabled: $get_option_callback(option: "{$lang}_{$countryCode}_sovendus_activated"),
-                trafficSourceNumber: (int) $get_option_callback(option: "{$lang}_{$countryCode}_sovendus_trafficSourceNumber"),
-                trafficMediumNumber: (int) $get_option_callback(option: "{$lang}_{$countryCode}_sovendus_trafficMediumNumber"),
+                isEnabled: $get_option_callback(option: str_replace(
+                    $settings_keys->active,
+                    ["{country}", "{lang}"],
+                    $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang]
+                )),
+                trafficSourceNumber: (int) $get_option_callback(option: str_replace(
+                    $settings_keys->trafficSourceNumber,
+                    ["{country}", "{lang}"],
+                    $settings_keys->uses_lower_case ? [strtolower(string: $countryCode), strtolower($lang)] : [$countryCode, $lang]
+                )),
+                trafficMediumNumber: (int) $get_option_callback(option: str_replace(
+                    $settings_keys->trafficMediumNumber,
+                    ["{country}", "{lang}"],
+                    $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang]
+                )),
             );
         }
         return $languageSettings;
