@@ -57,6 +57,7 @@ async function compileToJsFilesWithVite(distFolder: string): Promise<void> {
             input: file.input,
             output: {
               entryFileNames: file.output,
+              assetFileNames: "[name][extname]",
               exports: "none",
               format: "iife",
             },

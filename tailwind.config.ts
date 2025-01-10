@@ -1,8 +1,9 @@
 import type { Config } from "tailwindcss";
+import twa from "tailwindcss-animate";
 
-export default {
+const config: Config = {
   darkMode: ["class"],
-  content: ["./app/**/*.{js,jsx,ts,tsx}"],
+  content: ["./admin-frontend/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       borderRadius: {
@@ -76,5 +77,7 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config;
+  plugins: [twa],
+};
+
+export default config;

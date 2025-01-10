@@ -57,7 +57,7 @@ export default function SovendusBackendForm({
   return (
     <div className="container mx-auto p-6 space-y-8 items-center">
       <div className="flex justify-between items-center">
-        <h1 className="text-4xl font-bold">Sovendus Settings</h1>
+        <h1 className="text-4xl font-bold">Sovendus App Settings</h1>
         <div className="flex items-center space-x-2">
           {hasUnsavedChanges && (
             <span className="text-yellow-600 font-medium">Unsaved changes</span>
