@@ -11,10 +11,10 @@ interface SovendusPageConfig {
 interface SovPageWindow extends Window {
   sovPageConfig: SovendusPageConfig;
   sovPageStatus: {
-    loadedOptimize: boolean;
-    loadedVoucherNetworkSwitzerland: boolean;
-    executedCheckoutProducts: boolean;
-    sovPageConfigFound: boolean;
+    loadedOptimize?: boolean;
+    loadedVoucherNetworkSwitzerland?: boolean;
+    executedCheckoutProducts?: boolean;
+    sovPageConfigFound?: boolean;
   };
 }
 
@@ -22,6 +22,7 @@ declare let window: SovPageWindow;
 
 async function main(): Promise<void> {
   const pageSettings = window.sovPageConfig;
+  window.sovPageStatus = {};
   if (typeof pageSettings !== "undefined") {
     window.sovPageStatus.sovPageConfigFound = true;
     const {
@@ -68,9 +69,11 @@ function getSovendusConfig(
 
 // eslint-disable-next-line @typescript-eslint/require-await
 async function setCookie(cookieName: string, value?: string): Promise<string> {
-  document.cookie = `${cookieName}=${value};secure;samesite=strict;max-age=${
-    60 * 60 * 24 * 30
-  }`;
+  const path: string = "/";
+  const expires: number = 60 * 60 * 24 * 30;
+  const domain = window.location.hostname;
+  const cookieString = `${cookieName}=${value};secure;samesite=strict;max-age=${expires};domain=${domain};path=${path}`;
+  document.cookie = cookieString;
   return value || "";
 }
 

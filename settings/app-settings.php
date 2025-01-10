@@ -29,23 +29,21 @@ class VoucherNetworkCountry
     }
 }
 
-class OptimizeCountry
-{
+class OptimizeCountry {
     public bool $isEnabled;
     public string $optimizeId;
-
 
     public function __construct(
         bool $isEnabled,
         string $optimizeId,
     ) {
-        $this->active = $isEnabled;
+        $this->isEnabled = $isEnabled;
         $this->optimizeId = $optimizeId;
     }
 
     public static function fromJson(array $data): OptimizeCountry
     {
-        return new OptimizeCountry(
+        return new self(
             isEnabled: $data['isEnabled'],
             optimizeId: $data['optimizeId'],
         );
@@ -72,8 +70,7 @@ class VoucherNetworkLanguage
 
 
 
-class VoucherNetwork
-{
+class VoucherNetwork {
     public array $countries = [];
     public bool $anyCountryEnabled = false;
 
@@ -81,8 +78,8 @@ class VoucherNetwork
         bool $anyCountryEnabled,
         ?array $countries = [],
     ) {
-        $this->countries = $countries;
         $this->anyCountryEnabled = $anyCountryEnabled;
+        $this->countries = $countries;
     }
 
     public function addCountry(CountryCodes $countryCode, VoucherNetworkCountry $country): void
@@ -94,15 +91,27 @@ class VoucherNetwork
     {
         $anyCountryEnabled = true; // TODO
         $countries = [];
-        foreach ($data as $countryCode => $countryData) {
-            if (is_array($countryData)) {
-                $countries[$countryCode] = VoucherNetworkCountry::fromJson($countryData);
-            } else {
-                error_log("Warning: Invalid country data for $countryCode");
+        if (isset($data['countries']) && is_array($data['countries'])) {
+            foreach ($data['countries'] as $countryCode => $countryData) {
+                if (is_array($countryData)) {
+                    $countries[$countryCode] = VoucherNetworkCountry::fromJson($countryData);
+                } else {
+                    error_log("Warning: Invalid country data for $countryCode");
+                }
             }
+        } else {
+            error_log('Warning: Missing or invalid countries key in VoucherNetwork data');
         }
         return new VoucherNetwork(anyCountryEnabled: $anyCountryEnabled, countries: $countries);
     }
+}
+
+
+
+enum Versions: string
+{
+    case ONE = '1';
+    case TWO = '2';
 }
 
 class Optimize
@@ -123,13 +132,15 @@ class Optimize
         $this->globalEnabled = $globalEnabled;
         $this->countrySpecificIds = $countrySpecificIds;
     }
-
     public function addCountry(CountryCodes $countryCode, OptimizeCountry $country): void
     {
         $this->countrySpecificIds[$countryCode->value] = $country;
     }
+
     public static function fromJson(array $data): Optimize
     {
+        error_log('[Sovendus Debug] Optimize fromJson data: ' . json_encode($data));
+        
         $countrySpecificIds = [];
         if ($data['countrySpecificIds']) {
             foreach ($data['countrySpecificIds'] as $countryCode => $countryData) {
@@ -137,54 +148,32 @@ class Optimize
             }
         }
         return new Optimize(
-            useGlobalId: $data['useGlobalId'] || false,
-            globalId: $data['globalId'] || null,
-            globalEnabled: $data['globalEnabled'] || false,
+            useGlobalId: $data['useGlobalId'] ?? false,
+            globalId: $data['globalId'] ?? null,
+            globalEnabled: $data['globalEnabled'] ?? false,
             countrySpecificIds: $countrySpecificIds,
         );
     }
 }
-
-enum Versions: string
-{
-    case ONE = '1';
-    case TWO = '2';
-}
-
-class Sovendus_App_Settings
-{
+class Sovendus_App_Settings {
     public VoucherNetwork $voucherNetwork;
     public Optimize $optimize;
     public bool $checkoutProducts;
     public Versions $version;
 
-    public function __construct(
-        VoucherNetwork $voucherNetwork,
-        Optimize $optimize,
-        bool $checkoutProducts,
-        Versions $version,
-    ) {
+    public function __construct($voucherNetwork, $optimize, $checkoutProducts, $version) {
         $this->voucherNetwork = $voucherNetwork;
         $this->optimize = $optimize;
         $this->checkoutProducts = $checkoutProducts;
         $this->version = $version;
     }
 
-    public function toJson(): string
-    {
-
-        return json_encode($this, JSON_PRETTY_PRINT);
-    }
-
-    public static function fromJson(string $json): Sovendus_App_Settings
-    {
-        $data = json_decode($json, true);
-        return new Sovendus_App_Settings(
+    public static function fromJson($data) {
+        return new self(
             VoucherNetwork::fromJson($data['voucherNetwork']),
             Optimize::fromJson($data['optimize']),
             $data['checkoutProducts'],
-            version: Versions::TWO
+            Versions::from($data['version'])
         );
     }
-
 }

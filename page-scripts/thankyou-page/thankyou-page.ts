@@ -56,12 +56,12 @@ interface ThankYouWindow extends Window {
     consumerCountry: CountryCodes;
     consumerPhone: string | undefined;
   };
-  sovPageStatus: {
-    loadedOptimize: boolean;
-    loadedVoucherNetwork: boolean;
-    executedCheckoutProducts: boolean;
-    sovThankyouConfigFound: boolean;
-    countryCodePassedOnByPlugin: boolean;
+  sovThankyouStatus: {
+    loadedOptimize?: boolean;
+    loadedVoucherNetwork?: boolean;
+    executedCheckoutProducts?: boolean;
+    sovThankyouConfigFound?: boolean;
+    countryCodePassedOnByPlugin?: boolean;
   };
 }
 
@@ -69,20 +69,21 @@ declare let window: ThankYouWindow;
 
 async function sovendusThankYou(): Promise<void> {
   const config = window.sovThankyouConfig;
+  window.sovThankyouStatus = {};
   if (!config) {
-    window.sovPageStatus.sovThankyouConfigFound = false;
+    window.sovThankyouStatus.sovThankyouConfigFound = false;
     // eslint-disable-next-line no-console
     console.error("sovThankyouConfig is not defined");
     return;
   }
-  window.sovPageStatus.sovThankyouConfigFound = true;
+  window.sovThankyouStatus.sovThankyouConfigFound = true;
   const { optimizeId, checkoutProducts, voucherNetwork } = getSovendusConfig(
     config.settings,
     config.consumerCountry,
     config.consumerLanguage,
   );
   handleVoucherNetwork(voucherNetwork, config);
-  window.sovPageStatus.executedCheckoutProducts =
+  window.sovThankyouStatus.executedCheckoutProducts =
     await handleCheckoutProductsConversion(
       checkoutProducts,
       getCookie,
@@ -104,7 +105,7 @@ function handleOptimizeConversion(
     }&ordernumber=${config.orderId}&vouchercode=${
       config.usedCouponCodes?.[0]
     }&email=${config.consumerEmail}`;
-    window.sovPageStatus.loadedOptimize = true;
+    window.sovThankyouStatus.loadedOptimize = true;
   }
 }
 
@@ -147,7 +148,7 @@ function handleVoucherNetwork(
       window.location.protocol
     }//api.sovendus.com/sovabo/common/js/flexibleIframe.js`;
     document.body.appendChild(script);
-    window.sovPageStatus.loadedVoucherNetwork = true;
+    window.sovThankyouStatus.loadedVoucherNetwork = true;
   }
 }
 
@@ -210,10 +211,10 @@ function getLanguageSettings(
   language: LanguageCodes | undefined,
 ): VoucherNetworkLanguage | undefined {
   if (!country) {
-    window.sovPageStatus.countryCodePassedOnByPlugin = false;
+    window.sovThankyouStatus.countryCodePassedOnByPlugin = false;
     return undefined;
   }
-  window.sovPageStatus.countryCodePassedOnByPlugin = true;
+  window.sovThankyouStatus.countryCodePassedOnByPlugin = true;
   const countrySettings = settings.countries[country];
   const languagesSettings = countrySettings?.languages;
   if (!languagesSettings) {
