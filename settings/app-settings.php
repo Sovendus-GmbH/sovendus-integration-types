@@ -14,12 +14,16 @@ class VoucherNetworkCountry
     public static function fromJson(array $data): VoucherNetworkCountry
     {
         $languages = [];
-        foreach ($data['languages'] as $lang => $langData) {
-            $languages[$lang] = new VoucherNetworkLanguage(
-                isEnabled: $langData['isEnabled'],
-                trafficSourceNumber: $langData['trafficSourceNumber'],
-                trafficMediumNumber: $langData['trafficMediumNumber'],
-            );
+        if (isset($data['languages']) && is_array($data['languages'])) {
+            foreach ($data['languages'] as $lang => $langData) {
+                $languages[$lang] = new VoucherNetworkLanguage(
+                    isEnabled: $langData['isEnabled'],
+                    trafficSourceNumber: $langData['trafficSourceNumber'],
+                    trafficMediumNumber: $langData['trafficMediumNumber'],
+                );
+            }
+        } else {
+            error_log('Warning: Missing or invalid languages key in VoucherNetworkCountry data');
         }
         return new VoucherNetworkCountry($languages);
     }
@@ -79,8 +83,8 @@ class VoucherNetwork
     ) {
         $this->countries = $countries;
         $this->anyCountryEnabled = $anyCountryEnabled;
-
     }
+
     public function addCountry(CountryCodes $countryCode, VoucherNetworkCountry $country): void
     {
         $this->countries[$countryCode->value] = $country;
@@ -91,7 +95,11 @@ class VoucherNetwork
         $anyCountryEnabled = true; // TODO
         $countries = [];
         foreach ($data as $countryCode => $countryData) {
-            $countries[$countryCode] = VoucherNetworkCountry::fromJson($countryData);
+            if (is_array($countryData)) {
+                $countries[$countryCode] = VoucherNetworkCountry::fromJson($countryData);
+            } else {
+                error_log("Warning: Invalid country data for $countryCode");
+            }
         }
         return new VoucherNetwork(anyCountryEnabled: $anyCountryEnabled, countries: $countries);
     }
