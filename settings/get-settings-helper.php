@@ -6,6 +6,7 @@
 class SettingsKeys
 {
 
+    public string|int $active_value;
     public bool $uses_lower_case;
     public string $newSettingsKey;
     public string $active;
@@ -18,6 +19,7 @@ class SettingsKeys
 
 
     public function __construct(
+        string|int $active_value,
         bool $uses_lower_case = false,
         string $newSettingsKey = "sovendus_settings",
         string $active = "{country}_sovendus_activated",
@@ -30,6 +32,7 @@ class SettingsKeys
 
     ) {
         $this->uses_lower_case = $uses_lower_case;
+        $this->active_value = $$active_value;
         $this->newSettingsKey = $newSettingsKey;
         $this->active = $active;
         $this->trafficSourceNumber = $trafficSourceNumber;
@@ -117,7 +120,7 @@ class Get_Settings_Helper
         ));
         return [
             $lang => new VoucherNetworkLanguage(
-                isEnabled: $sovendusActive === "yes" && $trafficSourceNumber && $trafficMediumNumber ? true : false,
+                isEnabled: $sovendusActive === $settings_keys->active_value && $trafficSourceNumber && $trafficMediumNumber ? true : false,
                 trafficSourceNumber: $trafficSourceNumber,
                 trafficMediumNumber: $trafficMediumNumber,
             )
@@ -132,22 +135,25 @@ class Get_Settings_Helper
     ) {
         $languageSettings = [];
         foreach ($langs as $lang) {
+            $sovendusActive = $get_option_callback(option: str_replace(
+                $settings_keys->multiLangCountryActive,
+                ["{country}", "{lang}"],
+                $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang]
+            ));
+            $trafficSourceNumber = (int) $get_option_callback(option: str_replace(
+                $settings_keys->multiLangCountryTrafficSourceNumber,
+                ["{country}", "{lang}"],
+                $settings_keys->uses_lower_case ? [strtolower(string: $countryCode), strtolower($lang)] : [$countryCode, $lang]
+            ));
+            $trafficMediumNumber = (int) $get_option_callback(option: str_replace(
+                $settings_keys->multiLangCountryTrafficMediumNumber,
+                ["{country}", "{lang}"],
+                $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang]
+            ));
             $languageSettings[$lang] = new VoucherNetworkLanguage(
-                isEnabled: $get_option_callback(option: str_replace(
-                    $settings_keys->active,
-                    ["{country}", "{lang}"],
-                    $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang]
-                )),
-                trafficSourceNumber: (int) $get_option_callback(option: str_replace(
-                    $settings_keys->trafficSourceNumber,
-                    ["{country}", "{lang}"],
-                    $settings_keys->uses_lower_case ? [strtolower(string: $countryCode), strtolower($lang)] : [$countryCode, $lang]
-                )),
-                trafficMediumNumber: (int) $get_option_callback(option: str_replace(
-                    $settings_keys->trafficMediumNumber,
-                    ["{country}", "{lang}"],
-                    $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang]
-                )),
+                isEnabled: $sovendusActive === $settings_keys->active_value && $trafficSourceNumber && $trafficMediumNumber ? true : false,
+                trafficSourceNumber: $trafficSourceNumber,
+                trafficMediumNumber: $trafficMediumNumber,
             );
         }
         return $languageSettings;
