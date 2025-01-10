@@ -5,7 +5,6 @@
 
 class SettingsKeys
 {
-
     public string|int $active_value;
     public bool $uses_lower_case;
     public string $newSettingsKey;
@@ -16,8 +15,6 @@ class SettingsKeys
     public string $multiLangCountryTrafficSourceNumber;
     public string $multiLangCountryTrafficMediumNumber;
 
-
-
     public function __construct(
         string|int $active_value,
         bool $uses_lower_case = false,
@@ -27,12 +24,10 @@ class SettingsKeys
         string $trafficMediumNumber = "{country}_sovendus_trafficMediumNumber",
         string $multiLangCountryActive = "{lang}_{country}_sovendus_activated",
         string $multiLangCountryTrafficSourceNumber = "{lang}_{country}_sovendus_trafficSourceNumber",
-        string $multiLangCountryTrafficMediumNumber = "{lang}_{country}_sovendus_trafficMediumNumber",
-
-
+        string $multiLangCountryTrafficMediumNumber = "{lang}_{country}_sovendus_trafficMediumNumber"
     ) {
         $this->uses_lower_case = $uses_lower_case;
-        $this->active_value = $$active_value;
+        $this->active_value = $active_value;
         $this->newSettingsKey = $newSettingsKey;
         $this->active = $active;
         $this->trafficSourceNumber = $trafficSourceNumber;
