@@ -11,29 +11,47 @@ const program = new Command();
 program
   .command("build")
   .description("buildType: build")
-  .action(async () => {
+  .option(
+    "-bp, --backendpath <path>",
+    "specify the dist folder path",
+    "../dist",
+  )
+  .option(
+    "-fp, --frontendpath <path>",
+    "specify the dist folder path",
+    "../dist",
+  )
+  .action(async (options) => {
     console.log("Building started");
-    const distFolder = "../dist";
-    cleanDistFolder(distFolder);
-    await compileToJsFilesWithVite(distFolder);
+    const backendDistFolder = options.backendpath;
+    const frontendDistFolder = options.frontendpath;
+    cleanDistFolder(backendDistFolder);
+    cleanDistFolder(frontendDistFolder);
+    await compileToJsFilesWithVite(backendDistFolder, frontendDistFolder);
   });
 
 const filesToCompile = [
   {
     input: "../admin-frontend/frontend_react_loader.ts",
     output: "frontend_react_loader.js",
+    type: "backend",
   },
   {
     input: "page-scripts/landing-page/sovendus-page.ts",
     output: "sovendus-page.js",
+    type: "frontend",
   },
   {
     input: "page-scripts/thankyou-page/thankyou-page.ts",
     output: "thankyou-page.js",
+    type: "frontend",
   },
 ];
 
-async function compileToJsFilesWithVite(distFolder: string): Promise<void> {
+async function compileToJsFilesWithVite(
+  backendDistFolder: string,
+  frontendDistFolder: string,
+): Promise<void> {
   await Promise.all(
     filesToCompile.map(async (file) => {
       await build({
@@ -47,7 +65,8 @@ async function compileToJsFilesWithVite(distFolder: string): Promise<void> {
         },
         build: {
           target: "es6",
-          outDir: distFolder,
+          outDir:
+            file.type === "backend" ? backendDistFolder : frontendDistFolder,
           minify: false,
           emptyOutDir: false,
           cssMinify: false,
