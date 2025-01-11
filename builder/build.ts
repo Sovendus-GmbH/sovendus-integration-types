@@ -21,7 +21,7 @@ program
     "specify the dist folder path",
     "../dist",
   )
-  .action(async (options) => {
+  .action(async (options: { backendpath: string; frontendpath: string }) => {
     console.log("Building started");
     const backendDistFolder = options.backendpath;
     const frontendDistFolder = options.frontendpath;
@@ -70,7 +70,7 @@ async function compileToJsFilesWithVite(
           minify: false,
           emptyOutDir: false,
           cssMinify: false,
-          cssCodeSplit: false,
+          cssCodeSplit: true,
           sourcemap: true,
           rollupOptions: {
             input: file.input,

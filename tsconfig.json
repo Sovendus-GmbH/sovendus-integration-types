@@ -45,7 +45,9 @@
     "**/*.ts",
     "**/*.tsx",
     "admin-frontend/**/*.ts",
-    "admin-frontend/**/*.tsx"
+    "admin-frontend/**/*.tsx",
+    "../admin-frontend/**/*.ts",
+    "../admin-frontend/**/*.tsx"
   ],
   "exclude": ["./node_modules"]
 }

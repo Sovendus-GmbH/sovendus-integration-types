@@ -3,7 +3,10 @@ import twa from "tailwindcss-animate";
 
 const config: Config = {
   darkMode: ["class"],
-  content: ["./admin-frontend/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./admin-frontend/**/*.{js,jsx,ts,tsx}",
+    "../admin-frontend/**/*.{js,jsx,ts,tsx}",
+  ],
   theme: {
     extend: {
       borderRadius: {
