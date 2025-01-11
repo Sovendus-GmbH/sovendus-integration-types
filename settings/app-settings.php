@@ -29,7 +29,8 @@ class VoucherNetworkCountry
     }
 }
 
-class OptimizeCountry {
+class OptimizeCountry
+{
     public bool $isEnabled;
     public string $optimizeId;
 
@@ -70,7 +71,8 @@ class VoucherNetworkLanguage
 
 
 
-class VoucherNetwork {
+class VoucherNetwork
+{
     public array $countries = [];
     public bool $anyCountryEnabled = false;
 
@@ -140,7 +142,7 @@ class Optimize
     public static function fromJson(array $data): Optimize
     {
         error_log('[Sovendus Debug] Optimize fromJson data: ' . json_encode($data));
-        
+
         $countrySpecificIds = [];
         if ($data['countrySpecificIds']) {
             foreach ($data['countrySpecificIds'] as $countryCode => $countryData) {
@@ -155,20 +157,28 @@ class Optimize
         );
     }
 }
-class Sovendus_App_Settings {
+
+class Sovendus_App_Settings
+{
     public VoucherNetwork $voucherNetwork;
     public Optimize $optimize;
     public bool $checkoutProducts;
     public Versions $version;
 
-    public function __construct($voucherNetwork, $optimize, $checkoutProducts, $version) {
+    public function __construct(
+        VoucherNetwork $voucherNetwork,
+        Optimize $optimize,
+        bool $checkoutProducts,
+        Versions $version
+    ) {
         $this->voucherNetwork = $voucherNetwork;
         $this->optimize = $optimize;
         $this->checkoutProducts = $checkoutProducts;
         $this->version = $version;
     }
 
-    public static function fromJson($data) {
+    public static function fromJson(array $data): self
+    {
         return new self(
             VoucherNetwork::fromJson($data['voucherNetwork']),
             Optimize::fromJson($data['optimize']),
