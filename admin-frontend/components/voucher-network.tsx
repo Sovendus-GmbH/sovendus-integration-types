@@ -10,7 +10,6 @@ import type {
 } from "../../settings/app-settings";
 import { EnabledVoucherNetworkCountries } from "../../settings/app-settings";
 import type { AdditionalStep } from "./backend-form";
-import { ContactForm } from "./contact-form";
 import {
   Accordion,
   AccordionContent,
