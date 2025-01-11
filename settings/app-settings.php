@@ -16,11 +16,7 @@ class VoucherNetworkCountry
         $languages = [];
         if (isset($data['languages']) && is_array($data['languages'])) {
             foreach ($data['languages'] as $lang => $langData) {
-                $languages[$lang] = new VoucherNetworkLanguage(
-                    isEnabled: $langData['isEnabled'],
-                    trafficSourceNumber: (isset($langData['trafficSourceNumber']) && is_numeric($langData['trafficSourceNumber']) && (int)$langData['trafficSourceNumber'] > 0) ? (int)$langData['trafficSourceNumber'] : null,
-                    trafficMediumNumber: (isset($langData['trafficMediumNumber']) && is_numeric($langData['trafficMediumNumber']) && (int)$langData['trafficMediumNumber'] > 0) ? (int)$langData['trafficMediumNumber'] : null,
-                );
+                $languages[$lang] = VoucherNetworkLanguage::fromJson($langData);
             }
         } else {
             error_log('Warning: Missing or invalid languages key in VoucherNetworkCountry data');
@@ -36,7 +32,7 @@ class OptimizeCountry
 
     public function __construct(
         bool $isEnabled,
-        string $optimizeId,
+        string $optimizeId
     ) {
         $this->isEnabled = $isEnabled;
         $this->optimizeId = $optimizeId;
@@ -45,8 +41,8 @@ class OptimizeCountry
     public static function fromJson(array $data): OptimizeCountry
     {
         return new self(
-            isEnabled: $data['isEnabled'],
-            optimizeId: $data['optimizeId'],
+            $data['isEnabled'],
+            $data['optimizeId']
         );
     }
 }
@@ -60,12 +56,21 @@ class VoucherNetworkLanguage
 
     public function __construct(
         bool $isEnabled,
-        string $trafficSourceNumber,
-        string $trafficMediumNumber,
+        string $trafficSourceNumber = '',
+        string $trafficMediumNumber = ''
     ) {
         $this->isEnabled = $isEnabled;
         $this->trafficSourceNumber = $trafficSourceNumber;
         $this->trafficMediumNumber = $trafficMediumNumber;
+    }
+
+    public static function fromJson(array $data): self
+    {
+        return new self(
+            $data['isEnabled'],
+            $data['trafficSourceNumber'] ?? '',
+            $data['trafficMediumNumber'] ?? ''
+        );
     }
 }
 
@@ -78,7 +83,7 @@ class VoucherNetwork
 
     public function __construct(
         bool $anyCountryEnabled,
-        ?array $countries = [],
+        ?array $countries = []
     ) {
         $this->anyCountryEnabled = $anyCountryEnabled;
         $this->countries = $countries;
@@ -91,24 +96,16 @@ class VoucherNetwork
 
     public static function fromJson(array $data): VoucherNetwork
     {
-        $anyCountryEnabled = true; // TODO
+        $anyCountryEnabled = $data['anyCountryEnabled'] ?? true;
         $countries = [];
         if (isset($data['countries']) && is_array($data['countries'])) {
             foreach ($data['countries'] as $countryCode => $countryData) {
-                if (is_array($countryData)) {
-                    $countries[$countryCode] = VoucherNetworkCountry::fromJson($countryData);
-                } else {
-                    error_log("Warning: Invalid country data for $countryCode");
-                }
+                $countries[$countryCode] = VoucherNetworkCountry::fromJson($countryData);
             }
-        } else {
-            error_log('Warning: Missing or invalid countries key in VoucherNetwork data');
         }
-        return new VoucherNetwork(anyCountryEnabled: $anyCountryEnabled, countries: $countries);
+        return new self($anyCountryEnabled, $countries);
     }
 }
-
-
 
 enum Versions: string
 {
@@ -127,33 +124,27 @@ class Optimize
         bool $useGlobalId,
         string|null $globalId,
         bool $globalEnabled,
-        array $countrySpecificIds,
+        array $countrySpecificIds
     ) {
         $this->useGlobalId = $useGlobalId;
         $this->globalId = $globalId;
         $this->globalEnabled = $globalEnabled;
         $this->countrySpecificIds = $countrySpecificIds;
     }
-    public function addCountry(CountryCodes $countryCode, OptimizeCountry $country): void
-    {
-        $this->countrySpecificIds[$countryCode->value] = $country;
-    }
 
-    public static function fromJson(array $data): Optimize
+    public static function fromJson(array $data): self
     {
-        error_log('[Sovendus Debug] Optimize fromJson data: ' . json_encode($data));
-
         $countrySpecificIds = [];
-        if ($data['countrySpecificIds']) {
+        if (isset($data['countrySpecificIds']) && is_array($data['countrySpecificIds'])) {
             foreach ($data['countrySpecificIds'] as $countryCode => $countryData) {
                 $countrySpecificIds[$countryCode] = OptimizeCountry::fromJson($countryData);
             }
         }
-        return new Optimize(
-            useGlobalId: $data['useGlobalId'] ?? false,
-            globalId: $data['globalId'] ?? null,
-            globalEnabled: $data['globalEnabled'] ?? false,
-            countrySpecificIds: $countrySpecificIds,
+        return new self(
+            $data['useGlobalId'],
+            $data['globalId'] ?? null,
+            $data['globalEnabled'],
+            $countrySpecificIds
         );
     }
 }

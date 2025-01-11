@@ -48,7 +48,16 @@ class Get_Settings_Helper
         $settingsJson = $get_option_callback($settings_keys->newSettingsKey);
         if ($settingsJson) {
             $decodedSettings = json_decode($settingsJson, true);
-            return Sovendus_App_Settings::fromJson($decodedSettings);
+            error_log('encoded: ' . $settingsJson);
+            error_log('decoded: ' . json_encode($decodedSettings));
+
+            if (is_array($decodedSettings)) {
+                return Sovendus_App_Settings::fromJson($decodedSettings);
+            } else {
+                error_log('Failed to decode settings JSON or invalid format.');
+                // Handle the error appropriately, e.g., return default settings or throw an exception
+                throw new Exception('Invalid settings JSON format.');
+            }
         } else {
             $anyCountryEnabled = true; // TODO
             $settings = new Sovendus_App_Settings(
