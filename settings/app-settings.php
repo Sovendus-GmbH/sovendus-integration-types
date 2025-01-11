@@ -18,8 +18,8 @@ class VoucherNetworkCountry
             foreach ($data['languages'] as $lang => $langData) {
                 $languages[$lang] = new VoucherNetworkLanguage(
                     isEnabled: $langData['isEnabled'],
-                    trafficSourceNumber: $langData['trafficSourceNumber'],
-                    trafficMediumNumber: $langData['trafficMediumNumber'],
+                    trafficSourceNumber: (isset($langData['trafficSourceNumber']) && is_numeric($langData['trafficSourceNumber']) && (int)$langData['trafficSourceNumber'] > 0) ? (int)$langData['trafficSourceNumber'] : null,
+                    trafficMediumNumber: (isset($langData['trafficMediumNumber']) && is_numeric($langData['trafficMediumNumber']) && (int)$langData['trafficMediumNumber'] > 0) ? (int)$langData['trafficMediumNumber'] : null,
                 );
             }
         } else {

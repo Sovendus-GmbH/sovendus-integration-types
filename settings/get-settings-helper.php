@@ -130,18 +130,22 @@ class Get_Settings_Helper
             $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang],
             $activeKey
         ));
-        $trafficSourceNumber = (int) $get_option_callback(str_replace(
+        $trafficSourceNumber = $get_option_callback(str_replace(
             ["{country}", "{lang}"],
             $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang],
             $trafficSourceNumberKey
         ));
-        $trafficMediumNumber = (int) $get_option_callback(str_replace(
+        $trafficSourceNumber = is_numeric($trafficSourceNumber) && (int)$trafficSourceNumber > 0 ? (string)$trafficSourceNumber : '';
+
+        $trafficMediumNumber = $get_option_callback(str_replace(
             ["{country}", "{lang}"],
             $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang],
             $trafficMediumNumberKey
         ));
+        $trafficMediumNumber = is_numeric($trafficMediumNumber) && (int)$trafficMediumNumber > 0 ? (string)$trafficMediumNumber : '';
+
         return new VoucherNetworkLanguage(
-            isEnabled: $sovendusActive === $settings_keys->active_value && $trafficSourceNumber && $trafficMediumNumber ? true : false,
+            isEnabled: $sovendusActive === $settings_keys->active_value && $trafficSourceNumber && $trafficMediumNumber,
             trafficSourceNumber: $trafficSourceNumber,
             trafficMediumNumber: $trafficMediumNumber,
         );
