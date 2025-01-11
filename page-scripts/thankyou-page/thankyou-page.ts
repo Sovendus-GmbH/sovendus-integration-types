@@ -104,7 +104,7 @@ function handleOptimizeConversion(
       config.orderValue
     }&ordernumber=${config.orderId}&vouchercode=${
       config.usedCouponCodes?.[0]
-    }&email=${config.consumerEmail}`;
+    }&email=${config.consumerEmail}&integrationtype=${config.integrationType}`;
     window.sovThankyouStatus.loadedOptimize = true;
   }
 }

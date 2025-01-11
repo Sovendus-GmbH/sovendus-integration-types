@@ -14,6 +14,7 @@ export interface SovendusAppSettings {
   optimize: OptimizeSettings;
   checkoutProducts: boolean;
   version: Versions;
+  userConsentSettings?: ConsentSettings;
 }
 
 export function EnabledVoucherNetworkCountries({
@@ -140,4 +141,11 @@ export interface VoucherNetworkLanguage {
 export enum Versions {
   ONE = "1",
   TWO = "2",
+}
+
+export interface ConsentSettings {
+  title: string;
+  script: string;
+  key: string;
+  type: "custom" | "predefined";
 }

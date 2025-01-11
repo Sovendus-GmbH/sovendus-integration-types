@@ -4,7 +4,10 @@ import { InfoCircledIcon } from "@radix-ui/react-icons";
 import type { JSX } from "react";
 import React, { useMemo, useState } from "react";
 
-import type { SovendusAppSettings } from "../../settings/app-settings";
+import type {
+  ConsentSettings,
+  SovendusAppSettings,
+} from "../../settings/app-settings";
 import {
   EnabledOptimizeCountries,
   EnabledVoucherNetworkCountries,
@@ -16,6 +19,7 @@ import { Alert, AlertDescription } from "./ui/alert";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { predefinedConsentScripts } from "./user-consent";
 import { SovendusVoucherNetwork } from "./voucher-network";
 
 export interface AdditionalStep {
@@ -63,6 +67,19 @@ export default function SovendusBackendForm({
       setIsSaving(false);
       setTimeout(() => setNotification(null), 5000);
     }
+  };
+  const handleUserConsentChange = (
+    product: string,
+    type: "custom" | "predefined",
+    script: string,
+  ): void => {
+    setCurrentSettings((prevState) => ({
+      ...prevState,
+      userConsentSettings: {
+        ...prevState.userConsentSettings,
+        [product]: { type, script },
+      },
+    }));
   };
   return (
     <div className="container mx-auto p-6 space-y-8 items-center">
@@ -121,6 +138,15 @@ export default function SovendusBackendForm({
                 {savedSettings.checkoutProducts ? "Enabled" : "Disabled"}
               </p>
             </div>
+            <div>
+              <h4 className="text-md">User Consent</h4>
+              <p className="text-sm">
+                {savedSettings.userConsentSettings &&
+                Object.keys(savedSettings.userConsentSettings)?.length
+                  ? "Consent scripts configured"
+                  : "No consent scripts configured"}
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -138,6 +164,7 @@ export default function SovendusBackendForm({
           <TabsTrigger value="voucherNetwork">Voucher Network</TabsTrigger>
           <TabsTrigger value="optimize">Optimize</TabsTrigger>
           <TabsTrigger value="checkoutProducts">Checkout Products</TabsTrigger>
+          <TabsTrigger value="userConsent">Consent</TabsTrigger>
         </TabsList>
         <TabsContent value="voucherNetwork">
           <SovendusVoucherNetwork
@@ -160,6 +187,56 @@ export default function SovendusBackendForm({
             setCurrentSettings={setCurrentSettings}
             additionalSteps={additionalSteps?.checkoutProducts}
           />
+        </TabsContent>
+        <TabsContent value="userConsent">
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold mb-4">
+              User Consent Settings
+            </h2>
+            {/* Example UI for user consent */}
+
+            <div className="flex flex-col space-y-2 border-b pb-4 mb-4">
+              <label className="font-medium">Consent Fn</label>
+              <div className="flex items-center space-x-4">
+                <select
+                  className="border p-1 rounded"
+                  value={currentSettings.userConsentSettings?.key}
+                  onChange={(e): void =>
+                    setCurrentSettings((prev) => ({
+                      ...prev,
+                      userConsentSettings: predefinedConsentScripts.find(
+                        (script: ConsentSettings) => {
+                          return script.key === e.target.value;
+                        },
+                      ) as ConsentSettings,
+                    }))
+                  }
+                >
+                  {predefinedConsentScripts.map((script: ConsentSettings) => (
+                    <option key={script.key} value={script.key}>
+                      {script.title}
+                    </option>
+                  ))}
+                </select>
+                {/* // TODO add code editor here to edit current script */}
+                {/* edits on existing scripts will saved as a new script */}
+                {/*  */}
+              </div>
+            </div>
+
+            {/* A way to add new consent entries */}
+            <button
+              className="px-3 py-2 rounded-md bg-primary text-white"
+              onClick={(): void =>
+                setCurrentSettings((prev) => ({
+                  ...prev,
+                  userConsentSettings: predefinedConsentScripts[0],
+                }))
+              }
+            >
+              Add New Consent Script
+            </button>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
