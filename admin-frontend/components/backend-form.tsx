@@ -18,12 +18,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { SovendusVoucherNetwork } from "./voucher-network";
 
+export interface AdditionalStep {
+  title: string;
+  subSteps: string[];
+}
+
 export default function SovendusBackendForm({
   currentStoredSettings,
   saveSettings,
+  additionalSteps,
 }: {
   currentStoredSettings: SovendusAppSettings;
   saveSettings: (data: SovendusAppSettings) => Promise<SovendusAppSettings>;
+  additionalSteps?: {
+    checkoutProducts: AdditionalStep;
+    optimize: AdditionalStep;
+    voucherNetwork: AdditionalStep;
+  };
 }): JSX.Element {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [notification, setNotification] = useState<string | null>(null);
@@ -53,7 +64,6 @@ export default function SovendusBackendForm({
       setTimeout(() => setNotification(null), 5000);
     }
   };
-
   return (
     <div className="container mx-auto p-6 space-y-8 items-center">
       <div className="flex justify-between items-center">
@@ -133,6 +143,7 @@ export default function SovendusBackendForm({
           <SovendusVoucherNetwork
             currentSettings={currentSettings.voucherNetwork}
             setCurrentSettings={setCurrentSettings}
+            additionalSteps={additionalSteps?.voucherNetwork}
           />
         </TabsContent>
         <TabsContent value="optimize">
@@ -140,12 +151,14 @@ export default function SovendusBackendForm({
             currentOptimizeSettings={currentSettings.optimize}
             savedOptimizeSettings={savedSettings.optimize}
             setCurrentSettings={setCurrentSettings}
+            additionalSteps={additionalSteps?.optimize}
           />
         </TabsContent>
         <TabsContent value="checkoutProducts">
           <SovendusCheckoutProducts
             enabled={currentSettings.checkoutProducts}
             setCurrentSettings={setCurrentSettings}
+            additionalSteps={additionalSteps?.checkoutProducts}
           />
         </TabsContent>
       </Tabs>

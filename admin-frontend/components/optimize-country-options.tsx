@@ -41,7 +41,7 @@ export function CountryOptions({
     return `Optimize ID: ${country.optimizeId}`;
   };
 
-  const isCountryEnabled = (country: OptimizeCountry): boolean => {
+  const isCountryEnabled = (country: OptimizeCountry | undefined): boolean => {
     return (
       (country?.isEnabled &&
         country.optimizeId &&
@@ -131,7 +131,7 @@ export function CountryOptions({
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-4">
+            <div className="space-y-4 mx-1">
               <div className="flex items-center space-x-2">
                 <Switch
                   id={`${countryKey}-enabled`}

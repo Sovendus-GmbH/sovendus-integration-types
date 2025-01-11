@@ -218,7 +218,7 @@ function CountrySettings({
         </div>
       </AccordionTrigger>
       <AccordionContent>
-        <div className="space-y-4">
+        <div className="space-y-4 mx-1">
           <div className="flex items-center space-x-2">
             <Switch
               id={`${countryKey}-enabled`}
