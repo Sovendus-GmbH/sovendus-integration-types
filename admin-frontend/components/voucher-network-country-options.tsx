@@ -95,8 +95,6 @@ export function CountryOptions({
             },
           },
         } as SovendusAppSettings;
-        console.log("prevState", prevState);
-        console.log("newState", newState);
         return newState;
       }
       return prevState;

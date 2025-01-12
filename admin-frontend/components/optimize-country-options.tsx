@@ -24,11 +24,13 @@ import { Switch } from "./ui/switch";
 type CountryOptionsProps = {
   currentSettings: OptimizeSettings;
   setCurrentSettings: Dispatch<SetStateAction<SovendusAppSettings>>;
+  countryCodes: CountryCodes[];
 };
 
 export function CountryOptions({
   currentSettings,
   setCurrentSettings,
+  countryCodes,
 }: CountryOptionsProps): JSX.Element {
   const getCountryStatus = (countryKey: CountryCodes): string => {
     const country = currentSettings.countrySpecificIds[countryKey];
@@ -49,6 +51,7 @@ export function CountryOptions({
       false
     );
   };
+
   const handleEnabledChange = (
     countryKey: CountryCodes,
     checked: boolean,
@@ -66,9 +69,6 @@ export function CountryOptions({
               ...prevState.optimize.countrySpecificIds,
               [countryKey]: {
                 ...prevState.optimize.countrySpecificIds[countryKey],
-                id:
-                  prevState.optimize.countrySpecificIds[countryKey]
-                    ?.optimizeId || "",
                 isEnabled:
                   !!prevState.optimize.countrySpecificIds[countryKey]
                     ?.optimizeId && checked,
@@ -83,7 +83,7 @@ export function CountryOptions({
 
   const handleCountryChange = (
     countryKey: CountryCodes,
-    newOptimizeId: boolean | string,
+    newOptimizeId: string,
   ): void => {
     setCurrentSettings((prevState) => {
       if (
@@ -107,21 +107,20 @@ export function CountryOptions({
       return prevState;
     });
   };
+
   return (
     <Accordion type="single" collapsible className="w-full">
-      {Object.entries(COUNTRIES).map(([countryKey, countryName]) => (
+      {countryCodes.map((countryKey) => (
         <AccordionItem value={countryKey} key={countryKey}>
           <AccordionTrigger>
             <div className="flex items-center justify-between w-full">
-              <span>{countryName}</span>
+              <span>{COUNTRIES[countryKey]}</span>
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-muted-foreground">
-                  {getCountryStatus(countryKey as CountryCodes)}
+                  {getCountryStatus(countryKey)}
                 </span>
                 {isCountryEnabled(
-                  currentSettings?.countrySpecificIds[
-                    countryKey as CountryCodes
-                  ],
+                  currentSettings.countrySpecificIds[countryKey],
                 ) && (
                   <Badge variant="outline" className="ml-2">
                     Enabled
@@ -136,16 +135,15 @@ export function CountryOptions({
                 <Switch
                   id={`${countryKey}-enabled`}
                   checked={
-                    currentSettings.countrySpecificIds[
-                      countryKey as CountryCodes
-                    ]?.isEnabled || false
+                    currentSettings.countrySpecificIds[countryKey]?.isEnabled ||
+                    false
                   }
                   onCheckedChange={(checked): void =>
-                    handleEnabledChange(countryKey as CountryCodes, checked)
+                    handleEnabledChange(countryKey, checked)
                   }
                 />
                 <label htmlFor={`${countryKey}-enabled`}>
-                  Enable for {countryName}
+                  Enable for {COUNTRIES[countryKey]}
                 </label>
               </div>
               <div className="space-y-2">
@@ -153,15 +151,11 @@ export function CountryOptions({
                 <Input
                   id={`${countryKey}-id`}
                   value={
-                    currentSettings.countrySpecificIds[
-                      countryKey as CountryCodes
-                    ]?.optimizeId || ""
+                    currentSettings.countrySpecificIds[countryKey]
+                      ?.optimizeId || ""
                   }
                   onChange={(e): void =>
-                    handleCountryChange(
-                      countryKey as CountryCodes,
-                      e.target.value,
-                    )
+                    handleCountryChange(countryKey, e.target.value)
                   }
                   placeholder="Enter Optimize ID"
                 />
