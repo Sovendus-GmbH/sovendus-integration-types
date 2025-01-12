@@ -22,7 +22,7 @@ export function ContactCTA(): JSX.Element {
         <Button
           onClick={(): void =>
             void window.open(
-              "https://online.sovendus.com/kontakt/demo-tour-kontaktformular/#",
+              "https://online.sovendus.com/en/contact/demo-tour-contact-form",
               "_blank",
             )
           }
