@@ -2,17 +2,6 @@
 
 import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
-
-import type {
-  SovendusAppSettings,
-  VoucherNetworkLanguage,
-  VoucherNetworkSettings,
-} from "../../settings/app-settings";
-import type {
-  CountryCodes,
-  LanguageCodes,
-} from "../../settings/sovendus-countries";
-import { LANGUAGES_BY_COUNTRIES } from "../../settings/sovendus-countries";
 import {
   Accordion,
   AccordionContent,
@@ -23,14 +12,28 @@ import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
+import {
+  SovendusAppSettings,
+  VoucherNetworkLanguage,
+  VoucherNetworkSettings,
+} from "../../settings/app-settings";
+import {
+  CountryCodes,
+  LanguageCodes,
+  LANGUAGES_BY_COUNTRIES,
+} from "../../settings/sovendus-countries";
+
+type CountryOptionsProps = {
+  currentSettings: VoucherNetworkSettings;
+  setCurrentSettings: Dispatch<SetStateAction<SovendusAppSettings>>;
+  countryCodes: CountryCodes[];
+};
 
 export function CountryOptions({
   currentSettings,
   setCurrentSettings,
-}: {
-  currentSettings: VoucherNetworkSettings;
-  setCurrentSettings: Dispatch<SetStateAction<SovendusAppSettings>>;
-}): JSX.Element {
+  countryCodes,
+}: CountryOptionsProps): JSX.Element {
   const getCountryStatus = (
     countryKey: CountryCodes,
     languageKey: LanguageCodes,
@@ -95,6 +98,8 @@ export function CountryOptions({
             },
           },
         } as SovendusAppSettings;
+        console.log("prevState", prevState);
+        console.log("newState", newState);
         return newState;
       }
       return prevState;
@@ -139,20 +144,22 @@ export function CountryOptions({
   };
   return (
     <Accordion type="single" collapsible className="w-full">
-      {Object.entries(LANGUAGES_BY_COUNTRIES).map(([countryKey, languages]) =>
-        Object.entries(languages).map(([languageKey, countryName]) => (
-          <CountrySettings
-            key={countryKey}
-            countryKey={countryKey as CountryCodes}
-            languageKey={languageKey as LanguageCodes}
-            countryName={countryName}
-            currentSettings={currentSettings}
-            getCountryStatus={getCountryStatus}
-            isCountryEnabled={isCountryEnabled}
-            handleEnabledChange={handleEnabledChange}
-            handleIdChange={handleIdChange}
-          />
-        )),
+      {countryCodes.map((countryKey) =>
+        Object.entries(LANGUAGES_BY_COUNTRIES[countryKey]).map(
+          ([languageKey, countryName]) => (
+            <CountrySettings
+              key={`${countryKey}-${languageKey}`}
+              countryKey={countryKey}
+              languageKey={languageKey as LanguageCodes}
+              countryName={countryName}
+              currentSettings={currentSettings}
+              getCountryStatus={getCountryStatus}
+              isCountryEnabled={isCountryEnabled}
+              handleEnabledChange={handleEnabledChange}
+              handleIdChange={handleIdChange}
+            />
+          ),
+        ),
       )}
     </Accordion>
   );

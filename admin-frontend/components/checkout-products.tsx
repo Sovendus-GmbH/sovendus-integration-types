@@ -1,27 +1,32 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Cog, CreditCard, Package, Users } from "lucide-react";
 import React, { type Dispatch, type JSX, type SetStateAction } from "react";
-
-import type { SovendusAppSettings } from "../../settings/app-settings";
-import type { AdditionalStep } from "./backend-form";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "./ui/accordion";
-import { Alert, AlertDescription } from "./ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+  Package,
+  CreditCard,
+  Users,
+  CheckCircle,
+  ArrowRight,
+} from "lucide-react";
+
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Alert, AlertDescription } from "./ui/alert";
+import { Button } from "./ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { SovendusAppSettings } from "../../settings/app-settings";
+import { AdditionalSteps } from "./backend-form";
 
 interface SovendusCheckoutProductsProps {
   enabled: boolean;
   setCurrentSettings: Dispatch<SetStateAction<SovendusAppSettings>>;
-  additionalSteps: AdditionalStep | undefined;
+  additionalSteps?: AdditionalSteps["checkoutProducts"];
 }
+
+const DEMO_REQUEST_URL =
+  "https://online.sovendus.com/kontakt/demo-tour-kontaktformular/#";
 
 export function SovendusCheckoutProducts({
   enabled,
@@ -42,105 +47,84 @@ export function SovendusCheckoutProducts({
       transition={{ duration: 0.5 }}
       className="space-y-6"
     >
-      <h2 className="text-3xl font-bold mb-4">
-        Checkout Products: Receive Traffic from Other Shops
-      </h2>
-      <p className="text-lg text-gray-600 mb-6">
-        Boost your customer acquisition by receiving high-quality traffic from
-        other shops' success pages.
-      </p>
+      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-8 rounded-lg shadow-lg">
+        <h2 className="text-3xl font-bold mb-4">
+          Checkout Products: Your Gateway to Exponential Growth
+        </h2>
+        <p className="text-xl mb-6">
+          Transform your e-commerce success with high-quality traffic from our
+          vast network of partner shops.
+        </p>
+        <Button
+          size="lg"
+          onClick={() => window.open(DEMO_REQUEST_URL, "_blank")}
+          className="bg-white text-purple-600 hover:bg-purple-100"
+        >
+          Schedule Your Personalized Demo
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
+      </div>
 
       <Alert className="mb-4 bg-yellow-50 border-yellow-200">
-        <AlertDescription className="text-yellow-700">
-          <strong>Note:</strong> Enabling Checkout Products requires activation
-          on both your side and Sovendus' side. After configuring here, please
-          contact Sovendus support to complete the activation process.
+        <AlertDescription className="text-yellow-700 font-semibold">
+          <strong>Important:</strong> The first step to activate Checkout
+          Products is to contact Sovendus for a personalized demo and setup. Our
+          team will guide you through the entire process.
         </AlertDescription>
       </Alert>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Users className="mr-2 h-5 w-5 text-blue-500" />
-              Massive Reach
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>
-              Access to over 300 partner shops and 185 million ad impressions
-              per year.
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Package className="mr-2 h-5 w-5 text-green-500" />
-              High Conversion
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>
-              Enjoy a 1-3% order rate, resulting in 3.6 million orders annually
-              across our network.
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <CreditCard className="mr-2 h-5 w-5 text-purple-500" />
-              Risk-Free Revenue
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>
-              Generate additional revenue without any risk, setup costs, or
-              minimum contract duration.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <Tabs defaultValue="configure" className="w-full">
+        <TabsList className="grid w-full grid-cols-3 mb-8">
+          <TabsTrigger
+            value="configure"
+            className="text-lg font-semibold py-3 bg-purple-100 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+          >
+            Configure
+          </TabsTrigger>
+          <TabsTrigger
+            value="benefits"
+            className="text-lg font-semibold py-3 bg-purple-100 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+          >
+            Key Benefits
+          </TabsTrigger>
+          <TabsTrigger
+            value="how-it-works"
+            className="text-lg font-semibold py-3 bg-purple-100 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+          >
+            How It Works
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="configure">
+          <div className="space-y-6">
+            {additionalSteps && (
+              <Card className="border-2 border-purple-500">
+                <CardHeader>
+                  <CardTitle className="text-xl font-semibold flex items-center">
+                    <CheckCircle className="w-6 h-6 mr-2 text-purple-500" />
+                    Additional Setup Steps
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <h4 className="font-semibold mb-2">
+                    {additionalSteps.title}
+                  </h4>
+                  <ol className="list-decimal list-inside space-y-2">
+                    {additionalSteps.subSteps.map((step, index) => (
+                      <li key={index}>{step}</li>
+                    ))}
+                  </ol>
+                </CardContent>
+              </Card>
+            )}
 
-      <div className="bg-gray-100 p-6 rounded-lg mb-8">
-        <h3 className="text-2xl font-semibold mb-4">How It Works</h3>
-        <ol className="list-decimal list-inside space-y-4">
-          <li>
-            <strong>Partner Network:</strong> Your offers appear on other shops'
-            checkout pages as a thank-you gift to their customers.
-          </li>
-          <li>
-            <strong>Targeted Display:</strong> Our system intelligently displays
-            your offers to the most relevant customers based on their shopping
-            behavior.
-          </li>
-          <li>
-            <strong>Increased Traffic:</strong> Interested customers click
-            through to your shop, potentially becoming new customers and
-            increasing your sales.
-          </li>
-          <li>
-            <strong>Activation Process:</strong> Configure your settings here,
-            then contact Sovendus support to complete the activation on our
-            servers.
-          </li>
-        </ol>
-      </div>
-
-      <Accordion type="single" collapsible className="w-full mt-8">
-        <AccordionItem
-          value="checkout-products-settings"
-          className="border-2 border-green-500 rounded-lg overflow-hidden"
-        >
-          <AccordionTrigger className="bg-green-50 p-4 text-xl font-semibold">
-            <div className="flex items-center">
-              <Cog className="w-6 h-6 mr-2 text-green-500" />
-              Configure Checkout Products
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="p-4 bg-white">
-            <div className="flex items-center space-x-2 mb-4">
+            <Alert className="bg-blue-50 border-blue-200">
+              <AlertDescription className="text-blue-700">
+                <strong>Remember:</strong> Enabling this option only indicates
+                your interest. To fully activate and configure Checkout
+                Products, you must contact Sovendus for a personalized setup.
+              </AlertDescription>
+            </Alert>
+            <div className="flex items-center space-x-2">
               <Switch
                 id="checkout-products-enabled"
                 checked={enabled}
@@ -153,41 +137,132 @@ export function SovendusCheckoutProducts({
                 Enable Sovendus Checkout Products
               </Label>
             </div>
-            <p className="text-base text-gray-600 mb-4">
-              By enabling Checkout Products, you're indicating your interest in
-              receiving high-quality traffic from other shops' success pages.
-              This can potentially increase your customer base and sales without
-              any upfront costs.
+            <p className="text-base text-gray-600">
+              By enabling this option, you're expressing interest in Checkout
+              Products. Our team will guide you through the setup process to
+              ensure optimal performance for your shop.
             </p>
-            <Alert className="bg-blue-50 border-blue-200">
-              <AlertDescription className="text-blue-700">
-                Remember: After enabling this option, contact Sovendus support
-                to complete the activation process on our servers.
-              </AlertDescription>
-            </Alert>
-          </AccordionContent>
-        </AccordionItem>
-        {additionalSteps && (
-          <AccordionItem
-            value="additional-steps"
-            className="border-2 border-blue-500 rounded-lg overflow-hidden mt-4"
-          >
-            <AccordionTrigger className="bg-blue-50 p-4 text-xl font-semibold">
-              <div className="flex items-center">
-                <Cog className="w-6 h-6 mr-2 text-blue-500" />
-                {additionalSteps.title}
-              </div>
-            </AccordionTrigger>
-            <AccordionContent className="p-4 bg-white">
-              <ol className="list-decimal list-inside space-y-2">
-                {additionalSteps.subSteps.map((step, index) => (
-                  <li key={index}>{step}</li>
-                ))}
-              </ol>
-            </AccordionContent>
-          </AccordionItem>
-        )}
-      </Accordion>
+          </div>
+        </TabsContent>
+        <TabsContent value="benefits">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center text-blue-600">
+                  <Users className="mr-2 h-5 w-5" />
+                  Massive Reach
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>
+                  Tap into a network of 300+ partner shops and 185 million
+                  annual ad impressions.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center text-green-600">
+                  <Package className="mr-2 h-5 w-5" />
+                  High Conversion
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>
+                  Experience a 1-3% order rate, contributing to 3.6 million
+                  orders across our network yearly.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center text-purple-600">
+                  <CreditCard className="mr-2 h-5 w-5" />
+                  Risk-Free Revenue
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>
+                  Generate additional income with zero risk, no setup costs, and
+                  no minimum contract duration.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        <TabsContent value="how-it-works">
+          <div className="bg-gray-50 p-6 rounded-lg mt-6 space-y-4">
+            <h3 className="text-2xl font-semibold mb-4">
+              How Checkout Products Works
+            </h3>
+            <ol className="space-y-4">
+              <li className="flex items-start">
+                <CheckCircle className="mr-2 h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                <div>
+                  <strong className="text-lg">Seamless Integration:</strong>
+                  <p>
+                    After your personalized setup with Sovendus, your offers
+                    will appear on partner shops' checkout pages, presented as
+                    exclusive deals to their customers.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="mr-2 h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                <div>
+                  <strong className="text-lg">Smart Targeting:</strong>
+                  <p>
+                    Our advanced system displays your offers to the most
+                    relevant customers based on their shopping behavior and
+                    preferences.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="mr-2 h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                <div>
+                  <strong className="text-lg">Traffic Boost:</strong>
+                  <p>
+                    Interested customers click through to your shop, potentially
+                    becoming new, high-intent customers and increasing your
+                    sales.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="mr-2 h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                <div>
+                  <strong className="text-lg">Continuous Optimization:</strong>
+                  <p>
+                    Our team works with you to continuously refine and optimize
+                    your campaigns for maximum performance.
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-lg shadow-lg mt-8">
+        <h3 className="text-2xl font-bold mb-4">
+          Ready to Boost Your Revenue?
+        </h3>
+        <p className="text-lg mb-6">
+          Join the thousands of successful e-commerce businesses leveraging
+          Sovendus Checkout Products. Our team is ready to create a tailored
+          solution for your shop.
+        </p>
+        <Button
+          size="lg"
+          variant="outline"
+          onClick={() => window.open(DEMO_REQUEST_URL, "_blank")}
+          className="bg-white text-green-600 hover:bg-green-100"
+        >
+          Get Started Now
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
+      </div>
     </motion.div>
   );
 }

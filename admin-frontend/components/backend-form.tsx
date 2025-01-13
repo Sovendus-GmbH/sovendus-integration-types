@@ -1,22 +1,15 @@
 "use client";
 
-import { BarChart2, Gift, ShoppingBagIcon, Users } from "lucide-react";
-import type { JSX } from "react";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
+import { ShoppingBagIcon, BarChart2, Gift } from "lucide-react";
 
-import type { SovendusAppSettings } from "../../settings/app-settings";
-import {
-  EnabledOptimizeCountries,
-  EnabledVoucherNetworkCountries,
-} from "../../settings/app-settings";
-import { SovendusCheckoutProducts } from "./checkout-products";
-import { ContactCTA } from "./contact-form";
-import { SovendusOptimize } from "./optimize";
 import { Alert, AlertDescription } from "./ui/alert";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { SovendusAppSettings } from "../../settings/app-settings";
+import { ProductCard } from "./product-card";
+import { ConfigurationDialog } from "./confirmation-dialog";
 import { SovendusVoucherNetwork } from "./voucher-network";
+import { SovendusOptimize } from "./optimize";
+import { SovendusCheckoutProducts } from "./checkout-products";
 
 export interface AdditionalStep {
   title: string;
@@ -35,147 +28,210 @@ interface SovendusBackendFormProps {
   additionalSteps?: AdditionalSteps;
 }
 
+const DEMO_REQUEST_URL =
+  "https://online.sovendus.com/kontakt/demo-tour-kontaktformular/#";
+
 export default function SovendusBackendForm({
   currentStoredSettings,
   saveSettings,
   additionalSteps,
 }: SovendusBackendFormProps): JSX.Element {
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [notification, setNotification] = useState<string | null>(null);
   const [currentSettings, setCurrentSettings] = useState<SovendusAppSettings>(
     currentStoredSettings,
   );
-  const [savedSettings, setSavedSettings] = useState<SovendusAppSettings>(
-    currentStoredSettings,
-  );
+  const [activeConfig, setActiveConfig] = useState<
+    "voucherNetwork" | "optimize" | "checkoutProducts" | null
+  >(null);
 
-  const hasUnsavedChanges = useMemo(() => {
-    return JSON.stringify(savedSettings) !== JSON.stringify(currentSettings);
-  }, [currentSettings, savedSettings]);
+  const handleSave = async () => {
+    await saveSettings(currentSettings);
+  };
 
-  const handleSave = async (): Promise<void> => {
-    setIsSaving(true);
-    try {
-      const confirmedSettings = await saveSettings(currentSettings);
-      setSavedSettings(confirmedSettings);
-      setNotification("Your Sovendus settings have been successfully updated.");
-    } catch (error) {
-      setNotification(
-        "An error occurred while saving your settings. Please try again.",
-      );
-    } finally {
-      setIsSaving(false);
-      setTimeout(() => setNotification(null), 5000);
-    }
+  const getVoucherNetworkStatus = () => {
+    const enabledCountries = Object.entries(
+      currentSettings.voucherNetwork.countries,
+    )
+      .filter(([_, country]) =>
+        Object.values(country.languages).some((lang) => lang.isEnabled),
+      )
+      .map(([code]) => code);
+
+    const isActive = enabledCountries.length > 0;
+
+    return {
+      active: isActive,
+      details: (
+        <div className="space-y-2">
+          {isActive ? (
+            <>
+              <p>Active in {enabledCountries.length} countries:</p>
+              <ul className="list-disc list-inside text-sm">
+                {enabledCountries.map((country) => (
+                  <li key={country}>{country}</li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p>Not configured.</p>
+          )}
+        </div>
+      ),
+    };
+  };
+
+  const getOptimizeStatus = () => {
+    const isGlobalEnabled =
+      currentSettings.optimize.useGlobalId &&
+      currentSettings.optimize.globalEnabled;
+    const enabledCountries = Object.entries(
+      currentSettings.optimize.countrySpecificIds,
+    )
+      .filter(([_, data]) => data.isEnabled)
+      .map(([code]) => code);
+
+    const isActive = isGlobalEnabled || enabledCountries.length > 0;
+
+    return {
+      active: isActive,
+      details: (
+        <div className="space-y-2">
+          {isActive ? (
+            isGlobalEnabled ? (
+              <p>
+                Global optimization active (ID:{" "}
+                {currentSettings.optimize.globalId})
+              </p>
+            ) : (
+              <>
+                <p>Active in {enabledCountries.length} countries:</p>
+                <ul className="list-disc list-inside text-sm">
+                  {enabledCountries.map((country) => (
+                    <li key={country}>{country}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          ) : (
+            <p>Not configured.</p>
+          )}
+        </div>
+      ),
+    };
+  };
+
+  const getCheckoutProductsStatus = () => {
+    return {
+      active: currentSettings.checkoutProducts,
+      details: (
+        <p>
+          {currentSettings.checkoutProducts
+            ? "Ready to receive traffic from partner shops. Contact Sovendus for full activation."
+            : "Not active"}
+        </p>
+      ),
+    };
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-8 items-center">
+    <div className="container mx-auto p-6 space-y-8">
       <div className="flex justify-between items-center">
         <h1 className="text-4xl font-bold">Sovendus App</h1>
-        <div className="flex items-center space-x-2">
-          {hasUnsavedChanges && (
-            <span className="text-yellow-600 font-medium">Unsaved changes</span>
-          )}
-          {hasUnsavedChanges && (
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            <Button onClick={handleSave} disabled={isSaving}>
-              {isSaving ? "Saving..." : "Save Changes"}
-            </Button>
-          )}
-        </div>
       </div>
 
-      {notification && (
-        <Alert>
-          <AlertDescription>{notification}</AlertDescription>
-        </Alert>
-      )}
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Revenue Potential</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <h4 className="text-lg font-semibold flex items-center">
-                <Gift className="mr-2 h-5 w-5 text-blue-500" />
-                Voucher Network & Checkout Benefits
-              </h4>
-              <EnabledVoucherNetworkCountries
-                currentSettings={savedSettings.voucherNetwork}
-              />
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold flex items-center">
-                <BarChart2 className="mr-2 h-5 w-5 text-green-500" />
-                Optimize
-              </h4>
-              <EnabledOptimizeCountries
-                currentSettings={savedSettings.optimize}
-              />
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold flex items-center">
-                <ShoppingBagIcon className="mr-2 h-5 w-5 text-purple-500" />
-                Checkout Products
-              </h4>
-              <p
-                className={`text-sm ${
-                  savedSettings.checkoutProducts
-                    ? "text-green-600"
-                    : "text-red-600"
-                }`}
-              >
-                {savedSettings.checkoutProducts ? "Enabled" : "Disabled"}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Alert className="mb-4 bg-blue-50 border-blue-200">
-        <Users className="h-4 w-4 mr-2 text-blue-500" />
+      <Alert className="bg-blue-50 border-blue-200">
         <AlertDescription className="text-blue-700">
-          Join our network of 2,300+ European partners and reach 7 million
-          online shoppers monthly!
+          Welcome to your Sovendus configuration dashboard. To get started or
+          make changes to your setup, please contact Sovendus for a personalized
+          demo and configuration process.
         </AlertDescription>
       </Alert>
 
-      <Tabs defaultValue="voucherNetwork" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="voucherNetwork">
-            Voucher Network & Checkout Benefits
-          </TabsTrigger>
-          <TabsTrigger value="optimize">Optimize</TabsTrigger>
-          <TabsTrigger value="checkoutProducts">Checkout Products</TabsTrigger>
-        </TabsList>
-        <TabsContent value="voucherNetwork">
-          <SovendusVoucherNetwork
-            currentSettings={currentSettings.voucherNetwork}
-            setCurrentSettings={setCurrentSettings}
-            additionalSteps={additionalSteps?.voucherNetwork}
-          />
-        </TabsContent>
-        <TabsContent value="optimize">
-          <SovendusOptimize
-            currentOptimizeSettings={currentSettings.optimize}
-            savedOptimizeSettings={savedSettings.optimize}
-            setCurrentSettings={setCurrentSettings}
-            additionalSteps={additionalSteps?.optimize}
-          />
-        </TabsContent>
-        <TabsContent value="checkoutProducts">
-          <SovendusCheckoutProducts
-            enabled={currentSettings.checkoutProducts}
-            setCurrentSettings={setCurrentSettings}
-            additionalSteps={additionalSteps?.checkoutProducts}
-          />
-        </TabsContent>
-      </Tabs>
+      <div className="grid gap-6">
+        {/* <ProductCard
+          title="Voucher Network & Checkout Benefits"
+          description="Drive sales with post-purchase vouchers and earn revenue from partner offers"
+          icon={<Gift className="h-6 w-6 text-blue-500" />}
+          status={getVoucherNetworkStatus()}
+          metrics={[
+            { label: "Network Reach", value: "7M+" },
+            { label: "Partner Shops", value: "2,300+" },
+            { label: "Available Countries", value: "16" },
+          ]}
+          onConfigure={() => setActiveConfig("voucherNetwork")}
+          requestDemoHref={DEMO_REQUEST_URL}
+        />
 
-      <ContactCTA />
+        <ProductCard
+          title="Optimize"
+          description="Boost conversions with intelligent on-site optimization"
+          icon={<BarChart2 className="h-6 w-6 text-green-500" />}
+          status={getOptimizeStatus()}
+          metrics={[
+            { label: "Conversion Boost", value: "10%" },
+            { label: "Bounce Rate Reduction", value: "5%" },
+            { label: "Newsletter Sign-up Boost ", value: "15%" },
+          ]}
+          onConfigure={() => setActiveConfig("optimize")}
+          requestDemoHref={DEMO_REQUEST_URL}
+        />
+
+        <ProductCard
+          title="Checkout Products"
+          description="Receive high-quality traffic from partner shops"
+          icon={<ShoppingBagIcon className="h-6 w-6 text-purple-500" />}
+          status={getCheckoutProductsStatus()}
+          metrics={[
+            { label: "Annual Orders", value: "3.6M+" },
+            { label: "Conversion Rate", value: "1-3%" },
+            { label: "Ad Impressions", value: "185M+" },
+          ]}
+          onConfigure={() => setActiveConfig("checkoutProducts")}
+          requestDemoHref={DEMO_REQUEST_URL}
+        /> */}
+      </div>
+
+      {/* <ConfigurationDialog
+        open={activeConfig === "voucherNetwork"}
+        onOpenChange={(open) => !open && setActiveConfig(null)}
+        title="Configure Voucher Network & Checkout Benefits"
+        onSave={handleSave}
+        instructions="To set up or modify your Voucher Network and Checkout Benefits, please contact Sovendus for a personalized demo and configuration process. The settings below are for reference only."
+      >
+        <SovendusVoucherNetwork
+          currentSettings={currentSettings.voucherNetwork}
+          setCurrentSettings={setCurrentSettings}
+          additionalSteps={additionalSteps?.voucherNetwork}
+        />
+      </ConfigurationDialog>
+
+      <ConfigurationDialog
+        open={activeConfig === "optimize"}
+        onOpenChange={(open) => !open && setActiveConfig(null)}
+        title="Configure Optimize"
+        onSave={handleSave}
+        instructions="To set up or modify your Optimize settings, please contact Sovendus for a personalized demo and configuration process. The settings below are for reference only."
+      >
+        <SovendusOptimize
+          currentOptimizeSettings={currentSettings.optimize}
+          savedOptimizeSettings={currentStoredSettings.optimize}
+          setCurrentSettings={setCurrentSettings}
+          additionalSteps={additionalSteps?.optimize}
+        />
+      </ConfigurationDialog>
+
+      <ConfigurationDialog
+        open={activeConfig === "checkoutProducts"}
+        onOpenChange={(open) => !open && setActiveConfig(null)}
+        title="Configure Checkout Products"
+        onSave={handleSave}
+        instructions="To enable Checkout Products, please contact Sovendus for a personalized demo and setup process. The setting below is for reference only."
+      >
+        <SovendusCheckoutProducts
+          enabled={currentSettings.checkoutProducts}
+          setCurrentSettings={setCurrentSettings}
+          additionalSteps={additionalSteps?.checkoutProducts}
+        />
+      </ConfigurationDialog> */}
     </div>
   );
 }
