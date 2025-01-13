@@ -11,10 +11,10 @@ interface SovendusPageConfig {
 interface SovPageWindow extends Window {
   sovPageConfig: SovendusPageConfig;
   sovPageStatus: {
-    loadedOptimize?: boolean;
-    loadedVoucherNetworkSwitzerland?: boolean;
-    executedCheckoutProducts?: boolean;
-    sovPageConfigFound?: boolean;
+    loadedOptimize: boolean;
+    loadedVoucherNetworkSwitzerland: boolean;
+    executedCheckoutProducts: boolean;
+    sovPageConfigFound: boolean;
   };
 }
 
@@ -22,7 +22,12 @@ declare let window: SovPageWindow;
 
 async function main(): Promise<void> {
   const pageSettings = window.sovPageConfig;
-  window.sovPageStatus = {};
+  window.sovPageStatus = {
+    loadedOptimize: false,
+    loadedVoucherNetworkSwitzerland: false,
+    executedCheckoutProducts: false,
+    sovPageConfigFound: false,
+  };
   if (typeof pageSettings !== "undefined") {
     window.sovPageStatus.sovPageConfigFound = true;
     const {

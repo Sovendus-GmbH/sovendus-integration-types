@@ -58,11 +58,11 @@ interface ThankYouWindow extends Window {
     consumerPhone: string | undefined;
   };
   sovThankyouStatus: {
-    loadedOptimize?: boolean;
-    loadedVoucherNetwork?: boolean;
-    executedCheckoutProducts?: boolean;
-    sovThankyouConfigFound?: boolean;
-    countryCodePassedOnByPlugin?: boolean;
+    loadedOptimize: boolean;
+    loadedVoucherNetwork: boolean;
+    executedCheckoutProducts: boolean;
+    sovThankyouConfigFound: boolean;
+    countryCodePassedOnByPlugin: boolean;
   };
 }
 
@@ -70,7 +70,13 @@ declare let window: ThankYouWindow;
 
 async function sovendusThankYou(): Promise<void> {
   const config = window.sovThankyouConfig;
-  window.sovThankyouStatus = {};
+  window.sovThankyouStatus = {
+    loadedOptimize: false,
+    loadedVoucherNetwork: false,
+    executedCheckoutProducts: false,
+    sovThankyouConfigFound: false,
+    countryCodePassedOnByPlugin: false,
+  };
   if (!config) {
     window.sovThankyouStatus.sovThankyouConfigFound = false;
     // eslint-disable-next-line no-console
