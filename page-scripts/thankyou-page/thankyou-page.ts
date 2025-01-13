@@ -3,9 +3,10 @@ import type {
   VoucherNetworkLanguage,
   VoucherNetworkSettings,
 } from "../../settings/app-settings";
-import type {
-  CountryCodes,
-  LanguageCodes,
+import {
+  type CountryCodes,
+  type LanguageCodes,
+  LANGUAGES_BY_COUNTRIES,
 } from "../../settings/sovendus-countries";
 import { getOptimizeConfig, handleCheckoutProductsConversion } from "../utils";
 
@@ -220,12 +221,13 @@ function getLanguageSettings(
   if (!languagesSettings) {
     return undefined;
   }
-  const languagesSettingsList = Object.values(languagesSettings);
-  if (languagesSettingsList?.length === 1) {
-    const languageSettings = languagesSettingsList[0];
+  const languagesAvailable = Object.keys(LANGUAGES_BY_COUNTRIES[country]);
+  if (languagesAvailable?.length === 1) {
+    const language = languagesAvailable[0] as LanguageCodes;
+    const languageSettings = languagesSettings[language];
     return languageSettings;
   }
-  if (languagesSettingsList?.length > 1) {
+  if (languagesAvailable?.length > 1) {
     const languageKey = language || detectLanguageCode();
     const languageSettings = languagesSettings[languageKey];
     if (!languageSettings) {
