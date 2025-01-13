@@ -18,12 +18,11 @@ class VoucherNetworkCountry
             foreach ($data['languages'] as $lang => $langData) {
                 $languages[$lang] = VoucherNetworkLanguage::fromJson($langData);
             }
-        } else {
-            error_log('Warning: Missing or invalid languages key in VoucherNetworkCountry data');
         }
         return new VoucherNetworkCountry($languages);
     }
 }
+
 
 class OptimizeCountry
 {

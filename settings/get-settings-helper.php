@@ -51,7 +51,6 @@ class Get_Settings_Helper
             if (is_array($decodedSettings)) {
                 return Sovendus_App_Settings::fromJson($decodedSettings);
             } else {
-                error_log('Failed to decode settings JSON or invalid format.');
                 throw new Exception('Invalid settings JSON format.');
             }
         } else {
