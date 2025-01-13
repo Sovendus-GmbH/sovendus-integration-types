@@ -3,6 +3,13 @@
 import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
 
+import type {
+  OptimizeCountry,
+  OptimizeSettings,
+  SovendusAppSettings,
+} from "../../settings/app-settings";
+import type { CountryCodes } from "../../settings/sovendus-countries";
+import { COUNTRIES } from "../../settings/sovendus-countries";
 import {
   Accordion,
   AccordionContent,
@@ -13,12 +20,6 @@ import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
-import {
-  OptimizeCountry,
-  OptimizeSettings,
-  SovendusAppSettings,
-} from "../../settings/app-settings";
-import { COUNTRIES, CountryCodes } from "../../settings/sovendus-countries";
 
 type CountryOptionsProps = {
   currentSettings: OptimizeSettings;

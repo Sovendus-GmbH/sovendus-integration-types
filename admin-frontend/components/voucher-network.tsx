@@ -1,40 +1,35 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Gift, ShoppingBag, Cog, CheckCircle, ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle, Cog, Gift, ShoppingBag } from "lucide-react";
 import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
 
+import type {
+  SovendusAppSettings,
+  VoucherNetworkSettings,
+} from "../../settings/app-settings";
+import { EnabledVoucherNetworkCountries } from "../../settings/app-settings";
+import type { CountryCodes } from "../../settings/sovendus-countries";
+import { LANGUAGES_BY_COUNTRIES } from "../../settings/sovendus-countries";
+import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import {
-  EnabledVoucherNetworkCountries,
-  SovendusAppSettings,
-  VoucherNetworkSettings,
-} from "../../settings/app-settings";
-import { AdditionalSteps } from "./backend-form";
 import { CountryOptions } from "./voucher-network-country-options";
-import {
-  CountryCodes,
-  LANGUAGES_BY_COUNTRIES,
-} from "../../settings/sovendus-countries";
 
 interface SovendusVoucherNetworkProps {
   currentSettings: VoucherNetworkSettings;
   setCurrentSettings: Dispatch<SetStateAction<SovendusAppSettings>>;
   additionalSteps?: AdditionalSteps["voucherNetwork"];
 }
-
-const DEMO_REQUEST_URL =
-  "https://online.sovendus.com/kontakt/demo-tour-kontaktformular/#";
 
 export function SovendusVoucherNetwork({
   currentSettings,
@@ -46,10 +41,10 @@ export function SovendusVoucherNetwork({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="space-y-6"
+      className="space-y-6 pb-8"
     >
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold mb-4">
+        <h2 className="text-3xl font-bold mb-4 text-white">
           Voucher Network & Checkout Benefits: Dual Revenue Streams
         </h2>
         <p className="text-xl mb-6">
@@ -68,9 +63,9 @@ export function SovendusVoucherNetwork({
 
       <Alert className="mb-4 bg-yellow-50 border-yellow-200">
         <AlertDescription className="text-yellow-700 font-semibold">
-          <strong>Important:</strong> To activate Voucher Network & Checkout
-          Benefits, contact Sovendus for a personalized demo and setup. Our team
-          will guide you through the entire process.
+          <strong>Important:</strong> To activate Voucher Network and/or
+          Checkout Benefits, contact Sovendus for a personalized demo and setup.
+          Our team will guide you through the entire process.
         </AlertDescription>
       </Alert>
 
@@ -97,6 +92,13 @@ export function SovendusVoucherNetwork({
         </TabsList>
         <TabsContent value="configure">
           <div className="space-y-6">
+            <Alert className="bg-blue-50 border-green-200 mt-2">
+              <AlertDescription className="text-green-700">
+                <EnabledVoucherNetworkCountries
+                  currentSettings={currentSettings}
+                />
+              </AlertDescription>
+            </Alert>
             <Alert className="bg-blue-50 border-blue-200">
               <AlertDescription className="text-blue-700">
                 <strong>Remember:</strong> To fully activate and configure
@@ -126,7 +128,6 @@ export function SovendusVoucherNetwork({
               </Card>
             )}
 
-            <EnabledVoucherNetworkCountries currentSettings={currentSettings} />
             <Accordion type="single" collapsible className="w-full mt-8">
               <AccordionItem
                 value="step1"
@@ -269,26 +270,6 @@ export function SovendusVoucherNetwork({
           </div>
         </TabsContent>
       </Tabs>
-
-      <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-lg shadow-lg mt-8">
-        <h3 className="text-2xl font-bold mb-4">
-          Ready to Maximize Your Revenue?
-        </h3>
-        <p className="text-lg mb-6">
-          Join thousands of successful e-commerce businesses leveraging Sovendus
-          Voucher Network & Checkout Benefits. Our team is ready to create a
-          tailored solution for your shop.
-        </p>
-        <Button
-          size="lg"
-          variant="outline"
-          onClick={() => window.open(DEMO_REQUEST_URL, "_blank")}
-          className="bg-white text-green-600 hover:bg-green-100"
-        >
-          Get Started Now
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-      </div>
     </motion.div>
   );
 }

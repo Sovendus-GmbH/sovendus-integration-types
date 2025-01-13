@@ -74,7 +74,7 @@ export function EnabledOptimizeCountries({
 }): JSX.Element {
   let statusMessage: string;
   if (currentSettings.useGlobalId && currentSettings.globalEnabled) {
-    statusMessage = `Global ID: ${currentSettings.globalId}`;
+    statusMessage = `Enabled in all Countries (${currentSettings.globalId})`;
   } else if (!currentSettings.useGlobalId) {
     const enabledCountries = Object.entries(currentSettings.countrySpecificIds)
       .filter(

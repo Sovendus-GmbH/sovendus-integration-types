@@ -2,38 +2,38 @@
 
 import { motion } from "framer-motion";
 import {
-  Target,
   BarChart,
-  Globe,
+  CheckCircle,
   Cog,
   ExternalLink,
-  CheckCircle,
-  ArrowRight,
+  Globe,
+  Target,
 } from "lucide-react";
 import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
 
+import type {
+  OptimizeSettings,
+  SovendusAppSettings,
+} from "../../settings/app-settings";
+import { EnabledOptimizeCountries } from "../../settings/app-settings";
+import type { CountryCodes } from "../../settings/sovendus-countries";
+import { COUNTRIES } from "../../settings/sovendus-countries";
+import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
+import { CountryOptions } from "./optimize-country-options";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
+import { Alert, AlertDescription } from "./ui/alert";
+import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Alert, AlertDescription } from "./ui/alert";
-import { Button } from "./ui/button";
-import {
-  EnabledOptimizeCountries,
-  OptimizeSettings,
-  SovendusAppSettings,
-} from "../../settings/app-settings";
-import { AdditionalSteps } from "./backend-form";
-import { CountryOptions } from "./voucher-network-country-options";
-import { COUNTRIES, CountryCodes } from "../../settings/sovendus-countries";
 
 interface SovendusOptimizeProps {
   currentOptimizeSettings: OptimizeSettings;
@@ -41,9 +41,6 @@ interface SovendusOptimizeProps {
   setCurrentSettings: Dispatch<SetStateAction<SovendusAppSettings>>;
   additionalSteps?: AdditionalSteps["optimize"];
 }
-
-const DEMO_REQUEST_URL =
-  "https://online.sovendus.com/kontakt/demo-tour-kontaktformular/#";
 
 export function SovendusOptimize({
   currentOptimizeSettings,
@@ -80,10 +77,10 @@ export function SovendusOptimize({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="space-y-6"
+      className="space-y-6 pb-8"
     >
       <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold mb-4">
+        <h2 className="text-3xl font-bold mb-4 text-white">
           Optimize: Supercharge Your Conversions
         </h2>
         <p className="text-xl mb-6">
@@ -124,6 +121,13 @@ export function SovendusOptimize({
         </TabsList>
         <TabsContent value="configure">
           <div className="space-y-6">
+            <Alert className="bg-blue-50 border-green-200 mt-2">
+              <AlertDescription className="text-green-700">
+                <EnabledOptimizeCountries
+                  currentSettings={currentOptimizeSettings}
+                />
+              </AlertDescription>
+            </Alert>
             <Alert className="bg-blue-50 border-blue-200">
               <AlertDescription className="text-blue-700">
                 <strong>Remember:</strong> To fully activate and configure
@@ -152,9 +156,6 @@ export function SovendusOptimize({
               </Card>
             )}
 
-            <EnabledOptimizeCountries
-              currentSettings={currentOptimizeSettings}
-            />
             <Accordion type="single" collapsible className="w-full mt-8">
               <AccordionItem
                 value="optimize-settings"
@@ -351,26 +352,6 @@ export function SovendusOptimize({
           </div>
         </TabsContent>
       </Tabs>
-
-      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-lg shadow-lg mt-8">
-        <h3 className="text-2xl font-bold mb-4">
-          Ready to Optimize Your Conversions?
-        </h3>
-        <p className="text-lg mb-6">
-          Join thousands of successful e-commerce businesses leveraging Sovendus
-          Optimize. Our team is ready to create a tailored solution for your
-          shop.
-        </p>
-        <Button
-          size="lg"
-          variant="outline"
-          onClick={() => window.open(DEMO_REQUEST_URL, "_blank")}
-          className="bg-white text-blue-600 hover:bg-blue-100"
-        >
-          Get Started Now
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-      </div>
     </motion.div>
   );
 }

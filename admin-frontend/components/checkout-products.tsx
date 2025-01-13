@@ -1,32 +1,30 @@
 "use client";
 
 import { motion } from "framer-motion";
-import React, { type Dispatch, type JSX, type SetStateAction } from "react";
 import {
-  Package,
-  CreditCard,
-  Users,
-  CheckCircle,
   ArrowRight,
+  CheckCircle,
+  CreditCard,
+  Package,
+  Users,
 } from "lucide-react";
+import React, { type Dispatch, type JSX, type SetStateAction } from "react";
 
-import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import type { SovendusAppSettings } from "../../settings/app-settings";
+import { cn } from "../lib/utils";
+import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { SovendusAppSettings } from "../../settings/app-settings";
-import { AdditionalSteps } from "./backend-form";
 
 interface SovendusCheckoutProductsProps {
   enabled: boolean;
   setCurrentSettings: Dispatch<SetStateAction<SovendusAppSettings>>;
   additionalSteps?: AdditionalSteps["checkoutProducts"];
 }
-
-const DEMO_REQUEST_URL =
-  "https://online.sovendus.com/kontakt/demo-tour-kontaktformular/#";
 
 export function SovendusCheckoutProducts({
   enabled,
@@ -45,10 +43,14 @@ export function SovendusCheckoutProducts({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="space-y-6"
+      className="space-y-6 pb-8"
     >
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold mb-4">
+      <div
+        className={cn(
+          "bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-8 rounded-lg shadow-lg",
+        )}
+      >
+        <h2 className="text-3xl font-bold mb-4 text-white">
           Checkout Products: Your Gateway to Exponential Growth
         </h2>
         <p className="text-xl mb-6">
@@ -117,14 +119,7 @@ export function SovendusCheckoutProducts({
               </Card>
             )}
 
-            <Alert className="bg-blue-50 border-blue-200">
-              <AlertDescription className="text-blue-700">
-                <strong>Remember:</strong> Enabling this option only indicates
-                your interest. To fully activate and configure Checkout
-                Products, you must contact Sovendus for a personalized setup.
-              </AlertDescription>
-            </Alert>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4 pt-4 ml-2">
               <Switch
                 id="checkout-products-enabled"
                 checked={enabled}
@@ -137,11 +132,13 @@ export function SovendusCheckoutProducts({
                 Enable Sovendus Checkout Products
               </Label>
             </div>
-            <p className="text-base text-gray-600">
-              By enabling this option, you're expressing interest in Checkout
-              Products. Our team will guide you through the setup process to
-              ensure optimal performance for your shop.
-            </p>
+            <Alert className="bg-blue-50 border-blue-200">
+              <AlertDescription className="text-blue-700">
+                <strong>Remember:</strong> To fully activate and configure
+                Checkout Products, you must contact Sovendus for a personalized
+                setup.
+              </AlertDescription>
+            </Alert>
           </div>
         </TabsContent>
         <TabsContent value="benefits">
@@ -243,26 +240,6 @@ export function SovendusCheckoutProducts({
           </div>
         </TabsContent>
       </Tabs>
-
-      <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-lg shadow-lg mt-8">
-        <h3 className="text-2xl font-bold mb-4">
-          Ready to Boost Your Revenue?
-        </h3>
-        <p className="text-lg mb-6">
-          Join the thousands of successful e-commerce businesses leveraging
-          Sovendus Checkout Products. Our team is ready to create a tailored
-          solution for your shop.
-        </p>
-        <Button
-          size="lg"
-          variant="outline"
-          onClick={() => window.open(DEMO_REQUEST_URL, "_blank")}
-          className="bg-white text-green-600 hover:bg-green-100"
-        >
-          Get Started Now
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-      </div>
     </motion.div>
   );
 }

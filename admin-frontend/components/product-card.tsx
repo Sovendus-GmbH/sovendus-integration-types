@@ -1,9 +1,10 @@
 import { ChevronRight, ExternalLink } from "lucide-react";
+import React from "react";
+
+import { cn } from "../lib/utils";
+import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Badge } from "./ui/badge";
-import { cn } from "../lib/utils";
-import React from "react";
 
 interface ProductCardProps {
   title: string;
@@ -29,7 +30,7 @@ export function ProductCard({
   metrics,
   onConfigure,
   requestDemoHref,
-}: ProductCardProps) {
+}: ProductCardProps): JSX.Element {
   return (
     <Card className="w-full">
       <CardHeader className="border-b">

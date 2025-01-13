@@ -2,6 +2,17 @@
 
 import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
+
+import type {
+  SovendusAppSettings,
+  VoucherNetworkLanguage,
+  VoucherNetworkSettings,
+} from "../../settings/app-settings";
+import type {
+  CountryCodes,
+  LanguageCodes,
+} from "../../settings/sovendus-countries";
+import { LANGUAGES_BY_COUNTRIES } from "../../settings/sovendus-countries";
 import {
   Accordion,
   AccordionContent,
@@ -12,16 +23,6 @@ import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
-import {
-  SovendusAppSettings,
-  VoucherNetworkLanguage,
-  VoucherNetworkSettings,
-} from "../../settings/app-settings";
-import {
-  CountryCodes,
-  LanguageCodes,
-  LANGUAGES_BY_COUNTRIES,
-} from "../../settings/sovendus-countries";
 
 type CountryOptionsProps = {
   currentSettings: VoucherNetworkSettings;
@@ -98,8 +99,6 @@ export function CountryOptions({
             },
           },
         } as SovendusAppSettings;
-        console.log("prevState", prevState);
-        console.log("newState", newState);
         return newState;
       }
       return prevState;
