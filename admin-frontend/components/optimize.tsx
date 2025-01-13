@@ -239,7 +239,7 @@ export function SovendusOptimize({
             </Accordion>
             <Button
               size="lg"
-              onClick={() => window.open(DEMO_REQUEST_URL, "_blank")}
+              onClick={(): void => void window.open(DEMO_REQUEST_URL, "_blank")}
               className="w-full sm:w-auto mt-4"
             >
               Schedule Your Personalized Demo

@@ -1,6 +1,7 @@
 "use client";
 
 import { BarChart2, Gift, ShoppingBagIcon } from "lucide-react";
+import type { JSX } from "react";
 import React, { useState } from "react";
 
 import {
@@ -60,7 +61,6 @@ export default function SovendusBackendForm({
         JSON.stringify(currentSettings) !==
         JSON.stringify(currentStoredSettings);
       try {
-        console.log("Saving settings...");
         if (hasUnsavedChanges) {
           setNotificationState({
             message: "Saving settings...",
@@ -173,7 +173,7 @@ export default function SovendusBackendForm({
             { label: "Partner Shops", value: "2,300+" },
             { label: "Available Countries", value: "16" },
           ]}
-          onConfigure={() => setActiveConfig("voucherNetwork")}
+          onConfigure={(): void => setActiveConfig("voucherNetwork")}
           requestDemoHref={DEMO_REQUEST_URL}
         />
 
@@ -187,7 +187,7 @@ export default function SovendusBackendForm({
             { label: "Bounce Rate Reduction", value: "5%" },
             { label: "Newsletter Sign-up Boost ", value: "15%" },
           ]}
-          onConfigure={() => setActiveConfig("optimize")}
+          onConfigure={(): void => setActiveConfig("optimize")}
           requestDemoHref={DEMO_REQUEST_URL}
         />
 
@@ -201,14 +201,19 @@ export default function SovendusBackendForm({
             { label: "Conversion Rate", value: "1-3%" },
             { label: "Ad Impressions", value: "185M+" },
           ]}
-          onConfigure={() => setActiveConfig("checkoutProducts")}
+          onConfigure={(): void => setActiveConfig("checkoutProducts")}
           requestDemoHref={DEMO_REQUEST_URL}
         />
       </div>
-
+      {notificationState && (
+        <Notification
+          message={notificationState.message}
+          type={notificationState.type}
+        />
+      )}
       <ConfigurationDialog
         open={activeConfig === "voucherNetwork"}
-        onOpenChange={(open) => void handleSave(open)}
+        onOpenChange={(open): void => void handleSave(open)}
         title="Configure Voucher Network & Checkout Benefits"
       >
         <SovendusVoucherNetwork
@@ -220,7 +225,7 @@ export default function SovendusBackendForm({
 
       <ConfigurationDialog
         open={activeConfig === "optimize"}
-        onOpenChange={(open) => void handleSave(open)}
+        onOpenChange={(open): void => void handleSave(open)}
         title="Configure Optimize"
       >
         <SovendusOptimize
@@ -233,7 +238,7 @@ export default function SovendusBackendForm({
 
       <ConfigurationDialog
         open={activeConfig === "checkoutProducts"}
-        onOpenChange={(open) => void handleSave(open)}
+        onOpenChange={(open): void => void handleSave(open)}
         title="Configure Checkout Products"
       >
         <SovendusCheckoutProducts
@@ -242,12 +247,6 @@ export default function SovendusBackendForm({
           additionalSteps={additionalSteps?.checkoutProducts}
         />
       </ConfigurationDialog>
-      {notificationState && (
-        <Notification
-          message={notificationState.message}
-          type={notificationState.type}
-        />
-      )}
     </div>
   );
 }

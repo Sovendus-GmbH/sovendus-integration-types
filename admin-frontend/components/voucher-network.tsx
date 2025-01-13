@@ -53,7 +53,7 @@ export function SovendusVoucherNetwork({
         </p>
         <Button
           size="lg"
-          onClick={() => window.open(DEMO_REQUEST_URL, "_blank")}
+          onClick={(): void => void window.open(DEMO_REQUEST_URL, "_blank")}
           className="bg-white text-blue-600 hover:bg-blue-100"
         >
           Schedule Your Personalized Demo

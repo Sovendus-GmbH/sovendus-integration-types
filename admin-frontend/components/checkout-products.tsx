@@ -59,7 +59,7 @@ export function SovendusCheckoutProducts({
         </p>
         <Button
           size="lg"
-          onClick={() => window.open(DEMO_REQUEST_URL, "_blank")}
+          onClick={(): void => window.open(DEMO_REQUEST_URL, "_blank")}
           className="bg-white text-purple-600 hover:bg-purple-100"
         >
           Schedule Your Personalized Demo

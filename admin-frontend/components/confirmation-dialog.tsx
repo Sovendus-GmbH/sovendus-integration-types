@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import type { JSX } from "react";
 import React from "react";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
@@ -24,7 +25,7 @@ export function ConfigurationDialog({
       >
         <div className="sticky top-0 z-50 flex justify-end">
           <button
-            onClick={() => onOpenChange(false)}
+            onClick={(): void => onOpenChange(false)}
             className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
           >
             <X className="h-8 w-8" />

@@ -9,6 +9,7 @@ import {
   Trigger,
 } from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import type { JSX } from "react";
 import React from "react";
 
 import { cn } from "../../lib/utils";
@@ -119,7 +120,7 @@ const DialogDescription = React.forwardRef<
     {...props}
   />
 ));
-DialogDescription.displayName = Description.displayyName;
+DialogDescription.displayName = Description.displayName;
 
 export {
   Dialog,

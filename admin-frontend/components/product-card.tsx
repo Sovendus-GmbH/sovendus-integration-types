@@ -1,4 +1,5 @@
 import { ChevronRight, ExternalLink } from "lucide-react";
+import type { JSX } from "react";
 import React from "react";
 
 import { cn } from "../lib/utils";
@@ -70,7 +71,7 @@ export function ProductCard({
           <div className="flex gap-2">
             <Button
               variant="outline"
-              onClick={() => window.open(requestDemoHref, "_blank")}
+              onClick={(): void => void window.open(requestDemoHref, "_blank")}
               className="hidden sm:flex"
             >
               Request Demo Tour

@@ -20,8 +20,8 @@ export function ContactCTA(): JSX.Element {
           and help you maximize your revenue potential.
         </p>
         <Button
-          onClick={() =>
-            window.open(
+          onClick={(): void =>
+            void window.open(
               "https://online.sovendus.com/kontakt/demo-tour-kontaktformular/#",
               "_blank",
             )
