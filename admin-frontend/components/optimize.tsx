@@ -88,10 +88,18 @@ export function SovendusOptimize({
           rates with Sovendus Optimize. Boost your conversion rates and build
           long-term customer relationships.
         </p>
+        <Button
+          size="lg"
+          onClick={(): void => void window.open(DEMO_REQUEST_URL, "_blank")}
+          className="w-full sm:w-auto mt-4"
+        >
+          Schedule Your Personalized Demo
+          <ExternalLink className="ml-2 h-5 w-5" />
+        </Button>
       </div>
 
-      <Alert className="mb-4 bg-yellow-50 border-yellow-200">
-        <AlertDescription className="text-yellow-700 font-semibold">
+      <Alert className="mb-4 bg-blue-50 border-blue-200">
+        <AlertDescription className="text-blue-700 font-semibold">
           <strong>Important:</strong> To activate and configure Optimize,
           contact Sovendus for a personalized demo and setup. Our team will
           guide you through the entire process.
@@ -128,12 +136,12 @@ export function SovendusOptimize({
                 />
               </AlertDescription>
             </Alert>
-            <Alert className="bg-blue-50 border-blue-200">
+            {/* <Alert className="bg-blue-50 border-blue-200">
               <AlertDescription className="text-blue-700">
                 <strong>Remember:</strong> To fully activate and configure
                 Optimize, you must contact Sovendus for a personalized setup.
               </AlertDescription>
-            </Alert>
+            </Alert> */}
 
             {additionalSteps && (
               <Card className="border-2 border-green-500">
@@ -237,14 +245,6 @@ export function SovendusOptimize({
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            <Button
-              size="lg"
-              onClick={(): void => void window.open(DEMO_REQUEST_URL, "_blank")}
-              className="w-full sm:w-auto mt-4"
-            >
-              Schedule Your Personalized Demo
-              <ExternalLink className="ml-2 h-5 w-5" />
-            </Button>
           </div>
         </TabsContent>
         <TabsContent value="benefits">

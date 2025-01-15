@@ -26,9 +26,10 @@ export function ContactCTA(): JSX.Element {
               "_blank",
             )
           }
-          className="w-full sm:w-auto"
+          className="w-full sm:w-auto bg-blue-50 border-blue-200"
         >
-          Request Demo Tour <ExternalLink className="ml-2 h-4 w-4" />
+          Request Demo Tour{" "}
+          <ExternalLink className="ml-2 h-4 w-4 text-blue-700" />
         </Button>
       </CardContent>
     </Card>

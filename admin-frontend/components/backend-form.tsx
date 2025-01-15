@@ -154,10 +154,10 @@ export default function SovendusBackendForm({
       </div>
 
       <Alert className="bg-blue-50 border-blue-200">
-        <AlertDescription className="text-blue-700">
-          Welcome to your Sovendus configuration dashboard. To get started or
-          make changes to your setup, please contact Sovendus for a personalized
-          demo and configuration process.
+        <AlertDescription className="text-blue-700 font-semibold">
+          <strong>Important:</strong> Welcome to your Sovendus configuration
+          dashboard. To get started or make changes to your setup, please
+          contact Sovendus for a personalized demo and configuration process.
         </AlertDescription>
       </Alert>
 

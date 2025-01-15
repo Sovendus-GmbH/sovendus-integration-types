@@ -61,8 +61,8 @@ export function SovendusVoucherNetwork({
         </Button>
       </div>
 
-      <Alert className="mb-4 bg-yellow-50 border-yellow-200">
-        <AlertDescription className="text-yellow-700 font-semibold">
+      <Alert className="mb-4 bg-blue-50 border-blue-200">
+        <AlertDescription className="text-blue-700 font-semibold">
           <strong>Important:</strong> To activate Voucher Network and/or
           Checkout Benefits, contact Sovendus for a personalized demo and setup.
           Our team will guide you through the entire process.
@@ -99,13 +99,13 @@ export function SovendusVoucherNetwork({
                 />
               </AlertDescription>
             </Alert>
-            <Alert className="bg-blue-50 border-blue-200">
+            {/* <Alert className="bg-blue-50 border-blue-200">
               <AlertDescription className="text-blue-700">
                 <strong>Remember:</strong> To fully activate and configure
                 Voucher Network & Checkout Benefits, you must contact Sovendus
                 for a personalized setup.
               </AlertDescription>
-            </Alert>
+            </Alert> */}
 
             {additionalSteps && (
               <Card className="border-2 border-blue-500">

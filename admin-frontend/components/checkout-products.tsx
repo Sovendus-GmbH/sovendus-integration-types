@@ -67,8 +67,8 @@ export function SovendusCheckoutProducts({
         </Button>
       </div>
 
-      <Alert className="mb-4 bg-yellow-50 border-yellow-200">
-        <AlertDescription className="text-yellow-700 font-semibold">
+      <Alert className="mb-4 bg-blue-50 border-blue-200">
+        <AlertDescription className="text-blue-700 font-semibold">
           <strong>Important:</strong> The first step to activate Checkout
           Products is to contact Sovendus for a personalized demo and setup. Our
           team will guide you through the entire process.
@@ -132,13 +132,13 @@ export function SovendusCheckoutProducts({
                 Enable Sovendus Checkout Products
               </Label>
             </div>
-            <Alert className="bg-blue-50 border-blue-200">
+            {/* <Alert className="bg-blue-50 border-blue-200">
               <AlertDescription className="text-blue-700">
                 <strong>Remember:</strong> To fully activate and configure
                 Checkout Products, you must contact Sovendus for a personalized
                 setup.
               </AlertDescription>
-            </Alert>
+            </Alert> */}
           </div>
         </TabsContent>
         <TabsContent value="benefits">
