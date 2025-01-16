@@ -1,4 +1,6 @@
 <?php
+defined('ABSPATH') || exit('Opening plugin file directly');
+
 // ------------------------------------------------------------
 // IMPORTANT CHANGES HERE HAVE TO BE REPLICATED IN THE OTHER FILE
 // ------------------------------------------------------------

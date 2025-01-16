@@ -1,5 +1,8 @@
 <?php
 
+defined('ABSPATH') || exit('Opening plugin file directly');
+
+
 // require_once plugin_dir_path(__FILE__) . '../../helpers/integration-data-helpers.php';
 // require_once plugin_dir_path(__FILE__) . '../../settings/app-settings.php';
 

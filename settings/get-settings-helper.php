@@ -1,5 +1,7 @@
 <?php
 
+defined('ABSPATH') || exit('Opening plugin file directly');
+
 require_once __DIR__ . '/app-settings.php';
 require_once __DIR__ . '/sovendus-countries.php';
 

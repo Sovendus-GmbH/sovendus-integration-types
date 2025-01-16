@@ -1,5 +1,7 @@
 <?php
 
+defined('ABSPATH') || exit('Opening plugin file directly');
+
 /**
  * Split street and street number
  */
