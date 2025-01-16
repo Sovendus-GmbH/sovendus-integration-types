@@ -15,7 +15,7 @@ import { ConfigurationDialog } from "./confirmation-dialog";
 import { Notification } from "./notification";
 import { SovendusOptimize } from "./optimize";
 import { ProductCard } from "./product-card";
-import { Alert, AlertDescription } from "./ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { SovendusVoucherNetwork } from "./voucher-network";
 
 export interface AdditionalStep {
@@ -162,10 +162,12 @@ export default function SovendusBackendForm({
       </div>
 
       <Alert className="bg-blue-50 border-blue-200">
+        <AlertTitle className="text-blue-700 font-semibold">
+          <strong>Welcome to your Sovendus configuration dashboard.</strong>
+        </AlertTitle>
         <AlertDescription className="text-blue-700 font-semibold">
-          <strong>Important:</strong> Welcome to your Sovendus configuration
-          dashboard. To get started or make changes to your setup, please
-          contact Sovendus for a personalized demo and configuration process.
+          To get started or make changes to your setup, please contact Sovendus
+          for a personalized demo and configuration process.
         </AlertDescription>
       </Alert>
 
