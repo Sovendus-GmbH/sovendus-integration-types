@@ -74,7 +74,7 @@ function getSovendusConfig(
 
 // eslint-disable-next-line @typescript-eslint/require-await
 async function setCookie(cookieName: string, value?: string): Promise<string> {
-  const path: string = "/";
+  const path = "/";
   const expires: number = 60 * 60 * 24 * 30;
   const domain = window.location.hostname;
   const cookieString = `${cookieName}=${value};secure;samesite=strict;max-age=${expires};domain=${domain};path=${path}`;

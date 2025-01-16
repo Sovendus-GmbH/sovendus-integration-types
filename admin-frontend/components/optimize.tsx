@@ -136,13 +136,6 @@ export function SovendusOptimize({
                 />
               </AlertDescription>
             </Alert>
-            {/* <Alert className="bg-blue-50 border-blue-200">
-              <AlertDescription className="text-blue-700">
-                <strong>Remember:</strong> To fully activate and configure
-                Optimize, you must contact Sovendus for a personalized setup.
-              </AlertDescription>
-            </Alert> */}
-
             {additionalSteps && (
               <Card className="border-2 border-green-500">
                 <CardHeader>

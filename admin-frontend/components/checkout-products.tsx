@@ -59,7 +59,7 @@ export function SovendusCheckoutProducts({
         </p>
         <Button
           size="lg"
-          onClick={(): void => window.open(DEMO_REQUEST_URL, "_blank")}
+          onClick={(): void => void window.open(DEMO_REQUEST_URL, "_blank")}
           className="bg-white text-purple-600 hover:bg-purple-100"
         >
           Schedule Your Personalized Demo
@@ -132,13 +132,6 @@ export function SovendusCheckoutProducts({
                 Enable Sovendus Checkout Products
               </Label>
             </div>
-            {/* <Alert className="bg-blue-50 border-blue-200">
-              <AlertDescription className="text-blue-700">
-                <strong>Remember:</strong> To fully activate and configure
-                Checkout Products, you must contact Sovendus for a personalized
-                setup.
-              </AlertDescription>
-            </Alert> */}
           </div>
         </TabsContent>
         <TabsContent value="benefits">

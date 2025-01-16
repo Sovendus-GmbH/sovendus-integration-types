@@ -99,14 +99,6 @@ export function SovendusVoucherNetwork({
                 />
               </AlertDescription>
             </Alert>
-            {/* <Alert className="bg-blue-50 border-blue-200">
-              <AlertDescription className="text-blue-700">
-                <strong>Remember:</strong> To fully activate and configure
-                Voucher Network & Checkout Benefits, you must contact Sovendus
-                for a personalized setup.
-              </AlertDescription>
-            </Alert> */}
-
             {additionalSteps && (
               <Card className="border-2 border-blue-500">
                 <CardHeader>
