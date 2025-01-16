@@ -61,7 +61,9 @@ export default function SovendusBackendForm({
       const hasUnsavedChanges =
         JSON.stringify(currentSettings) !==
         JSON.stringify(currentStoredSettings);
+      const prevActiveConfig = activeConfig;
       try {
+        setActiveConfig(null);
         if (hasUnsavedChanges) {
           setNotificationState({
             message: "Saving settings...",
@@ -75,8 +77,8 @@ export default function SovendusBackendForm({
             type: "success",
           });
         }
-        setActiveConfig(null);
       } catch (error) {
+        setActiveConfig(prevActiveConfig);
         setNotificationState({
           message: `Failed to save settings, error: ${error?.message || JSON.stringify(error)}`,
           type: "error",
