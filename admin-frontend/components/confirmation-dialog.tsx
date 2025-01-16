@@ -32,7 +32,7 @@ export function ConfigurationDialog({
             <span className="sr-only">Close</span>
           </button>
         </div>
-        <DialogHeader className="pb-6">
+        <DialogHeader className="pb-6" style={{ marginTop: "-55px" }}>
           <DialogTitle className="text-2xl">{title}</DialogTitle>
         </DialogHeader>
         {children}
