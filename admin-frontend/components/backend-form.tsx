@@ -9,6 +9,7 @@ import {
   EnabledVoucherNetworkCountries,
   type SovendusAppSettings,
 } from "../../settings/app-settings";
+import { cn } from "../lib/utils";
 import { SovendusCheckoutProducts } from "./checkout-products";
 import { ConfigurationDialog } from "./confirmation-dialog";
 import { Notification } from "./notification";
@@ -138,7 +139,14 @@ export default function SovendusBackendForm({
     return {
       active: currentSettings.checkoutProducts,
       details: (
-        <p>
+        <p
+          className={cn(
+            "text-sm",
+            currentSettings.checkoutProducts
+              ? "text-green-600"
+              : "text-red-600",
+          )}
+        >
           {currentSettings.checkoutProducts
             ? "Ready to receive traffic from partner shops."
             : "Not active"}
