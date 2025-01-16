@@ -171,7 +171,7 @@ export default function SovendusBackendForm({
           metrics={[
             { label: "Network Reach", value: "7M+" },
             { label: "Partner Shops", value: "2,300+" },
-            { label: "Available Countries", value: "16" },
+            { label: "Available Countries", value: "14" },
           ]}
           onConfigure={(): void => setActiveConfig("voucherNetwork")}
           requestDemoHref={DEMO_REQUEST_URL}
