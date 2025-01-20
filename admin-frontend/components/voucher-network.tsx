@@ -48,8 +48,8 @@ export function SovendusVoucherNetwork({
           Voucher Network & Checkout Benefits: Dual Revenue Streams
         </h2>
         <p className="text-xl mb-6">
-          Boost sales with post-purchase vouchers and earn revenue from partner
-          offers - a win-win solution for your e-commerce business.
+          Boost traffic and sales with our closed voucher network, while
+          rewarding customers at checkout and earning extra revenue.
         </p>
         <Button
           size="lg"
@@ -161,9 +161,8 @@ export function SovendusVoucherNetwork({
               </CardHeader>
               <CardContent>
                 <p>
-                  Attract new customers by offering vouchers from our extensive
-                  network on your checkout page. Increase your brand visibility
-                  and acquire new customers from partner shops.
+                  Gain traffic and new sales through our closed voucher network
+                  with over 7 million online shoppers every month.
                 </p>
               </CardContent>
             </Card>

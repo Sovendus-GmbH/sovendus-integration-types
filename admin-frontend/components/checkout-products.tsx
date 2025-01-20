@@ -54,8 +54,8 @@ export function SovendusCheckoutProducts({
           Checkout Products: Your Gateway to Exponential Growth
         </h2>
         <p className="text-xl mb-6">
-          Transform your e-commerce success with high-quality traffic from our
-          vast network of partner shops.
+          Market your products to a network of over 24 million active online
+          shoppers every month and see an increase in new customers and sales.
         </p>
         <Button
           size="lg"
@@ -202,9 +202,9 @@ export function SovendusCheckoutProducts({
                 <div>
                   <strong className="text-lg">Smart Targeting:</strong>
                   <p>
-                    Our advanced system displays your offers to the most
-                    relevant customers based on their shopping behavior and
-                    preferences.
+                    Through data-based targeting, our algorithm presents your
+                    offers to the most relevant customers based on their
+                    shopping behavior and preferences.
                   </p>
                 </div>
               </li>

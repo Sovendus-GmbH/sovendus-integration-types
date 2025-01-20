@@ -205,7 +205,7 @@ export default function SovendusBackendForm({
 
         <ProductCard
           title="Checkout Products"
-          description="Receive high-quality traffic from partner shops"
+          description="Reach 24 million potential customers a month with your product"
           icon={<ShoppingBagIcon className="h-6 w-6 text-purple-500" />}
           status={getCheckoutProductsStatus()}
           metrics={[

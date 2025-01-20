@@ -265,8 +265,9 @@ export function SovendusOptimize({
               </CardHeader>
               <CardContent>
                 <p>
-                  Leverage advanced analytics to continuously improve your
-                  performance and understand customer behavior.
+                  Leverage powerful analytics to gain deeper insights, optimize
+                  your strategies, and continuously enhance your shop's
+                  performance by understanding customer behavior.
                 </p>
               </CardContent>
             </Card>
@@ -279,8 +280,8 @@ export function SovendusOptimize({
               </CardHeader>
               <CardContent>
                 <p>
-                  Easy copy/paste integration into any online shop, with
-                  customized design to match your brand.
+                  Easy integration into any online shop, with customized design
+                  to match your brand.
                 </p>
               </CardContent>
             </Card>
@@ -316,8 +317,10 @@ export function SovendusOptimize({
                 <div>
                   <strong className="text-lg">Targeted Interventions:</strong>
                   <p>
-                    Based on the analysis, Optimize deploys personalized
-                    interventions to engage users at critical moments.
+                    Sovendus Optimize is designed to intelligently analyze user
+                    behavior and implement targeted interventions to enhance
+                    user engagement and reduce bounce and cart abandonment
+                    rates.
                   </p>
                 </div>
               </li>
@@ -326,8 +329,10 @@ export function SovendusOptimize({
                 <div>
                   <strong className="text-lg">Conversion Boost:</strong>
                   <p>
-                    These interventions help reduce bounce rates, increase
-                    engagement, and drive more conversions.
+                    By focusing on personalized strategies, Sovendus Optimize
+                    helps businesses reduce bounce and cart abandonment rates,
+                    driving higher conversions and improving overall customer
+                    retention.
                   </p>
                 </div>
               </li>
