@@ -43,16 +43,7 @@ export function EnabledVoucherNetworkCountries({
     <p
       className={cn(
         "text-sm",
-        Object.values(currentSettings.countries).some((country) =>
-          Object.values(country.languages)?.some(
-            (lang) =>
-              lang.isEnabled &&
-              lang.trafficMediumNumber &&
-              lang.trafficSourceNumber,
-          ),
-        )
-          ? "text-green-600"
-          : "text-red-600",
+        isVnEnabled(currentSettings) ? "text-green-600" : "text-red-600",
       )}
     >
       {enabledLocales.length > 0 ? (
@@ -64,6 +55,15 @@ export function EnabledVoucherNetworkCountries({
         <span>No countries enabled</span>
       )}
     </p>
+  );
+}
+
+export function isVnEnabled(currentSettings: VoucherNetworkSettings): boolean {
+  return Object.values(currentSettings.countries).some((country) =>
+    Object.values(country.languages)?.some(
+      (lang) =>
+        lang.isEnabled && lang.trafficMediumNumber && lang.trafficSourceNumber,
+    ),
   );
 }
 
@@ -96,17 +96,21 @@ export function EnabledOptimizeCountries({
     <p
       className={cn(
         "text-sm",
-        (currentSettings.useGlobalId && currentSettings.globalEnabled) ||
-          (!currentSettings.useGlobalId &&
-            Object.values(currentSettings.countrySpecificIds).some(
-              (country) => country.isEnabled,
-            ))
-          ? "text-green-600"
-          : "text-red-600",
+        isOptimizeEnabled(currentSettings) ? "text-green-600" : "text-red-600",
       )}
     >
       {statusMessage}
     </p>
+  );
+}
+
+export function isOptimizeEnabled(currentSettings: OptimizeSettings): boolean {
+  return (
+    (currentSettings.useGlobalId && currentSettings.globalEnabled) ||
+    (!currentSettings.useGlobalId &&
+      Object.values(currentSettings.countrySpecificIds).some(
+        (country) => country.isEnabled,
+      ))
   );
 }
 

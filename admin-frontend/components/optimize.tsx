@@ -16,7 +16,10 @@ import type {
   OptimizeSettings,
   SovendusAppSettings,
 } from "../../settings/app-settings";
-import { EnabledOptimizeCountries } from "../../settings/app-settings";
+import {
+  EnabledOptimizeCountries,
+  isOptimizeEnabled,
+} from "../../settings/app-settings";
 import type { CountryCodes } from "../../settings/sovendus-countries";
 import { COUNTRIES } from "../../settings/sovendus-countries";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
@@ -71,7 +74,7 @@ export function SovendusOptimize({
       },
     }));
   };
-
+  const optimizeEnabled = isOptimizeEnabled(currentOptimizeSettings);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -129,8 +132,16 @@ export function SovendusOptimize({
         </TabsList>
         <TabsContent value="configure">
           <div className="space-y-6">
-            <Alert className="bg-blue-50 border-green-200 mt-2">
-              <AlertDescription className="text-green-700">
+            <Alert
+              className={`${
+                optimizeEnabled
+                  ? "bg-green-50 border-green-200"
+                  : "bg-red-50 border-red-200"
+              } mt-2`}
+            >
+              <AlertDescription
+                className={optimizeEnabled ? "text-green-700" : "text-red-700"}
+              >
                 <EnabledOptimizeCountries
                   currentSettings={currentOptimizeSettings}
                 />
@@ -197,6 +208,11 @@ export function SovendusOptimize({
                       </TabsTrigger>
                     </TabsList>
                     <TabsContent value="global" className="p-4">
+                      <Alert className="bg-blue-50 border-blue-200">
+                        <AlertDescription className="text-blue-700">
+                          Use one Optimize ID for all countries
+                        </AlertDescription>
+                      </Alert>
                       <div className="space-y-4 mt-4">
                         <div className="flex items-center space-x-2">
                           <Switch
@@ -224,6 +240,11 @@ export function SovendusOptimize({
                       </div>
                     </TabsContent>
                     <TabsContent value="country-specific" className="p-4">
+                      <Alert className="bg-blue-50 border-blue-200">
+                        <AlertDescription className="text-blue-700">
+                          Use different Optimize ID's for each country
+                        </AlertDescription>
+                      </Alert>
                       <div className="space-y-4 mt-4">
                         <CountryOptions
                           currentSettings={currentOptimizeSettings}

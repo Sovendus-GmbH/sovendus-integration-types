@@ -9,7 +9,10 @@ import type {
   SovendusAppSettings,
   VoucherNetworkSettings,
 } from "../../settings/app-settings";
-import { EnabledVoucherNetworkCountries } from "../../settings/app-settings";
+import {
+  EnabledVoucherNetworkCountries,
+  isVnEnabled,
+} from "../../settings/app-settings";
 import type { CountryCodes } from "../../settings/sovendus-countries";
 import { LANGUAGES_BY_COUNTRIES } from "../../settings/sovendus-countries";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
@@ -36,6 +39,7 @@ export function SovendusVoucherNetwork({
   setCurrentSettings,
   additionalSteps,
 }: SovendusVoucherNetworkProps): JSX.Element {
+  const vnEnabled = isVnEnabled(currentSettings);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -92,8 +96,16 @@ export function SovendusVoucherNetwork({
         </TabsList>
         <TabsContent value="configure">
           <div className="space-y-6">
-            <Alert className="bg-blue-50 border-green-200 mt-2">
-              <AlertDescription className="text-green-700">
+            <Alert
+              className={`${
+                vnEnabled
+                  ? "bg-green-50 border-green-200"
+                  : "bg-red-50 border-red-200"
+              } mt-2`}
+            >
+              <AlertDescription
+                className={vnEnabled ? "text-green-700" : "text-red-700"}
+              >
                 <EnabledVoucherNetworkCountries
                   currentSettings={currentSettings}
                 />
