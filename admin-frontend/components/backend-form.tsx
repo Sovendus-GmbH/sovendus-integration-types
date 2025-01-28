@@ -33,6 +33,7 @@ interface SovendusBackendFormProps {
   currentStoredSettings: SovendusAppSettings;
   saveSettings: (data: SovendusAppSettings) => Promise<SovendusAppSettings>;
   additionalSteps?: AdditionalSteps;
+  zoomedVersion: boolean;
 }
 
 export const DEMO_REQUEST_URL =
@@ -42,6 +43,7 @@ export default function SovendusBackendForm({
   currentStoredSettings: _currentStoredSettings,
   saveSettings,
   additionalSteps,
+  zoomedVersion,
 }: SovendusBackendFormProps): JSX.Element {
   const [currentStoredSettings, setCurrentStoredSettings] =
     useState<SovendusAppSettings>(_currentStoredSettings);
@@ -158,27 +160,30 @@ export default function SovendusBackendForm({
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-4xl font-bold">Sovendus App</h1>
+    <div
+      className={cn("container mx-auto p-6 space-y-8", {
+        zoomed: zoomedVersion,
+      })}
+    >
+      <div className={cn("flex justify-between items-center")}>
+        <h1 className={cn("text-4xl font-bold")}>Sovendus App</h1>
       </div>
 
-      <Alert className="bg-blue-50 border-blue-200">
-        <AlertTitle className="text-blue-700 font-semibold">
+      <Alert className={cn("bg-blue-50 border-blue-200")}>
+        <AlertTitle className={cn("text-blue-700 font-semibold")}>
           <strong>Welcome to your Sovendus configuration dashboard.</strong>
         </AlertTitle>
-        <AlertDescription className="text-blue-700 font-semibold">
+        <AlertDescription className={cn("text-blue-700 font-semibold")}>
           To get started or make changes to your setup, please contact Sovendus
           for a personalized demo and configuration process.
         </AlertDescription>
       </Alert>
 
-      <div className="grid gap-6">
+      <div className={cn("grid gap-6")}>
         <ProductCard
           title="Voucher Network & Checkout Benefits"
           description="Drive sales with post-purchase vouchers and earn revenue from partner offers"
-          icon={<Gift className="h-6 w-6 text-blue-500" />}
-          // status={getVoucherNetworkStatus()}
+          icon={<Gift className={cn("h-6 w-6 text-blue-500")} />}
           status={getVoucherNetworkStatus()}
           metrics={[
             { label: "Network Reach", value: "7M+" },
@@ -192,7 +197,7 @@ export default function SovendusBackendForm({
         <ProductCard
           title="Optimize"
           description="Boost conversions with intelligent on-site optimization"
-          icon={<BarChart2 className="h-6 w-6 text-green-500" />}
+          icon={<BarChart2 className={cn("h-6 w-6 text-green-500")} />}
           status={getOptimizeStatus()}
           metrics={[
             { label: "Conversion Boost", value: "10%" },
@@ -206,7 +211,7 @@ export default function SovendusBackendForm({
         <ProductCard
           title="Checkout Products"
           description="Reach 24 million potential customers a month with your product"
-          icon={<ShoppingBagIcon className="h-6 w-6 text-purple-500" />}
+          icon={<ShoppingBagIcon className={cn("h-6 w-6 text-purple-500")} />}
           status={getCheckoutProductsStatus()}
           metrics={[
             { label: "Annual Orders", value: "3.6M+" },

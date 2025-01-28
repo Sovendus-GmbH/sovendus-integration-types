@@ -117,6 +117,7 @@ export function isOptimizeEnabled(currentSettings: OptimizeSettings): boolean {
 export interface VoucherNetworkSettings {
   countries: { [key in CountryCodes]?: VoucherNetworkCountry };
   anyCountryEnabled: boolean;
+  iframeContainerId?: string;
 }
 
 export interface OptimizeSettings {

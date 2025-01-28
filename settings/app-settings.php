@@ -79,13 +79,16 @@ class VoucherNetwork
 {
     public array $countries = [];
     public bool $anyCountryEnabled = false;
+    public string|null $iframeContainerId = null;
 
     public function __construct(
         bool $anyCountryEnabled,
-        ?array $countries = []
+        ?array $countries = [],
+        ?string $forced_iframe = null
     ) {
         $this->anyCountryEnabled = $anyCountryEnabled;
         $this->countries = $countries;
+        $this->iframeContainerId = $forced_iframe;
     }
 
     public function addCountry(CountryCodes $countryCode, VoucherNetworkCountry $country): void
@@ -102,7 +105,7 @@ class VoucherNetwork
                 $countries[$countryCode] = VoucherNetworkCountry::fromJson($countryData);
             }
         }
-        return new self($anyCountryEnabled, $countries);
+        return new self(anyCountryEnabled: $anyCountryEnabled, countries: $countries);
     }
 }
 

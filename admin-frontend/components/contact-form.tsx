@@ -6,15 +6,16 @@ import React from "react";
 
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { cn } from "../lib/utils";
 
 export function ContactCTA(): JSX.Element {
   return (
-    <Card className="mt-8">
+    <Card className={cn("mt-8")}>
       <CardHeader>
         <CardTitle>Want to boost your revenue even further?</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="text-gray-600">
+      <CardContent className={cn("space-y-4")}>
+        <p className={cn("text-gray-600")}>
           Get in touch with our team to learn more about how Sovendus can help
           grow your business. Our experts will guide you through our products
           and help you maximize your revenue potential.
@@ -26,10 +27,10 @@ export function ContactCTA(): JSX.Element {
               "_blank",
             )
           }
-          className="w-full sm:w-auto bg-blue-50 border-blue-200"
+          className={cn("w-full sm:w-auto bg-blue-50 border-blue-200")}
         >
           Request Demo Tour{" "}
-          <ExternalLink className="ml-2 h-4 w-4 text-blue-700" />
+          <ExternalLink className={cn("ml-2 h-4 w-4 text-blue-700")} />
         </Button>
       </CardContent>
     </Card>

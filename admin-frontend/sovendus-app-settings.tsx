@@ -9,16 +9,19 @@ import SovendusBackendForm from "./components/backend-form";
 interface SovendusSettingsProps {
   currentStoredSettings: SovendusAppSettings;
   saveSettings: (data: SovendusAppSettings) => Promise<SovendusAppSettings>;
+  zoomedVersion?: boolean;
 }
 
 export function SovendusSettings({
   currentStoredSettings,
   saveSettings,
+  zoomedVersion = false,
 }: SovendusSettingsProps): JSX.Element {
   return (
     <SovendusBackendForm
       currentStoredSettings={currentStoredSettings}
       saveSettings={saveSettings}
+      zoomedVersion={zoomedVersion}
     />
   );
 }

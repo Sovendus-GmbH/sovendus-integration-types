@@ -20,6 +20,7 @@ import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
+import { cn } from "../lib/utils";
 
 type CountryOptionsProps = {
   currentSettings: OptimizeSettings;
@@ -109,20 +110,20 @@ export function CountryOptions({
   };
 
   return (
-    <Accordion type="single" collapsible className="w-full">
+    <Accordion type="single" collapsible className={cn("w-full")}>
       {countryCodes.map((countryKey) => (
         <AccordionItem value={countryKey} key={countryKey}>
           <AccordionTrigger>
-            <div className="flex items-center justify-between w-full">
+            <div className={cn("flex items-center justify-between w-full")}>
               <span>{COUNTRIES[countryKey]}</span>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-muted-foreground">
+              <div className={cn("flex items-center space-x-2")}>
+                <span className={cn("text-sm text-muted-foreground")}>
                   {getCountryStatus(countryKey)}
                 </span>
                 {isCountryEnabled(
                   currentSettings.countrySpecificIds[countryKey],
                 ) && (
-                  <Badge variant="outline" className="ml-2">
+                  <Badge variant="outline" className={cn("ml-2")}>
                     Enabled
                   </Badge>
                 )}
@@ -130,8 +131,8 @@ export function CountryOptions({
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-4 mx-1">
-              <div className="flex items-center space-x-2">
+            <div className={cn("space-y-4 mx-1")}>
+              <div className={cn("flex items-center space-x-2")}>
                 <Switch
                   id={`${countryKey}-enabled`}
                   checked={
@@ -146,7 +147,7 @@ export function CountryOptions({
                   Enable for {COUNTRIES[countryKey]}
                 </label>
               </div>
-              <div className="space-y-2">
+              <div className={cn("space-y-2")}>
                 <Label htmlFor={`${countryKey}-id`}>Optimize ID</Label>
                 <Input
                   id={`${countryKey}-id`}

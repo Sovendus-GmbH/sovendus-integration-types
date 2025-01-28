@@ -33,15 +33,15 @@ export function ProductCard({
   requestDemoHref,
 }: ProductCardProps): JSX.Element {
   return (
-    <Card className="w-full">
-      <CardHeader className="border-b">
-        <div className="flex items-start justify-between">
-          <div className="space-y-1">
-            <CardTitle className="flex items-center text-2xl">
+    <Card className={cn("w-full")}>
+      <CardHeader className={cn("border-b")}>
+        <div className={cn("flex items-start justify-between")}>
+          <div className={cn("space-y-1")}>
+            <CardTitle className={cn("flex items-center text-2xl")}>
               {icon}
-              <span className="ml-2">{title}</span>
+              <span className={cn("ml-2")}>{title}</span>
             </CardTitle>
-            <p className="text-sm text-muted-foreground max-w-2xl">
+            <p className={cn("text-sm text-muted-foreground max-w-2xl")}>
               {description}
             </p>
           </div>
@@ -58,34 +58,38 @@ export function ProductCard({
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="pt-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap gap-8">
+      <CardContent className={cn("pt-6")}>
+        <div
+          className={cn("flex flex-wrap items-center justify-between gap-4")}
+        >
+          <div className={cn("flex flex-wrap gap-8")}>
             {metrics.map((metric, index) => (
-              <div key={index} className="space-y-1">
-                <p className="text-sm text-muted-foreground">{metric.label}</p>
-                <p className="text-2xl font-bold">{metric.value}</p>
+              <div key={index} className={cn("space-y-1")}>
+                <p className={cn("text-sm text-muted-foreground")}>
+                  {metric.label}
+                </p>
+                <p className={cn("text-2xl font-bold")}>{metric.value}</p>
               </div>
             ))}
           </div>
-          <div className="flex gap-2">
+          <div className={cn("flex gap-2")}>
             <Button
               variant="outline"
               onClick={(): void => void window.open(requestDemoHref, "_blank")}
-              className="hidden sm:flex"
+              className={cn("hidden sm:flex")}
             >
               Request Demo Tour
-              <ExternalLink className="ml-2 h-4 w-4" />
+              <ExternalLink className={cn("ml-2 h-4 w-4")} />
             </Button>
             <Button onClick={onConfigure}>
               Configure
-              <ChevronRight className="ml-2 h-4 w-4" />
+              <ChevronRight className={cn("ml-2 h-4 w-4")} />
             </Button>
           </div>
         </div>
         {status.details && (
-          <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <h4 className="text-sm font-semibold mb-2">
+          <div className={cn("mt-4 p-4 bg-gray-50 rounded-lg")}>
+            <h4 className={cn("text-sm font-semibold mb-2")}>
               Current Configuration
             </h4>
             {status.details}

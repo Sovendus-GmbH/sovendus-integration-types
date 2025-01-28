@@ -148,12 +148,22 @@ function handleVoucherNetwork(
       consumerCountry: config.consumerCountry,
       consumerPhone: config.consumerPhone,
     };
+
+    const sovendusDiv = document.createElement("div");
+    sovendusDiv.id = "sovendus-integration-container";
+    const rootElement =
+      config.settings.voucherNetwork.iframeContainerId &&
+      document.querySelector(config.settings.voucherNetwork.iframeContainerId);
+    if (rootElement) {
+      rootElement.appendChild(sovendusDiv);
+    } else {
+      document.body.appendChild(sovendusDiv);
+    }
+
     const script = document.createElement("script");
     script.type = "text/javascript";
     script.async = true;
-    script.src = `${
-      window.location.protocol
-    }//api.sovendus.com/sovabo/common/js/flexibleIframe.js`;
+    script.src = `https://api.sovendus.com/sovabo/common/js/flexibleIframe.js`;
     document.body.appendChild(script);
     window.sovThankyouStatus.loadedVoucherNetwork = true;
   }
@@ -169,7 +179,11 @@ const getCookie = (name: string): string | undefined => {
 };
 
 const setCookie = (name: string): string => {
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  // only capable clearing a cookie
+  const path = "/";
+  const domain = window.location.hostname;
+  const cookieString = `${name}=;secure;samesite=strict;max-age=Thu, 01 Jan 1970 00:00:00 UTC;domain=${domain};path=${path}`;
+  document.cookie = cookieString;
   return "";
 };
 

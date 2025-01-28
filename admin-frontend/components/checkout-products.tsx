@@ -43,74 +43,84 @@ export function SovendusCheckoutProducts({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="space-y-6 pb-8"
+      className={cn("space-y-6 pb-8")}
     >
       <div
         className={cn(
           "bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-8 rounded-lg shadow-lg",
         )}
       >
-        <h2 className="text-3xl font-bold mb-4 text-white">
+        <h2 className={cn("text-3xl font-bold mb-4 text-white")}>
           Checkout Products: Your Gateway to Exponential Growth
         </h2>
-        <p className="text-xl mb-6">
+        <p className={cn("text-xl mb-6")}>
           Market your products to a network of over 24 million active online
           shoppers every month and see an increase in new customers and sales.
         </p>
         <Button
           size="lg"
           onClick={(): void => void window.open(DEMO_REQUEST_URL, "_blank")}
-          className="bg-white text-purple-600 hover:bg-purple-100"
+          className={cn("bg-white text-purple-600 hover:bg-purple-100")}
         >
           Schedule Your Personalized Demo
-          <ArrowRight className="ml-2 h-5 w-5" />
+          <ArrowRight className={cn("ml-2 h-5 w-5")} />
         </Button>
       </div>
 
-      <Alert className="mb-4 bg-blue-50 border-blue-200">
-        <AlertDescription className="text-blue-700 font-semibold">
+      <Alert className={cn("mb-4 bg-blue-50 border-blue-200")}>
+        <AlertDescription className={cn("text-blue-700 font-semibold")}>
           <strong>Important:</strong> The first step to activate Checkout
           Products is to contact Sovendus for a personalized demo and setup. Our
           team will guide you through the entire process.
         </AlertDescription>
       </Alert>
 
-      <Tabs defaultValue="configure" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-8">
+      <Tabs defaultValue="configure" className={cn("w-full")}>
+        <TabsList className={cn("grid w-full grid-cols-3 mb-8")}>
           <TabsTrigger
             value="configure"
-            className="text-lg font-semibold py-3 bg-purple-100 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+            className={cn(
+              "text-lg font-semibold py-3 bg-purple-100 data-[state=active]:bg-purple-600 data-[state=active]:text-white",
+            )}
           >
             Configure
           </TabsTrigger>
           <TabsTrigger
             value="benefits"
-            className="text-lg font-semibold py-3 bg-purple-100 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+            className={cn(
+              "text-lg font-semibold py-3 bg-purple-100 data-[state=active]:bg-purple-600 data-[state=active]:text-white",
+            )}
           >
             Key Benefits
           </TabsTrigger>
           <TabsTrigger
             value="how-it-works"
-            className="text-lg font-semibold py-3 bg-purple-100 data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+            className={cn(
+              "text-lg font-semibold py-3 bg-purple-100 data-[state=active]:bg-purple-600 data-[state=active]:text-white",
+            )}
           >
             How It Works
           </TabsTrigger>
         </TabsList>
         <TabsContent value="configure">
-          <div className="space-y-6">
+          <div className={cn("space-y-6")}>
             {additionalSteps && (
-              <Card className="border-2 border-purple-500">
+              <Card className={cn("border-2 border-purple-500")}>
                 <CardHeader>
-                  <CardTitle className="text-xl font-semibold flex items-center">
-                    <CheckCircle className="w-6 h-6 mr-2 text-purple-500" />
+                  <CardTitle
+                    className={cn("text-xl font-semibold flex items-center")}
+                  >
+                    <CheckCircle
+                      className={cn("w-6 h-6 mr-2 text-purple-500")}
+                    />
                     Additional Setup Steps
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <h4 className="font-semibold mb-2">
+                  <h4 className={cn("font-semibold mb-2")}>
                     {additionalSteps.title}
                   </h4>
-                  <ol className="list-decimal list-inside space-y-2">
+                  <ol className={cn("list-decimal list-inside space-y-2")}>
                     {additionalSteps.subSteps.map((step, index) => (
                       <li key={index}>{step}</li>
                     ))}
@@ -119,7 +129,7 @@ export function SovendusCheckoutProducts({
               </Card>
             )}
 
-            <div className="flex items-center space-x-4 pt-4 ml-2">
+            <div className={cn("flex items-center space-x-4 pt-4 ml-2")}>
               <Switch
                 id="checkout-products-enabled"
                 checked={enabled}
@@ -127,7 +137,7 @@ export function SovendusCheckoutProducts({
               />
               <Label
                 htmlFor="checkout-products-enabled"
-                className="text-lg font-semibold"
+                className={cn("text-lg font-semibold")}
               >
                 Enable Sovendus Checkout Products
               </Label>
@@ -135,11 +145,11 @@ export function SovendusCheckoutProducts({
           </div>
         </TabsContent>
         <TabsContent value="benefits">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-6 mt-6")}>
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center text-blue-600">
-                  <Users className="mr-2 h-5 w-5" />
+                <CardTitle className={cn("flex items-center text-blue-600")}>
+                  <Users className={cn("mr-2 h-5 w-5")} />
                   Massive Reach
                 </CardTitle>
               </CardHeader>
@@ -152,8 +162,8 @@ export function SovendusCheckoutProducts({
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center text-green-600">
-                  <Package className="mr-2 h-5 w-5" />
+                <CardTitle className={cn("flex items-center text-green-600")}>
+                  <Package className={cn("mr-2 h-5 w-5")} />
                   High Conversion
                 </CardTitle>
               </CardHeader>
@@ -166,8 +176,8 @@ export function SovendusCheckoutProducts({
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center text-purple-600">
-                  <CreditCard className="mr-2 h-5 w-5" />
+                <CardTitle className={cn("flex items-center text-purple-600")}>
+                  <CreditCard className={cn("mr-2 h-5 w-5")} />
                   Risk-Free Revenue
                 </CardTitle>
               </CardHeader>
@@ -181,15 +191,21 @@ export function SovendusCheckoutProducts({
           </div>
         </TabsContent>
         <TabsContent value="how-it-works">
-          <div className="bg-gray-50 p-6 rounded-lg mt-6 space-y-4">
-            <h3 className="text-2xl font-semibold mb-4">
+          <div className={cn("bg-gray-50 p-6 rounded-lg mt-6 space-y-4")}>
+            <h3 className={cn("text-2xl font-semibold mb-4")}>
               How Checkout Products Works
             </h3>
-            <ol className="space-y-4">
-              <li className="flex items-start">
-                <CheckCircle className="mr-2 h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+            <ol className={cn("space-y-4")}>
+              <li className={cn("flex items-start")}>
+                <CheckCircle
+                  className={cn(
+                    "mr-2 h-5 w-5 text-green-500 mt-1 flex-shrink-0",
+                  )}
+                />
                 <div>
-                  <strong className="text-lg">Seamless Integration:</strong>
+                  <strong className={cn("text-lg")}>
+                    Seamless Integration:
+                  </strong>
                   <p>
                     After your personalized setup with Sovendus, your offers
                     will appear on partner shops' checkout pages, presented as
@@ -197,10 +213,14 @@ export function SovendusCheckoutProducts({
                   </p>
                 </div>
               </li>
-              <li className="flex items-start">
-                <CheckCircle className="mr-2 h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+              <li className={cn("flex items-start")}>
+                <CheckCircle
+                  className={cn(
+                    "mr-2 h-5 w-5 text-green-500 mt-1 flex-shrink-0",
+                  )}
+                />
                 <div>
-                  <strong className="text-lg">Smart Targeting:</strong>
+                  <strong className={cn("text-lg")}>Smart Targeting:</strong>
                   <p>
                     Through data-based targeting, our algorithm presents your
                     offers to the most relevant customers based on their
@@ -208,10 +228,14 @@ export function SovendusCheckoutProducts({
                   </p>
                 </div>
               </li>
-              <li className="flex items-start">
-                <CheckCircle className="mr-2 h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+              <li className={cn("flex items-start")}>
+                <CheckCircle
+                  className={cn(
+                    "mr-2 h-5 w-5 text-green-500 mt-1 flex-shrink-0",
+                  )}
+                />
                 <div>
-                  <strong className="text-lg">Traffic Boost:</strong>
+                  <strong className={cn("text-lg")}>Traffic Boost:</strong>
                   <p>
                     Interested customers click through to your shop, potentially
                     becoming new, high-intent customers and increasing your
@@ -219,10 +243,16 @@ export function SovendusCheckoutProducts({
                   </p>
                 </div>
               </li>
-              <li className="flex items-start">
-                <CheckCircle className="mr-2 h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+              <li className={cn("flex items-start")}>
+                <CheckCircle
+                  className={cn(
+                    "mr-2 h-5 w-5 text-green-500 mt-1 flex-shrink-0",
+                  )}
+                />
                 <div>
-                  <strong className="text-lg">Continuous Optimization:</strong>
+                  <strong className={cn("text-lg")}>
+                    Continuous Optimization:
+                  </strong>
                   <p>
                     Our team works with you to continuously refine and optimize
                     your campaigns for maximum performance.

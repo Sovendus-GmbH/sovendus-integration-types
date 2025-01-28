@@ -23,6 +23,7 @@ import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
+import { cn } from "../lib/utils";
 
 type CountryOptionsProps = {
   currentSettings: VoucherNetworkSettings;
@@ -142,7 +143,7 @@ export function CountryOptions({
     });
   };
   return (
-    <Accordion type="single" collapsible className="w-full">
+    <Accordion type="single" collapsible className={cn("w-full")}>
       {countryCodes.map((countryKey) =>
         Object.entries(LANGUAGES_BY_COUNTRIES[countryKey]).map(
           ([languageKey, countryName]) => (
@@ -207,14 +208,14 @@ function CountrySettings({
   return (
     <AccordionItem value={countryKey} key={countryKey}>
       <AccordionTrigger>
-        <div className="flex items-center justify-between w-full">
+        <div className={cn("flex items-center justify-between w-full")}>
           <span>{countryName}</span>
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-muted-foreground">
+          <div className={cn("flex items-center space-x-2")}>
+            <span className={cn("text-sm text-muted-foreground")}>
               {getCountryStatus(countryKey, languageKey)}
             </span>
             {isEnabled && (
-              <Badge variant="outline" className="ml-2">
+              <Badge variant="outline" className={cn("ml-2")}>
                 Enabled
               </Badge>
             )}
@@ -222,8 +223,8 @@ function CountrySettings({
         </div>
       </AccordionTrigger>
       <AccordionContent>
-        <div className="space-y-4 mx-1">
-          <div className="flex items-center space-x-2">
+        <div className={cn("space-y-4 mx-1")}>
+          <div className={cn("flex items-center space-x-2")}>
             <Switch
               id={`${countryKey}-enabled`}
               checked={isEnabled}
@@ -235,8 +236,8 @@ function CountrySettings({
               Enable for {countryName}
             </label>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
+          <div className={cn("grid grid-cols-2 gap-4")}>
+            <div className={cn("space-y-2")}>
               <Label htmlFor={`${countryKey}-source`}>
                 Traffic Source Number
               </Label>
@@ -256,7 +257,7 @@ function CountrySettings({
                 placeholder="Enter Traffic Source Number"
               />
             </div>
-            <div className="space-y-2">
+            <div className={cn("space-y-2")}>
               <Label htmlFor={`${countryKey}-medium`}>
                 Traffic Medium Number
               </Label>
