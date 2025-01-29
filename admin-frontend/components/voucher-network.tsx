@@ -56,8 +56,13 @@ export function SovendusVoucherNetwork({
     addToThankYou: false,
     addToOrderStatus: false,
   });
+  const [testStepsCompleted, setTestStepsCompleted] = useState({
+    placeTestOrder: false,
+    checkThankYou: false,
+    checkOrderStatus: false,
+  });
 
-  const totalSteps = 2; // 1. Additional Setup Steps, 2. Configure Settings
+  const totalSteps = 3; // 1. Additional Setup Steps, 2. Configure Settings, 3. Test the App
 
   const nextStep = (): void => {
     if (currentStep < totalSteps - 1) {
@@ -80,8 +85,22 @@ export function SovendusVoucherNetwork({
     }));
   };
 
+  const handleTestStepChange = (
+    step: "placeTestOrder" | "checkThankYou" | "checkOrderStatus",
+  ): void => {
+    setTestStepsCompleted((prev) => ({
+      ...prev,
+      [step]: !prev[step],
+    }));
+  };
+
   const allSetupStepsCompleted =
     Object.values(setupStepsCompleted).every(Boolean);
+
+  const allTestStepsCompleted =
+    Object.values(testStepsCompleted).every(Boolean);
+
+  const [isImageVisible, setIsImageVisible] = useState(false);
 
   const renderSetupStep = (step: number): JSX.Element => {
     if (step === 0) {
@@ -153,32 +172,108 @@ export function SovendusVoucherNetwork({
           </CardContent>
         </Card>
       );
+    } else if (step === 1) {
+      return (
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold flex items-center">
+              <Cog className="w-6 h-6 mr-2 text-blue-500" />
+              Step 2: Configure Settings
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg mb-4">
+              Great job completing the setup! Now, let's configure your Voucher
+              Network & Checkout Benefits settings.
+            </p>
+            <EnabledVoucherNetworkCountries currentSettings={currentSettings} />
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold mb-2">
+                Country-Specific Settings
+              </h3>
+              <CountryOptions
+                currentSettings={currentSettings}
+                setCurrentSettings={setCurrentSettings}
+                countryCodes={
+                  Object.keys(LANGUAGES_BY_COUNTRIES) as CountryCodes[]
+                }
+              />
+            </div>
+          </CardContent>
+        </Card>
+      );
     }
     return (
       <Card className="mt-6">
         <CardHeader>
           <CardTitle className="text-xl font-semibold flex items-center">
             <Cog className="w-6 h-6 mr-2 text-blue-500" />
-            Step 2: Configure Settings
+            Step 3: Test the App
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-lg mb-4">
-            Great job completing the setup! Now, let's configure your Voucher
-            Network & Checkout Benefits settings.
+            To test the integration, follow these steps:
           </p>
-          <EnabledVoucherNetworkCountries currentSettings={currentSettings} />
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-2">
-              Country-Specific Settings
-            </h3>
-            <CountryOptions
-              currentSettings={currentSettings}
-              setCurrentSettings={setCurrentSettings}
-              countryCodes={
-                Object.keys(LANGUAGES_BY_COUNTRIES) as CountryCodes[]
-              }
-            />
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="placeTestOrder"
+                checked={testStepsCompleted.placeTestOrder}
+                onCheckedChange={(): void =>
+                  handleTestStepChange("placeTestOrder")
+                }
+              />
+              <Label htmlFor="placeTestOrder">
+                Go to your Shopify store and place a test order to access the
+                "Thank You" page. Ensure that the order completes successfully
+                and that you are redirected to the confirmation page.
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="checkThankYou"
+                checked={testStepsCompleted.checkThankYou}
+                onCheckedChange={(): void =>
+                  handleTestStepChange("checkThankYou")
+                }
+              />
+              <Label htmlFor="checkThankYou">
+                Verify that the Sovendus integration is visible. Ensure that the
+                Sovendus banner is displayed in the correct position, as shown
+                in the example image below.
+              </Label>
+            </div>
+            <Button onClick={() => setIsImageVisible(!isImageVisible)}>
+              {isImageVisible ? "Hide Image" : "Show Image"}
+            </Button>
+            {isImageVisible && (
+              <motion.img
+                src="https://raw.githubusercontent.com/Sovendus-GmbH/Sovendus-Voucher-Network-and-Checkout-Benefits-App-for-Shopify/main/Shopify-App.png"
+                alt="Thank-You-Page-Example"
+                className="rounded-lg shadow-md"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+              />
+            )}
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="checkOrderStatus"
+                checked={testStepsCompleted.checkOrderStatus}
+                onCheckedChange={(): void =>
+                  handleTestStepChange("checkOrderStatus")
+                }
+              />
+              <Label htmlFor="checkOrderStatus">
+                Now reload the page to access the "Order Status" page. Verify
+                that the Sovendus integration is visible. Ensure that the
+                Sovendus banner is displayed in the correct position, as shown
+                in the example image below.
+              </Label>
+              <img src="" alt="" />
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -252,9 +347,9 @@ export function SovendusVoucherNetwork({
         <TabsContent value="configure">
           <Alert className="mb-4 bg-yellow-50 border-yellow-200">
             <AlertDescription className="text-yellow-700 font-semibold">
-              <strong>Important:</strong> Follow the two-step guide below to set
-              up your Voucher Network & Checkout Benefits. Our team is here to
-              assist you throughout the process.
+              <strong>Important:</strong> Follow the three-step guide below to
+              set up your Voucher Network & Checkout Benefits. Our team is here
+              to assist you throughout the process.
             </AlertDescription>
           </Alert>
           <div className="flex justify-between mt-6">
@@ -269,7 +364,8 @@ export function SovendusVoucherNetwork({
               onClick={nextStep}
               disabled={
                 currentStep === totalSteps - 1 ||
-                (currentStep === 0 && !allSetupStepsCompleted)
+                (currentStep === 0 && !allSetupStepsCompleted) ||
+                (currentStep === totalSteps && !allTestStepsCompleted)
               }
             >
               {currentStep === totalSteps - 1 ? "Finish Setup" : "Next Step"}
@@ -279,7 +375,7 @@ export function SovendusVoucherNetwork({
             <CardHeader>
               <CardTitle>Setup Progress</CardTitle>
               <CardDescription>
-                Complete both steps to activate Voucher Network & Checkout
+                Complete all steps to activate Voucher Network & Checkout
                 Benefits
               </CardDescription>
             </CardHeader>
@@ -307,7 +403,8 @@ export function SovendusVoucherNetwork({
               onClick={nextStep}
               disabled={
                 currentStep === totalSteps - 1 ||
-                (currentStep === 0 && !allSetupStepsCompleted)
+                (currentStep === 0 && !allSetupStepsCompleted) ||
+                (currentStep === totalSteps && !allTestStepsCompleted)
               }
             >
               {currentStep === totalSteps - 1 ? "Finish Setup" : "Next Step"}
