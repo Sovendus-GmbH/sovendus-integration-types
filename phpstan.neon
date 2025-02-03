@@ -1,6 +1,9 @@
 parameters:
   level: 5
+  treatPhpDocTypesAsCertain: false
   paths:
     - .
   bootstrapFiles:
     - vendor/autoload.php
+  excludePaths:
+    - vendor/*
