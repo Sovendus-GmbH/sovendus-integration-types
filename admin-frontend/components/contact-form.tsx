@@ -4,9 +4,9 @@ import { ExternalLink } from "lucide-react";
 import type { JSX } from "react";
 import React from "react";
 
+import { cn } from "../lib/utils";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { cn } from "../lib/utils";
 
 export function ContactCTA(): JSX.Element {
   return (

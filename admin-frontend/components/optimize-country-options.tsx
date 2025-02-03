@@ -10,6 +10,7 @@ import type {
 } from "../../settings/app-settings";
 import type { CountryCodes } from "../../settings/sovendus-countries";
 import { COUNTRIES } from "../../settings/sovendus-countries";
+import { cn } from "../lib/utils";
 import {
   Accordion,
   AccordionContent,
@@ -20,7 +21,6 @@ import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
-import { cn } from "../lib/utils";
 
 type CountryOptionsProps = {
   currentSettings: OptimizeSettings;

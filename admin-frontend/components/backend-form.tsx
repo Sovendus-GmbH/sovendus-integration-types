@@ -57,7 +57,7 @@ export default function SovendusBackendForm({
     message: string;
     type: "success" | "error" | "loading";
   } | null>(null);
-
+  const buttonsDisabled = notificationState?.type === "loading";
   const handleSave = async (open: boolean): Promise<void> => {
     if (!open) {
       const hasUnsavedChanges =
@@ -185,6 +185,7 @@ export default function SovendusBackendForm({
           description="Drive sales with post-purchase vouchers and earn revenue from partner offers"
           icon={<Gift className={cn("h-6 w-6 text-blue-500")} />}
           status={getVoucherNetworkStatus()}
+          buttonsDisabled={buttonsDisabled}
           metrics={[
             { label: "Network Reach", value: "7M+" },
             { label: "Partner Shops", value: "2,300+" },
@@ -199,6 +200,7 @@ export default function SovendusBackendForm({
           description="Boost conversions with intelligent on-site optimization"
           icon={<BarChart2 className={cn("h-6 w-6 text-green-500")} />}
           status={getOptimizeStatus()}
+          buttonsDisabled={buttonsDisabled}
           metrics={[
             { label: "Conversion Boost", value: "10%" },
             { label: "Bounce Rate Reduction", value: "5%" },
@@ -213,6 +215,7 @@ export default function SovendusBackendForm({
           description="Reach 24 million potential customers a month with your product"
           icon={<ShoppingBagIcon className={cn("h-6 w-6 text-purple-500")} />}
           status={getCheckoutProductsStatus()}
+          buttonsDisabled={buttonsDisabled}
           metrics={[
             { label: "Annual Orders", value: "3.6M+" },
             { label: "Conversion Rate", value: "1-3%" },

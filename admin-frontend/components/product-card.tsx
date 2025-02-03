@@ -21,6 +21,7 @@ interface ProductCardProps {
   }[];
   onConfigure: () => void;
   requestDemoHref: string;
+  buttonsDisabled: boolean;
 }
 
 export function ProductCard({
@@ -31,6 +32,7 @@ export function ProductCard({
   metrics,
   onConfigure,
   requestDemoHref,
+  buttonsDisabled,
 }: ProductCardProps): JSX.Element {
   return (
     <Card className={cn("w-full")}>
@@ -81,7 +83,7 @@ export function ProductCard({
               Request Demo Tour
               <ExternalLink className={cn("ml-2 h-4 w-4")} />
             </Button>
-            <Button onClick={onConfigure}>
+            <Button onClick={onConfigure} disabled={buttonsDisabled}>
               Configure
               <ChevronRight className={cn("ml-2 h-4 w-4")} />
             </Button>

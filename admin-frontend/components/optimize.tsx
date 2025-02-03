@@ -22,6 +22,7 @@ import {
 } from "../../settings/app-settings";
 import type { CountryCodes } from "../../settings/sovendus-countries";
 import { COUNTRIES } from "../../settings/sovendus-countries";
+import { cn } from "../lib/utils";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
 import { CountryOptions } from "./optimize-country-options";
 import {
@@ -37,7 +38,6 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { cn } from "../lib/utils";
 
 interface SovendusOptimizeProps {
   currentOptimizeSettings: OptimizeSettings;

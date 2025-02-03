@@ -1,8 +1,9 @@
-import { cn } from "../lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle, XCircle } from "lucide-react";
 import type { JSX } from "react";
 import React, { useEffect, useState } from "react";
+
+import { cn } from "../lib/utils";
 
 interface NotificationProps {
   message: string;

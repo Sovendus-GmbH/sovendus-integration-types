@@ -15,6 +15,7 @@ import {
 } from "../../settings/app-settings";
 import type { CountryCodes } from "../../settings/sovendus-countries";
 import { LANGUAGES_BY_COUNTRIES } from "../../settings/sovendus-countries";
+import { cn } from "../lib/utils";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
 import {
   Accordion,
@@ -27,7 +28,6 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { CountryOptions } from "./voucher-network-country-options";
-import { cn } from "../lib/utils";
 
 interface SovendusVoucherNetworkProps {
   currentSettings: VoucherNetworkSettings;
