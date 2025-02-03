@@ -1,6 +1,6 @@
 parameters:
   level: 5
-  treatPhpDocTypesAsCertain: false
+  treatPhpDocTypesAsCertain: true
   paths:
     - .
   bootstrapFiles:
