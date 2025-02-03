@@ -16,16 +16,28 @@ class SettingsKeys
     public string $multiLangCountryTrafficSourceNumber;
     public string $multiLangCountryTrafficMediumNumber;
 
+    /**
+     * @param string|int $active_value
+     * @param bool $uses_lower_case
+     * @param string $newSettingsKey
+     * @param string $active
+     * @param string $trafficSourceNumber
+     * @param string $trafficMediumNumber
+     * @param string $multiLangCountryActive
+     * @param string $multiLangCountryTrafficSourceNumber
+     * @param string $multiLangCountryTrafficMediumNumber
+     * @return void
+     */
     public function __construct(
-        string|int $active_value,
-        bool $uses_lower_case = false,
-        string $newSettingsKey = "sovendus_settings",
-        string $active = "{country}_sovendus_activated",
-        string $trafficSourceNumber = "{country}_sovendus_trafficSourceNumber",
-        string $trafficMediumNumber = "{country}_sovendus_trafficMediumNumber",
-        string $multiLangCountryActive = "{lang}_{country}_sovendus_activated",
-        string $multiLangCountryTrafficSourceNumber = "{lang}_{country}_sovendus_trafficSourceNumber",
-        string $multiLangCountryTrafficMediumNumber = "{lang}_{country}_sovendus_trafficMediumNumber"
+        $active_value,
+        $uses_lower_case = false,
+        $newSettingsKey = "sovendus_settings",
+        $active = "{country}_sovendus_activated",
+        $trafficSourceNumber = "{country}_sovendus_trafficSourceNumber",
+        $trafficMediumNumber = "{country}_sovendus_trafficMediumNumber",
+        $multiLangCountryActive = "{lang}_{country}_sovendus_activated",
+        $multiLangCountryTrafficSourceNumber = "{lang}_{country}_sovendus_trafficSourceNumber",
+        $multiLangCountryTrafficMediumNumber = "{lang}_{country}_sovendus_trafficMediumNumber"
     ) {
         $this->uses_lower_case = $uses_lower_case;
         $this->active_value = $active_value;
@@ -42,10 +54,10 @@ class SettingsKeys
 class Get_Settings_Helper
 {
     public static function get_settings(
-        string|null $countryCode,
-        callable $get_option_callback,
-        SettingsKeys $settings_keys
-    ): Sovendus_App_Settings {
+        $countryCode,
+        $get_option_callback,
+        $settings_keys
+    ) {
         $settingsJson = $get_option_callback($settings_keys->newSettingsKey);
         if ($settingsJson) {
             $decodedSettings = json_decode($settingsJson, true);
@@ -97,20 +109,34 @@ class Get_Settings_Helper
         }
     }
 
+    /**
+     * @param null|string $countryCode,
+     * @param null|string $lang,
+     * @param callable $get_option_callback,
+     * @param SettingsKeys $settings_keys
+     * @return VoucherNetworkLanguage
+     */
     private static function get_country_settings(
         $countryCode,
         $lang,
-        callable $get_option_callback,
-        SettingsKeys $settings_keys
+        $get_option_callback,
+        $settings_keys
     ) {
         return self::fetch_settings($countryCode, $lang, $get_option_callback, $settings_keys, false);
     }
 
+    /**
+     * @param null|string $countryCode,
+     * @param null|string $lang,
+     * @param callable $get_option_callback,
+     * @param SettingsKeys $settings_keys
+     * @return array
+     */
     private static function get_multilang_country_settings(
         $countryCode,
         $langs,
-        callable $get_option_callback,
-        SettingsKeys $settings_keys
+        $get_option_callback,
+        $settings_keys
     ) {
         $languageSettings = [];
         foreach ($langs as $lang) {
@@ -119,12 +145,20 @@ class Get_Settings_Helper
         return $languageSettings;
     }
 
+    /**
+     * @param null|string $countryCode,
+     * @param null|string $lang,
+     * @param callable $get_option_callback,
+     * @param SettingsKeys $settings_keys
+     * @param bool $isMultiLang
+     * @return VoucherNetworkLanguage
+     */
     private static function fetch_settings(
         $countryCode,
         $lang,
-        callable $get_option_callback,
-        SettingsKeys $settings_keys,
-        bool $isMultiLang
+        $get_option_callback,
+        $settings_keys,
+        $isMultiLang
     ) {
         $activeKey = $isMultiLang ? $settings_keys->multiLangCountryActive : $settings_keys->active;
         $trafficSourceNumberKey = $isMultiLang ? $settings_keys->multiLangCountryTrafficSourceNumber : $settings_keys->trafficSourceNumber;

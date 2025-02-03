@@ -3,6 +3,9 @@
 
 /**
  * Split street and street number
+ * 
+ * @param string|null $street
+ * @return array
  */
 function splitStreetAndStreetNumber($street)
 {
@@ -10,13 +13,18 @@ function splitStreetAndStreetNumber($street)
         $housenr = end($match[0]);
         $consumerStreet = trim(str_replace(array($housenr, '/'), '', $street));
         $consumerStreetNumber = trim($housenr);
-        return [$consumerStreet, $consumerStreetNumber];
+        return array($consumerStreet, $consumerStreetNumber);
     } else {
-        return [$street, ""];
+        return array($street, "");
     }
 }
 
-function getIntegrationType(string $pluginName, string $pluginVersion): string
+/**
+ * @param string $pluginName
+ * @param string $pluginVersion
+ * @return string
+ */
+function getIntegrationType($pluginName, $pluginVersion)
 {
     return "{$pluginName}-{$pluginVersion}";
 }

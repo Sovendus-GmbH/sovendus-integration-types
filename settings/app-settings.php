@@ -6,14 +6,22 @@ class VoucherNetworkCountry
 {
     public array $languages;
 
-    public function __construct(array $languages)
+    /**
+     * @param array $languages
+     * @return void
+     */
+    public function __construct($languages)
     {
         $this->languages = $languages;
     }
 
-    public static function fromJson(array $data): VoucherNetworkCountry
+    /**
+     * @param array $data
+     * @return VoucherNetworkCountry
+     */
+    public static function fromJson($data)
     {
-        $languages = [];
+        $languages = array();
         if (isset($data['languages']) && is_array($data['languages'])) {
             foreach ($data['languages'] as $lang => $langData) {
                 $languages[$lang] = VoucherNetworkLanguage::fromJson($langData);
@@ -29,15 +37,24 @@ class OptimizeCountry
     public bool $isEnabled;
     public string $optimizeId;
 
+    /**
+     * @param bool $isEnabled
+     * @param string $optimizeId
+     * @return void
+     */
     public function __construct(
-        bool $isEnabled,
-        string $optimizeId
+        $isEnabled,
+        $optimizeId
     ) {
         $this->isEnabled = $isEnabled;
         $this->optimizeId = $optimizeId;
     }
 
-    public static function fromJson(array $data): OptimizeCountry
+    /**
+     * @param array $data
+     * @return OptimizeCountry
+     */
+    public static function fromJson($data)
     {
         return new self(
             $data['isEnabled'],
@@ -53,17 +70,27 @@ class VoucherNetworkLanguage
     public string $trafficSourceNumber;
     public string $trafficMediumNumber;
 
+    /**
+     * @param bool $isEnabled
+     * @param string $trafficSourceNumber
+     * @param string $trafficMediumNumber
+     * @return void
+     */
     public function __construct(
-        bool $isEnabled,
-        string $trafficSourceNumber = '',
-        string $trafficMediumNumber = ''
+        $isEnabled,
+        $trafficSourceNumber = '',
+        $trafficMediumNumber = ''
     ) {
         $this->isEnabled = $isEnabled;
         $this->trafficSourceNumber = $trafficSourceNumber;
         $this->trafficMediumNumber = $trafficMediumNumber;
     }
 
-    public static function fromJson(array $data): self
+    /**
+     * @param array $data
+     * @return self
+     */
+    public static function fromJson($data)
     {
         return new self(
             $data['isEnabled'],
@@ -81,22 +108,37 @@ class VoucherNetwork
     public bool $anyCountryEnabled = false;
     public string|null $iframeContainerId = null;
 
+    /**
+     * @param bool $anyCountryEnabled
+     * @param ?array $countries
+     * @param ?string $forced_iframe
+     * @return void
+     */
     public function __construct(
-        bool $anyCountryEnabled,
-        ?array $countries = [],
-        ?string $forced_iframe = null
+        $anyCountryEnabled,
+        $countries = [],
+        $forced_iframe = null
     ) {
         $this->anyCountryEnabled = $anyCountryEnabled;
         $this->countries = $countries;
         $this->iframeContainerId = $forced_iframe;
     }
 
-    public function addCountry(CountryCodes $countryCode, VoucherNetworkCountry $country): void
+    /**
+     * @param CountryCodes $countryCode
+     * @param VoucherNetworkCountry $country
+     * @return void
+     */
+    public function addCountry($countryCode, $country)
     {
         $this->countries[$countryCode->value] = $country;
     }
 
-    public static function fromJson(array $data): VoucherNetwork
+    /**
+     * @param array $data
+     * @return VoucherNetwork
+     */
+    public static function fromJson($data)
     {
         $anyCountryEnabled = $data['anyCountryEnabled'] ?? true;
         $countries = [];
@@ -120,13 +162,20 @@ class Optimize
     public bool $useGlobalId = false;
     public string|null $globalId = null;
     public bool $globalEnabled = false;
-    public array $countrySpecificIds = [];
+    public array $countrySpecificIds = array();
 
+    /**
+     * @param bool $useGlobalId
+     * @param string|null $globalId
+     * @param bool $globalEnabled
+     * @param array $countrySpecificIds
+     * @return void
+     */
     public function __construct(
-        bool $useGlobalId,
-        string|null $globalId,
-        bool $globalEnabled,
-        array $countrySpecificIds
+        $useGlobalId,
+        $globalId,
+        $globalEnabled,
+        $countrySpecificIds
     ) {
         $this->useGlobalId = $useGlobalId;
         $this->globalId = $globalId;
@@ -134,7 +183,11 @@ class Optimize
         $this->countrySpecificIds = $countrySpecificIds;
     }
 
-    public static function fromJson(array $data): self
+    /**
+     * @param array $data
+     * @return self
+     */
+    public static function fromJson($data)
     {
         $countrySpecificIds = [];
         if (isset($data['countrySpecificIds']) && is_array($data['countrySpecificIds'])) {
@@ -158,11 +211,18 @@ class Sovendus_App_Settings
     public bool $checkoutProducts;
     public Versions $version;
 
+    /**
+     * @param VoucherNetwork $voucherNetwork
+     * @param Optimize $optimize
+     * @param bool $checkoutProducts
+     * @param Versions $version
+     * @return self
+     */
     public function __construct(
-        VoucherNetwork $voucherNetwork,
-        Optimize $optimize,
-        bool $checkoutProducts,
-        Versions $version
+        $voucherNetwork,
+        $optimize,
+        $checkoutProducts,
+        $version
     ) {
         $this->voucherNetwork = $voucherNetwork;
         $this->optimize = $optimize;
@@ -170,7 +230,11 @@ class Sovendus_App_Settings
         $this->version = $version;
     }
 
-    public static function fromJson(array $data): self
+    /**
+     * @param array $data
+     * @return self
+     */
+    public static function fromJson($data)
     {
         return new self(
             VoucherNetwork::fromJson($data['voucherNetwork']),
