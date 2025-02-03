@@ -1,7 +1,6 @@
 parameters:
-  root: .
   level: 5
   paths:
     - .
   bootstrapFiles:
-    - %root%/vendor/autoload.php
+    - vendor/autoload.php
