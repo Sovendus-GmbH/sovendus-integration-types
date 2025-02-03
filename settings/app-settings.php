@@ -166,7 +166,7 @@ class VoucherNetwork
                 $countries[$countryCode] = VoucherNetworkCountry::fromJson($countryData);
             }
         }
-        return new self(anyCountryEnabled: $anyCountryEnabled, countries: $countries);
+        return new self($anyCountryEnabled, $countries);
     }
 }
 
