@@ -186,9 +186,9 @@ class Get_Settings_Helper
         $trafficMediumNumber = is_numeric($trafficMediumNumber) && (int)$trafficMediumNumber > 0 ? (string)$trafficMediumNumber : '';
 
         return new VoucherNetworkLanguage(
-            isEnabled: $sovendusActive === $settings_keys->active_value && $trafficSourceNumber && $trafficMediumNumber,
-            trafficSourceNumber: $trafficSourceNumber,
-            trafficMediumNumber: $trafficMediumNumber
+            $sovendusActive === $settings_keys->active_value && $trafficSourceNumber && $trafficMediumNumber,
+            $trafficSourceNumber,
+            $trafficMediumNumber
         );
     }
 }
