@@ -131,6 +131,11 @@ export function CountryOptions({
                   [languageKey]: {
                     ...element,
                     [field]: newValue,
+                    isEnabled:
+                      (field === "trafficSourceNumber"
+                        ? !isNaN(Number(element?.trafficMediumNumber))
+                        : !isNaN(Number(element?.trafficSourceNumber))) &&
+                      !isNaN(Number(newValue)),
                   },
                 },
               },
