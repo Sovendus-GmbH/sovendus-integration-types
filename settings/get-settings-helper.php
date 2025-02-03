@@ -80,17 +80,17 @@ class Get_Settings_Helper
         } else {
             $anyCountryEnabled = true; // TODO
             $settings = new Sovendus_App_Settings(
-                voucherNetwork: new VoucherNetwork(
-                    anyCountryEnabled: $anyCountryEnabled
+                new VoucherNetwork(
+                    $anyCountryEnabled
                 ),
-                optimize: new Optimize(
-                    useGlobalId: true,
-                    globalId: null,
-                    globalEnabled: false,
-                    countrySpecificIds: []
+                new Optimize(
+                    true,
+                    null,
+                    false,
+                    []
                 ),
-                checkoutProducts: false,
-                version: Versions::TWO
+                false,
+                Versions::TWO
             );
             $countries = $countryCode
                 ? [$countryCode => LANGUAGES_BY_COUNTRIES[$countryCode]]
@@ -98,9 +98,9 @@ class Get_Settings_Helper
             foreach ($countries as $countryKey => $countryData) {
                 $countriesLanguages = array_keys($countryData);
                 $settings->voucherNetwork->addCountry(
-                    countryCode: CountryCodes::from($countryKey),
-                    country: new VoucherNetworkCountry(
-                        languages: count(LANGUAGES_BY_COUNTRIES[$countryKey]) > 1
+                    CountryCodes::from($countryKey),
+                    new VoucherNetworkCountry(
+                        count(LANGUAGES_BY_COUNTRIES[$countryKey]) > 1
                             ? self::get_multilang_country_settings(
                                 $countryKey,
                                 $countriesLanguages,
@@ -143,12 +143,8 @@ class Get_Settings_Helper
      * @param SettingsKeys $settings_keys
      * @return array
      */
-    private static function get_multilang_country_settings(
-        $countryCode,
-        $langs,
-        $get_option_callback,
-        $settings_keys
-    ) {
+    private static function get_multilang_country_settings($countryCode, $langs, $get_option_callback, $settings_keys)
+    {
         $languageSettings = array();
         foreach ($langs as $lang) {
             $languageSettings[$lang] = self::fetch_settings($countryCode, $lang, $get_option_callback, $settings_keys, true);
@@ -164,13 +160,8 @@ class Get_Settings_Helper
      * @param bool $isMultiLang
      * @return VoucherNetworkLanguage
      */
-    private static function fetch_settings(
-        $countryCode,
-        $lang,
-        $get_option_callback,
-        $settings_keys,
-        $isMultiLang
-    ) {
+    private static function fetch_settings($countryCode, $lang, $get_option_callback, $settings_keys, $isMultiLang)
+    {
         $activeKey = $isMultiLang ? $settings_keys->multiLangCountryActive : $settings_keys->active;
         $trafficSourceNumberKey = $isMultiLang ? $settings_keys->multiLangCountryTrafficSourceNumber : $settings_keys->trafficSourceNumber;
         $trafficMediumNumberKey = $isMultiLang ? $settings_keys->multiLangCountryTrafficMediumNumber : $settings_keys->trafficMediumNumber;
