@@ -267,7 +267,7 @@ class Sovendus_App_Settings
      */
     public $checkoutProducts;
     /**
-     * @var Versions
+     * @var string
      */
     public $version;
 
@@ -276,14 +276,9 @@ class Sovendus_App_Settings
      * @param Optimize $optimize
      * @param bool $checkoutProducts
      * @param string $version
-     * @return self
      */
-    public function __construct(
-        $voucherNetwork,
-        $optimize,
-        $checkoutProducts,
-        $version
-    ) {
+    public function __construct($voucherNetwork, $optimize, $checkoutProducts, $version)
+    {
         $this->voucherNetwork = $voucherNetwork;
         $this->optimize = $optimize;
         $this->checkoutProducts = $checkoutProducts;
