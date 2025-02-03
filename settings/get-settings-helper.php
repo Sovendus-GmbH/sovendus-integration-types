@@ -121,9 +121,9 @@ class Get_Settings_Helper
     }
 
     /**
-     * @param null|string $countryCode,
-     * @param null|string $lang,
-     * @param callable $get_option_callback,
+     * @param null|string $countryCode
+     * @param null|string $lang
+     * @param callable $get_option_callback
      * @param SettingsKeys $settings_keys
      * @return VoucherNetworkLanguage
      */
