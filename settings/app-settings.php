@@ -51,10 +51,8 @@ class OptimizeCountry
      * @param string $optimizeId
      * @return void
      */
-    public function __construct(
-        $isEnabled,
-        $optimizeId
-    ) {
+    public function __construct($isEnabled, $optimizeId)
+    {
         $this->isEnabled = $isEnabled;
         $this->optimizeId = $optimizeId;
     }
@@ -94,11 +92,8 @@ class VoucherNetworkLanguage
      * @param string $trafficMediumNumber
      * @return void
      */
-    public function __construct(
-        $isEnabled,
-        $trafficSourceNumber = '',
-        $trafficMediumNumber = ''
-    ) {
+    public function __construct($isEnabled, $trafficSourceNumber = '', $trafficMediumNumber = '')
+    {
         $this->isEnabled = $isEnabled;
         $this->trafficSourceNumber = $trafficSourceNumber;
         $this->trafficMediumNumber = $trafficMediumNumber;
@@ -141,11 +136,8 @@ class VoucherNetwork
      * @param ?string $forced_iframe
      * @return void
      */
-    public function __construct(
-        $anyCountryEnabled,
-        $countries = array(),
-        $forced_iframe = null
-    ) {
+    public function __construct($anyCountryEnabled, $countries = array(), $forced_iframe = null)
+    {
         $this->anyCountryEnabled = $anyCountryEnabled;
         $this->countries = $countries;
         $this->iframeContainerId = $forced_iframe;
@@ -219,12 +211,8 @@ class Optimize
      * @param array $countrySpecificIds
      * @return void
      */
-    public function __construct(
-        $useGlobalId,
-        $globalId,
-        $globalEnabled,
-        $countrySpecificIds
-    ) {
+    public function __construct($useGlobalId, $globalId, $globalEnabled, $countrySpecificIds)
+    {
         $this->useGlobalId = $useGlobalId;
         $this->globalId = $globalId;
         $this->globalEnabled = $globalEnabled;
