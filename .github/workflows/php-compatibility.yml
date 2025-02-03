@@ -1,0 +1,66 @@
+name: PHP Compatibility & Lint Checks
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  php_checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+          tools: composer, phpcs, phpstan
+          coverage: none
+
+      - name: Install PHPCompatibility and PHP_CodeSniffer
+        run: |
+          composer global require "squizlabs/php_codesniffer"
+          composer global require "phpcompatibility/php-compatibility"
+
+          # Find PHPCS path
+          PHPCS_PATH=$(composer global config bin-dir --absolute)/phpcs
+
+          # Find PHPCompatibility path
+          PHP_COMPATIBILITY_PATH=$(composer global config home)/vendor/phpcompatibility/php-compatibility
+
+          # Register PHPCompatibility with PHPCS
+          $PHPCS_PATH --config-set installed_paths $PHP_COMPATIBILITY_PATH
+
+          # Verify installation
+          $PHPCS_PATH -i
+
+      - name: Run PHP 7.0 Compatibility Check
+        run: |
+          ~/.composer/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 7.0-7.0 . || exit 1
+
+      - name: Lint PHP Files
+        run: |
+          find . -name "*.php" -print0 | xargs -0 -n1 php -l
+        continue-on-error: false
+
+      - name: Install PHPStan for Static Analysis
+        run: |
+          composer require --dev phpstan/phpstan
+          vendor/bin/phpstan analyse -c phpstan.neon || exit 1
+
+      - name: Upload PHPCompatibility Report if issues exist
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: PHPCompatibility-Report
+          path: phpcs.xml
