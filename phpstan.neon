@@ -1,12 +1,8 @@
 parameters:
   level: 5
   paths:
-    - SovendusApp
+    - .
   bootstrapFiles:
     - %root%/vendor/autoload.php
-  ignoreErrors:
 
   
-  # Load Magento stubs from the installed package.
-  scanFiles:
-    - %root%/vendor/magento/magento2-stubs/magento.stub.php
