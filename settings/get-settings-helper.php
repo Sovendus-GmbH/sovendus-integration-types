@@ -81,16 +81,16 @@ class Get_Settings_Helper
             $anyCountryEnabled = true; // TODO
             $settings = new Sovendus_App_Settings(
                 voucherNetwork: new VoucherNetwork(
-                    anyCountryEnabled: $anyCountryEnabled,
+                    anyCountryEnabled: $anyCountryEnabled
                 ),
                 optimize: new Optimize(
                     useGlobalId: true,
                     globalId: null,
                     globalEnabled: false,
-                    countrySpecificIds: [],
+                    countrySpecificIds: []
                 ),
                 checkoutProducts: false,
-                version: Versions::TWO,
+                version: Versions::TWO
             );
             $countries = $countryCode
                 ? [$countryCode => LANGUAGES_BY_COUNTRIES[$countryCode]]
@@ -197,7 +197,7 @@ class Get_Settings_Helper
         return new VoucherNetworkLanguage(
             isEnabled: $sovendusActive === $settings_keys->active_value && $trafficSourceNumber && $trafficMediumNumber,
             trafficSourceNumber: $trafficSourceNumber,
-            trafficMediumNumber: $trafficMediumNumber,
+            trafficMediumNumber: $trafficMediumNumber
         );
     }
 }
