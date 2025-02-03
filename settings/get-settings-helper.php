@@ -138,7 +138,7 @@ class Get_Settings_Helper
 
     /**
      * @param null|string $countryCode,
-     * @param null|string $lang,
+     * @param string[] $langs,
      * @param callable $get_option_callback,
      * @param SettingsKeys $settings_keys
      * @return array
