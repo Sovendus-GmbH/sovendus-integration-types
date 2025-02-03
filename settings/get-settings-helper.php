@@ -6,15 +6,26 @@ require_once __DIR__ . '/sovendus-countries.php';
 
 class SettingsKeys
 {
-    public string|int $active_value;
-    public bool $uses_lower_case;
-    public string $newSettingsKey;
-    public string $active;
-    public string $trafficSourceNumber;
-    public string $trafficMediumNumber;
-    public string $multiLangCountryActive;
-    public string $multiLangCountryTrafficSourceNumber;
-    public string $multiLangCountryTrafficMediumNumber;
+    /**
+     * @var string|int $active_value
+     * @var bool $uses_lower_case
+     * @var string $newSettingsKey
+     * @var string $active
+     * @var string $trafficSourceNumber
+     * @var string $trafficMediumNumber
+     * @var string $multiLangCountryActive
+     * @var string $multiLangCountryTrafficSourceNumber
+     * @var string $multiLangCountryTrafficMediumNumber
+     */
+    public $active_value;
+    public $uses_lower_case;
+    public $newSettingsKey;
+    public $active;
+    public $trafficSourceNumber;
+    public $trafficMediumNumber;
+    public $multiLangCountryActive;
+    public $multiLangCountryTrafficSourceNumber;
+    public $multiLangCountryTrafficMediumNumber;
 
     /**
      * @param string|int $active_value
@@ -96,12 +107,12 @@ class Get_Settings_Helper
                                 $get_option_callback,
                                 $settings_keys
                             )
-                            : [self::get_country_settings( // Wrap in array
+                            : array(self::get_country_settings( // Wrap in array
                                 $countryKey,
                                 $countriesLanguages[0],
                                 $get_option_callback,
                                 $settings_keys
-                            )]
+                            ))
                     )
                 );
             }
@@ -138,7 +149,7 @@ class Get_Settings_Helper
         $get_option_callback,
         $settings_keys
     ) {
-        $languageSettings = [];
+        $languageSettings = array();
         foreach ($langs as $lang) {
             $languageSettings[$lang] = self::fetch_settings($countryCode, $lang, $get_option_callback, $settings_keys, true);
         }
@@ -166,19 +177,19 @@ class Get_Settings_Helper
 
         $sovendusActive = $get_option_callback(str_replace(
             ["{country}", "{lang}"],
-            $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang],
+            $settings_keys->uses_lower_case ? array(strtolower($countryCode), strtolower($lang)) : array($countryCode, $lang),
             $activeKey
         ));
         $trafficSourceNumber = $get_option_callback(str_replace(
             ["{country}", "{lang}"],
-            $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang],
+            $settings_keys->uses_lower_case ? array(strtolower($countryCode), strtolower($lang)) : array($countryCode, $lang),
             $trafficSourceNumberKey
         ));
         $trafficSourceNumber = is_numeric($trafficSourceNumber) && (int)$trafficSourceNumber > 0 ? (string)$trafficSourceNumber : '';
 
         $trafficMediumNumber = $get_option_callback(str_replace(
             ["{country}", "{lang}"],
-            $settings_keys->uses_lower_case ? [strtolower($countryCode), strtolower($lang)] : [$countryCode, $lang],
+            $settings_keys->uses_lower_case ? array(strtolower($countryCode), strtolower($lang)) : array($countryCode, $lang),
             $trafficMediumNumberKey
         ));
         $trafficMediumNumber = is_numeric($trafficMediumNumber) && (int)$trafficMediumNumber > 0 ? (string)$trafficMediumNumber : '';

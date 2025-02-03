@@ -4,7 +4,10 @@
 // ------------------------------------------------------------
 class VoucherNetworkCountry
 {
-    public array $languages;
+    /**
+     * @var array
+     */
+    public $languages;
 
     /**
      * @param array $languages
@@ -34,8 +37,14 @@ class VoucherNetworkCountry
 
 class OptimizeCountry
 {
-    public bool $isEnabled;
-    public string $optimizeId;
+    /**
+     * @var bool
+     */
+    public $isEnabled;
+    /**
+     * @var string
+     */
+    public $optimizeId;
 
     /**
      * @param bool $isEnabled
@@ -66,9 +75,18 @@ class OptimizeCountry
 
 class VoucherNetworkLanguage
 {
-    public bool $isEnabled;
-    public string $trafficSourceNumber;
-    public string $trafficMediumNumber;
+    /**
+     * @var bool
+     */
+    public $isEnabled;
+    /**
+     * @var string
+     */
+    public $trafficSourceNumber;
+    /**
+     * @var string
+     */
+    public $trafficMediumNumber;
 
     /**
      * @param bool $isEnabled
@@ -104,9 +122,18 @@ class VoucherNetworkLanguage
 
 class VoucherNetwork
 {
-    public array $countries = [];
-    public bool $anyCountryEnabled = false;
-    public string|null $iframeContainerId = null;
+    /**
+     * @var array
+     */
+    public $countries = array();
+    /**
+     * @var bool
+     */
+    public $anyCountryEnabled = false;
+    /**
+     * @var string|null
+     */
+    public $iframeContainerId = null;
 
     /**
      * @param bool $anyCountryEnabled
@@ -116,7 +143,7 @@ class VoucherNetwork
      */
     public function __construct(
         $anyCountryEnabled,
-        $countries = [],
+        $countries = array(),
         $forced_iframe = null
     ) {
         $this->anyCountryEnabled = $anyCountryEnabled;
@@ -125,13 +152,13 @@ class VoucherNetwork
     }
 
     /**
-     * @param CountryCodes $countryCode
+     * @param string $countryCode
      * @param VoucherNetworkCountry $country
      * @return void
      */
     public function addCountry($countryCode, $country)
     {
-        $this->countries[$countryCode->value] = $country;
+        $this->countries[$countryCode] = $country;
     }
 
     /**
@@ -141,7 +168,7 @@ class VoucherNetwork
     public static function fromJson($data)
     {
         $anyCountryEnabled = $data['anyCountryEnabled'] ?? true;
-        $countries = [];
+        $countries = array();
         if (isset($data['countries']) && is_array($data['countries'])) {
             foreach ($data['countries'] as $countryCode => $countryData) {
                 $countries[$countryCode] = VoucherNetworkCountry::fromJson($countryData);
@@ -151,18 +178,39 @@ class VoucherNetwork
     }
 }
 
-enum Versions: string
+class Versions
 {
-    case ONE = '1';
-    case TWO = '2';
+    const ONE = '1';
+    const TWO = '2';
+
+    /**
+     * @param string $version
+     * @return string
+     */
+    public static function from($version)
+    {
+        return ($version === self::TWO) ? self::TWO : self::ONE;
+    }
 }
 
 class Optimize
 {
-    public bool $useGlobalId = false;
-    public string|null $globalId = null;
-    public bool $globalEnabled = false;
-    public array $countrySpecificIds = array();
+    /**
+     * @var bool
+     */
+    public $useGlobalId = false;
+    /**
+     * @var string|null
+     */
+    public $globalId = null;
+    /**
+     * @var bool
+     */
+    public $globalEnabled = false;
+    /**
+     * @var array
+     */
+    public $countrySpecificIds = array();
 
     /**
      * @param bool $useGlobalId
@@ -189,7 +237,7 @@ class Optimize
      */
     public static function fromJson($data)
     {
-        $countrySpecificIds = [];
+        $countrySpecificIds = array();
         if (isset($data['countrySpecificIds']) && is_array($data['countrySpecificIds'])) {
             foreach ($data['countrySpecificIds'] as $countryCode => $countryData) {
                 $countrySpecificIds[$countryCode] = OptimizeCountry::fromJson($countryData);
@@ -206,16 +254,28 @@ class Optimize
 
 class Sovendus_App_Settings
 {
-    public VoucherNetwork $voucherNetwork;
-    public Optimize $optimize;
-    public bool $checkoutProducts;
-    public Versions $version;
+    /**
+     * @var VoucherNetwork
+     */
+    public $voucherNetwork;
+    /**
+     * @var Optimize
+     */
+    public $optimize;
+    /**
+     * @var bool
+     */
+    public $checkoutProducts;
+    /**
+     * @var Versions
+     */
+    public $version;
 
     /**
      * @param VoucherNetwork $voucherNetwork
      * @param Optimize $optimize
      * @param bool $checkoutProducts
-     * @param Versions $version
+     * @param string $version
      * @return self
      */
     public function __construct(

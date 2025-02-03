@@ -4,7 +4,7 @@ import type {
   VoucherNetworkSettings,
 } from "../../settings/app-settings";
 import {
-  type CountryCodes,
+  CountryCodes,
   type LanguageCodes,
   LANGUAGES_BY_COUNTRIES,
 } from "../../settings/sovendus-countries";
@@ -84,6 +84,10 @@ async function sovendusThankYou(): Promise<void> {
     return;
   }
   window.sovThankyouStatus.sovThankyouConfigFound = true;
+  // @ts-ignore: using string literal "UK" intentionally despite type mismatch as some systems might return UK instead of GB
+  if (config.consumerCountry === "UK") {
+    config.consumerCountry = CountryCodes.GB;
+  }
   const { optimizeId, checkoutProducts, voucherNetwork } = getSovendusConfig(
     config.settings,
     config.consumerCountry,
