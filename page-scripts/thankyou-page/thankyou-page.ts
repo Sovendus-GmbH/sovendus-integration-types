@@ -27,7 +27,7 @@ export interface SovendusThankYouPageConfig {
   consumerStreetNumber: string | undefined;
   consumerZipcode: string | undefined;
   consumerCity: string | undefined;
-  consumerCountry: CountryCodes;
+  consumerCountry: CountryCodes | "UK";
   consumerLanguage: LanguageCodes | undefined;
   consumerPhone: string | undefined;
 }
@@ -84,7 +84,7 @@ async function sovendusThankYou(): Promise<void> {
     return;
   }
   window.sovThankyouStatus.sovThankyouConfigFound = true;
-  // @ts-ignore: using string literal "UK" intentionally despite type mismatch as some systems might return UK instead of GB
+  // using string literal "UK" intentionally despite type mismatch as some systems might return UK instead of GB
   if (config.consumerCountry === "UK") {
     config.consumerCountry = CountryCodes.GB;
   }
@@ -93,7 +93,7 @@ async function sovendusThankYou(): Promise<void> {
     config.consumerCountry,
     config.consumerLanguage,
   );
-  handleVoucherNetwork(voucherNetwork, config);
+  handleVoucherNetwork(voucherNetwork, config, config.consumerCountry);
   window.sovThankyouStatus.executedCheckoutProducts =
     await handleCheckoutProductsConversion(
       checkoutProducts,
@@ -123,6 +123,7 @@ function handleOptimizeConversion(
 function handleVoucherNetwork(
   voucherNetworkConfig: VoucherNetworkLanguage | undefined,
   config: SovendusThankYouPageConfig,
+  country: CountryCodes,
 ): void {
   if (
     voucherNetworkConfig?.trafficSourceNumber &&
@@ -149,7 +150,7 @@ function handleVoucherNetwork(
       consumerStreetNumber: config.consumerStreetNumber,
       consumerZipcode: config.consumerZipcode,
       consumerCity: config.consumerCity,
-      consumerCountry: config.consumerCountry,
+      consumerCountry: country,
       consumerPhone: config.consumerPhone,
     };
 
@@ -167,7 +168,7 @@ function handleVoucherNetwork(
     const script = document.createElement("script");
     script.type = "text/javascript";
     script.async = true;
-    script.src = `https://api.sovendus.com/sovabo/common/js/flexibleIframe.js`;
+    script.src = "https://api.sovendus.com/sovabo/common/js/flexibleIframe.js";
     document.body.appendChild(script);
     window.sovThankyouStatus.loadedVoucherNetwork = true;
   }
