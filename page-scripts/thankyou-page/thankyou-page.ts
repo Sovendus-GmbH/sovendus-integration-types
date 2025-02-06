@@ -116,6 +116,7 @@ function handleOptimizeConversion(
     }&ordernumber=${config.orderId}&vouchercode=${
       config.usedCouponCodes?.[0]
     }&email=${config.consumerEmail}`;
+    document.body.appendChild(script);
     window.sovThankyouStatus.loadedOptimize = true;
   }
 }
