@@ -58,6 +58,7 @@ export default function SovendusBackendForm({
     type: "success" | "error" | "loading";
   } | null>(null);
   const buttonsDisabled = notificationState?.type === "loading";
+  console.log("currentStoredSettings", buttonsDisabled);
   const handleSave = async (open: boolean): Promise<void> => {
     if (!open) {
       const hasUnsavedChanges =
@@ -235,6 +236,7 @@ export default function SovendusBackendForm({
         open={activeConfig === "voucherNetwork"}
         onOpenChange={(open): void => void handleSave(open)}
         title="Configure Voucher Network & Checkout Benefits"
+        zoomedVersion={zoomedVersion}
       >
         <SovendusVoucherNetwork
           currentSettings={currentSettings.voucherNetwork}
@@ -247,6 +249,7 @@ export default function SovendusBackendForm({
         open={activeConfig === "optimize"}
         onOpenChange={(open): void => void handleSave(open)}
         title="Configure Optimize"
+        zoomedVersion={zoomedVersion}
       >
         <SovendusOptimize
           currentOptimizeSettings={currentSettings.optimize}
@@ -260,6 +263,7 @@ export default function SovendusBackendForm({
         open={activeConfig === "checkoutProducts"}
         onOpenChange={(open): void => void handleSave(open)}
         title="Configure Checkout Products"
+        zoomedVersion={zoomedVersion}
       >
         <SovendusCheckoutProducts
           enabled={currentSettings.checkoutProducts}

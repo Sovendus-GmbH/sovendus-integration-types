@@ -220,7 +220,13 @@ function CountrySettings({
               {getCountryStatus(countryKey, languageKey)}
             </span>
             {isEnabled && (
-              <Badge variant="outline" className={cn("ml-2")}>
+              <Badge
+                variant={"default"}
+                className={cn(
+                  "ml-2",
+                  "bg-green-100 text-green-800 hover:bg-green-100",
+                )}
+              >
                 Enabled
               </Badge>
             )}

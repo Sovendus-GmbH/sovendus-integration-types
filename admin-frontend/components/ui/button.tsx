@@ -21,9 +21,9 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
+        default: "px-4 py-2 text-md",
+        sm: "h-8 rounded-md px-4 py-3 text-xs text-lg",
+        lg: "rounded-md px-8 py-3 text-xl",
         icon: "h-9 w-9",
       },
     },
@@ -34,24 +34,43 @@ const buttonVariants = cva(
   },
 );
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+interface ButtonProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link"
+    | null;
+  size?: "default" | "sm" | "lg" | "icon" | null;
   asChild?: boolean;
+  disabled?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
+const Button = React.forwardRef<HTMLDivElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, disabled, ...props }, ref) => {
+    const Comp = asChild ? Slot : "div";
+
+    const computedClassName = cn(
+      buttonVariants({ variant, size, className }),
+      disabled
+        ? "cursor-not-allowed opacity-50 pointer-events-none"
+        : "cursor-pointer",
+    );
+
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={computedClassName}
         ref={ref}
+        aria-disabled={disabled}
+        {...(asChild ? { disabled } : {})}
         {...props}
       />
     );
   },
 );
+
 Button.displayName = "Button";
 
 export { Button, buttonVariants };

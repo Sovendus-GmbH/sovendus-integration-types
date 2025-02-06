@@ -78,7 +78,6 @@ export function ProductCard({
             <Button
               variant="outline"
               onClick={(): void => void window.open(requestDemoHref, "_blank")}
-              className={cn("hidden sm:flex")}
             >
               Request Demo Tour
               <ExternalLink className={cn("ml-2 h-4 w-4")} />

@@ -5,6 +5,7 @@ import {
   ArrowRight,
   CheckCircle,
   CreditCard,
+  ExternalLink,
   Package,
   Users,
 } from "lucide-react";
@@ -63,7 +64,7 @@ export function SovendusCheckoutProducts({
           className={cn("bg-white text-purple-600 hover:bg-purple-100")}
         >
           Schedule Your Personalized Demo
-          <ArrowRight className={cn("ml-2 h-5 w-5")} />
+          <ExternalLink className={cn("ml-2 h-4 w-4")} />
         </Button>
       </div>
 

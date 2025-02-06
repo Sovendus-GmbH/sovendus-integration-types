@@ -1,7 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle, Cog, Gift, ShoppingBag } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle,
+  Cog,
+  ExternalLink,
+  Gift,
+  ShoppingBag,
+} from "lucide-react";
 import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
 
@@ -66,7 +73,7 @@ export function SovendusVoucherNetwork({
           className={cn("bg-white text-blue-600 hover:bg-blue-100")}
         >
           Schedule Your Personalized Demo
-          <ArrowRight className={cn("ml-2 h-5 w-5")} />
+          <ExternalLink className={cn("ml-2 h-4 w-4")} />
         </Button>
       </div>
 

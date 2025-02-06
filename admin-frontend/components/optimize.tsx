@@ -102,7 +102,7 @@ export function SovendusOptimize({
           className={cn("w-full sm:w-auto mt-4")}
         >
           Schedule Your Personalized Demo
-          <ExternalLink className={cn("ml-2 h-5 w-5")} />
+          <ExternalLink className={cn("ml-2 h-4 w-4")} />
         </Button>
       </div>
 
