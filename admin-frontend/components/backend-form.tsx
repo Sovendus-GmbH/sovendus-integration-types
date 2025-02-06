@@ -1,5 +1,3 @@
-"use client";
-
 import { BarChart2, Gift, ShoppingBagIcon } from "lucide-react";
 import type { JSX } from "react";
 import React, { useState } from "react";
