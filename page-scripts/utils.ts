@@ -1,6 +1,9 @@
+import type {
+  CountryCodes,
+  OptimizeSettings,
+} from "sovendus-integration-types";
+
 import { sovReqProductIdKey, sovReqTokenKey } from "../page-scripts/constants";
-import type { OptimizeSettings } from "../settings/app-settings";
-import type { CountryCodes } from "../settings/sovendus-countries";
 
 export async function handleCheckoutProductsConversion(
   checkoutProducts: boolean,

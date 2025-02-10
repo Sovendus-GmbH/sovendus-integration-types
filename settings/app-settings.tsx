@@ -4,17 +4,15 @@
 
 import type { JSX } from "react";
 import React from "react";
+import type {
+  CountryCodes,
+  LanguageCodes,
+  OptimizeSettings,
+  VoucherNetworkSettings,
+} from "sovendus-integration-types";
+import { COUNTRIES, LANGUAGES_BY_COUNTRIES } from "sovendus-integration-types";
 
 import { cn } from "../admin-frontend/lib/utils";
-import type { CountryCodes, LanguageCodes } from "./sovendus-countries";
-import { COUNTRIES, LANGUAGES_BY_COUNTRIES } from "./sovendus-countries";
-
-export interface SovendusAppSettings {
-  voucherNetwork: VoucherNetworkSettings;
-  optimize: OptimizeSettings;
-  checkoutProducts: boolean;
-  version: Versions;
-}
 
 export function EnabledVoucherNetworkCountries({
   currentSettings,
@@ -112,37 +110,4 @@ export function isOptimizeEnabled(currentSettings: OptimizeSettings): boolean {
         (country) => country.isEnabled,
       ))
   );
-}
-
-export interface VoucherNetworkSettings {
-  countries: { [key in CountryCodes]?: VoucherNetworkCountry };
-  anyCountryEnabled: boolean;
-  iframeContainerId?: string;
-}
-
-export interface OptimizeSettings {
-  useGlobalId: boolean;
-  globalId: string | null;
-  globalEnabled: boolean;
-  countrySpecificIds: { [key in CountryCodes]?: OptimizeCountry };
-}
-
-export interface VoucherNetworkCountry {
-  languages: { [key in LanguageCodes]?: VoucherNetworkLanguage };
-}
-
-export interface OptimizeCountry {
-  isEnabled: boolean;
-  optimizeId: string;
-}
-
-export interface VoucherNetworkLanguage {
-  isEnabled: boolean;
-  trafficSourceNumber: string;
-  trafficMediumNumber: string;
-}
-
-export enum Versions {
-  ONE = "1",
-  TWO = "2",
 }

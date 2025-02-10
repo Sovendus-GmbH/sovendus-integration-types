@@ -2,8 +2,8 @@ import "./app.css";
 
 import type { JSX } from "react";
 import React from "react";
+import type { SovendusAppSettings } from "sovendus-integration-types";
 
-import type { SovendusAppSettings } from "../settings/app-settings";
 import SovendusBackendForm from "./components/backend-form";
 
 interface SovendusSettingsProps {

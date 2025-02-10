@@ -1,69 +1,47 @@
 import type {
+  ConversionsType,
+  LanguageCodes,
+  SovConsumerType,
   SovendusAppSettings,
+  SovendusThankYouPageConfig,
+  SovendusThankYouPageStatus,
   VoucherNetworkLanguage,
   VoucherNetworkSettings,
-} from "../../settings/app-settings";
+} from "sovendus-integration-types";
 import {
   CountryCodes,
-  type LanguageCodes,
   LANGUAGES_BY_COUNTRIES,
-} from "../../settings/sovendus-countries";
+} from "sovendus-integration-types";
+
 import { getOptimizeConfig, handleCheckoutProductsConversion } from "../utils";
 
-export interface SovendusThankYouPageConfig {
-  settings: SovendusAppSettings;
-  sessionId: string | undefined;
-  timestamp: string | undefined;
-  orderId: string | undefined;
-  orderValue: string | undefined;
-  orderCurrency: string | undefined;
-  usedCouponCodes: string | undefined;
-  iframeContainerId: string;
-  integrationType: string;
-  consumerFirstName: string | undefined;
-  consumerLastName: string | undefined;
-  consumerEmail: string | undefined;
-  consumerStreet: string | undefined;
-  consumerStreetNumber: string | undefined;
-  consumerZipcode: string | undefined;
-  consumerCity: string | undefined;
-  consumerCountry: CountryCodes | "UK";
-  consumerLanguage: LanguageCodes | undefined;
-  consumerPhone: string | undefined;
-}
+// export interface SovendusThankYouPageConfig {
+//   settings: SovendusAppSettings;
+//   sessionId: string | undefined;
+//   timestamp: string | undefined;
+//   orderId: string | undefined;
+//   orderValue: string | undefined;
+//   orderCurrency: string | undefined;
+//   usedCouponCodes: string | undefined;
+//   iframeContainerId: string;
+//   integrationType: string;
+//   consumerFirstName: string | undefined;
+//   consumerLastName: string | undefined;
+//   consumerEmail: string | undefined;
+//   consumerStreet: string | undefined;
+//   consumerStreetNumber: string | undefined;
+//   consumerZipcode: string | undefined;
+//   consumerCity: string | undefined;
+//   consumerCountry: CountryCodes | "UK";
+//   consumerLanguage: LanguageCodes | undefined;
+//   consumerPhone: string | undefined;
+// }
 
 interface ThankYouWindow extends Window {
   sovThankyouConfig: SovendusThankYouPageConfig;
-  sovIframes: {
-    trafficSourceNumber: string;
-    trafficMediumNumber: string;
-    sessionId: string | undefined;
-    timestamp: string | undefined;
-    orderId: string | undefined;
-    orderValue: string | undefined;
-    orderCurrency: string | undefined;
-    usedCouponCode: string | undefined;
-    iframeContainerId: string;
-    integrationType: string;
-  }[];
-  sovConsumer: {
-    consumerFirstName: string | undefined;
-    consumerLastName: string | undefined;
-    consumerEmail: string | undefined;
-    consumerStreet: string | undefined;
-    consumerStreetNumber: string | undefined;
-    consumerZipcode: string | undefined;
-    consumerCity: string | undefined;
-    consumerCountry: CountryCodes;
-    consumerPhone: string | undefined;
-  };
-  sovThankyouStatus: {
-    loadedOptimize: boolean;
-    loadedVoucherNetwork: boolean;
-    executedCheckoutProducts: boolean;
-    sovThankyouConfigFound: boolean;
-    countryCodePassedOnByPlugin: boolean;
-  };
+  sovIframes: ConversionsType[];
+  sovConsumer: SovConsumerType;
+  sovThankyouStatus: SovendusThankYouPageStatus;
 }
 
 declare let window: ThankYouWindow;

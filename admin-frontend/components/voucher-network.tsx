@@ -8,17 +8,17 @@ import {
 } from "lucide-react";
 import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
-
 import type {
-  SovendusAppSettings,
-  VoucherNetworkSettings,
-} from "../../settings/app-settings";
+  CountryCodes,
+  type SovendusAppSettings,
+  type VoucherNetworkSettings,
+} from "sovendus-integration-types";
+import { LANGUAGES_BY_COUNTRIES } from "sovendus-integration-types";
+
 import {
   EnabledVoucherNetworkCountries,
   isVnEnabled,
 } from "../../settings/app-settings";
-import type { CountryCodes } from "../../settings/sovendus-countries";
-import { LANGUAGES_BY_COUNTRIES } from "../../settings/sovendus-countries";
 import { cn } from "../lib/utils";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
 import {

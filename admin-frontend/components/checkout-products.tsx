@@ -8,8 +8,8 @@ import {
   Users,
 } from "lucide-react";
 import React, { type Dispatch, type JSX, type SetStateAction } from "react";
+import type { SovendusAppSettings } from "sovendus-integration-types";
 
-import type { SovendusAppSettings } from "../../settings/app-settings";
 import { cn } from "../lib/utils";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
 import { Alert, AlertDescription } from "./ui/alert";

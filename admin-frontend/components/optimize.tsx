@@ -9,17 +9,17 @@ import {
 } from "lucide-react";
 import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
-
 import type {
-  OptimizeSettings,
-  SovendusAppSettings,
-} from "../../settings/app-settings";
+  CountryCodes,
+  type OptimizeSettings,
+  type SovendusAppSettings,
+} from "sovendus-integration-types";
+import { COUNTRIES } from "sovendus-integration-types";
+
 import {
   EnabledOptimizeCountries,
   isOptimizeEnabled,
 } from "../../settings/app-settings";
-import type { CountryCodes } from "../../settings/sovendus-countries";
-import { COUNTRIES } from "../../settings/sovendus-countries";
 import { cn } from "../lib/utils";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
 import { CountryOptions } from "./optimize-country-options";

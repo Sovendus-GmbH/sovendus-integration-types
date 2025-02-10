@@ -1,16 +1,14 @@
 import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
-
-import type {
-  SovendusAppSettings,
-  VoucherNetworkLanguage,
-  VoucherNetworkSettings,
-} from "../../settings/app-settings";
 import type {
   CountryCodes,
   LanguageCodes,
-} from "../../settings/sovendus-countries";
-import { LANGUAGES_BY_COUNTRIES } from "../../settings/sovendus-countries";
+  SovendusAppSettings,
+  VoucherNetworkLanguage,
+  VoucherNetworkSettings,
+} from "sovendus-integration-types";
+import { LANGUAGES_BY_COUNTRIES } from "sovendus-integration-types";
+
 import { cn } from "../lib/utils";
 import {
   Accordion,

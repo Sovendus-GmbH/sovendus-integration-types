@@ -1,5 +1,8 @@
-import type { SovendusAppSettings } from "../../settings/app-settings";
-import type { CountryCodes } from "../../settings/sovendus-countries";
+import type {
+  CountryCodes,
+  SovendusAppSettings,
+} from "sovendus-integration-types";
+
 import { getOptimizeConfig, handleCheckoutProductsPage } from "../utils";
 
 interface SovendusPageConfig {
@@ -13,7 +16,9 @@ interface SovPageWindow extends Window {
   sovPageStatus: {
     loadedOptimize: boolean;
     loadedVoucherNetworkSwitzerland: boolean;
+    loadedVoucherNetworkVoucherCode: boolean;
     executedCheckoutProducts: boolean;
+    missingSovReqTokenOrProductId: boolean;
     sovPageConfigFound: boolean;
   };
 }
@@ -26,6 +31,7 @@ async function main(): Promise<void> {
     loadedOptimize: false,
     loadedVoucherNetworkSwitzerland: false,
     executedCheckoutProducts: false,
+    // missingSovReqTokenOrProductId: false,
     sovPageConfigFound: false,
   };
   if (typeof pageSettings !== "undefined") {

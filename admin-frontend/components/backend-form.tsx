@@ -1,11 +1,11 @@
 import { BarChart2, Gift, ShoppingBagIcon } from "lucide-react";
 import type { JSX } from "react";
 import React, { useState } from "react";
+import type { SovendusAppSettings } from "sovendus-integration-types";
 
 import {
   EnabledOptimizeCountries,
   EnabledVoucherNetworkCountries,
-  type SovendusAppSettings,
 } from "../../settings/app-settings";
 import { cn } from "../lib/utils";
 import { SovendusCheckoutProducts } from "./checkout-products";
@@ -31,7 +31,7 @@ interface SovendusBackendFormProps {
   currentStoredSettings: SovendusAppSettings;
   saveSettings: (data: SovendusAppSettings) => Promise<SovendusAppSettings>;
   additionalSteps?: AdditionalSteps;
-  zoomedVersion: boolean;
+  zoomedVersion?: boolean;
 }
 
 export const DEMO_REQUEST_URL =
@@ -41,7 +41,7 @@ export default function SovendusBackendForm({
   currentStoredSettings: _currentStoredSettings,
   saveSettings,
   additionalSteps,
-  zoomedVersion,
+  zoomedVersion = false,
 }: SovendusBackendFormProps): JSX.Element {
   const [currentStoredSettings, setCurrentStoredSettings] =
     useState<SovendusAppSettings>(_currentStoredSettings);
