@@ -1,17 +1,19 @@
+import { Label } from "@radix-ui/react-label";
 import { motion } from "framer-motion";
 import {
   CheckCircle,
+  ChevronRight,
   Cog,
   ExternalLink,
   Gift,
   ShoppingBag,
 } from "lucide-react";
 import type { Dispatch, JSX, SetStateAction } from "react";
-import React from "react";
+import React, { useState } from "react";
 import type {
   CountryCodes,
-  type SovendusAppSettings,
-  type VoucherNetworkSettings,
+  SovendusAppSettings,
+  VoucherNetworkSettings,
 } from "sovendus-integration-types";
 import { LANGUAGES_BY_COUNTRIES } from "sovendus-integration-types";
 
@@ -21,15 +23,17 @@ import {
 } from "../../settings/app-settings";
 import { cn } from "../lib/utils";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "./ui/accordion";
 import { Alert, AlertDescription } from "./ui/alert";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Checkbox } from "./ui/checkbox";
+import { Progress } from "./ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { CountryOptions } from "./voucher-network-country-options";
 
@@ -45,6 +49,142 @@ export function SovendusVoucherNetwork({
   additionalSteps,
 }: SovendusVoucherNetworkProps): JSX.Element {
   const vnEnabled = isVnEnabled(currentSettings);
+
+  const [currentStep, setCurrentStep] = useState(0);
+  const [setupStepsCompleted, setSetupStepsCompleted] = useState({
+    goToSettings: false,
+    addToThankYou: false,
+    addToOrderStatus: false,
+  });
+
+  const totalSteps = 2; // 1. Additional Setup Steps, 2. Configure Settings
+
+  const nextStep = (): void => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const prevStep = (): void => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSetupStepChange = (
+    step: "goToSettings" | "addToThankYou" | "addToOrderStatus",
+  ): void => {
+    setSetupStepsCompleted((prev) => ({
+      ...prev,
+      [step]: !prev[step],
+    }));
+  };
+
+  const allSetupStepsCompleted =
+    Object.values(setupStepsCompleted).every(Boolean);
+
+  const renderSetupStep = (step: number): JSX.Element => {
+    if (step === 0) {
+      return (
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold flex items-center">
+              <Gift className="w-6 h-6 mr-2 text-blue-500" />
+              Step 1: Add the Sovendus App to your checkout page
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg mb-4">
+              Complete the following steps to set up Voucher Network & Checkout
+              Benefits:
+            </p>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="goToSettings"
+                  checked={setupStepsCompleted.goToSettings}
+                  onCheckedChange={(): void =>
+                    handleSetupStepChange("goToSettings")
+                  }
+                />
+                <Label htmlFor="goToSettings">
+                  {
+                    'Go to "Settings" -> "Checkout" -> click on "Customize" to customize your checkout pages'
+                  }
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="addToThankYou"
+                  checked={setupStepsCompleted.addToThankYou}
+                  onCheckedChange={(): void =>
+                    handleSetupStepChange("addToThankYou")
+                  }
+                />
+                <Label htmlFor="addToThankYou">
+                  Click on "Checkout" in the top middle and then on "Thank you".
+                  Click on "Add App block" on the bottom left, then on "Sovendus
+                  App" and then "Save"
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="addToOrderStatus"
+                  checked={setupStepsCompleted.addToOrderStatus}
+                  onCheckedChange={(): void =>
+                    handleSetupStepChange("addToOrderStatus")
+                  }
+                />
+                <Label htmlFor="addToOrderStatus">
+                  Click on "Thank you" in the top middle and then on "Order
+                  status". Click on "Add App block" on the bottom left, then on
+                  "Sovendus App" and then "Save"
+                </Label>
+              </div>
+            </div>
+            <Button
+              onClick={nextStep}
+              disabled={!allSetupStepsCompleted}
+              className="mt-4"
+            >
+              Proceed to Configuration
+              <ChevronRight className="ml-2 h-5 w-5" />
+            </Button>
+          </CardContent>
+        </Card>
+      );
+    }
+    return (
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold flex items-center">
+            <Cog className="w-6 h-6 mr-2 text-blue-500" />
+            Step 2: Configure Settings
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-lg mb-4">
+            Great job completing the setup! Now, let's configure your Voucher
+            Network & Checkout Benefits settings.
+          </p>
+          <EnabledVoucherNetworkCountries currentSettings={currentSettings} />
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold mb-2">
+              Country-Specific Settings
+            </h3>
+            <CountryOptions
+              currentSettings={currentSettings}
+              setCurrentSettings={setCurrentSettings}
+              countryCodes={
+                Object.keys(LANGUAGES_BY_COUNTRIES) as CountryCodes[]
+              }
+            />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -110,7 +250,70 @@ export function SovendusVoucherNetwork({
           </TabsTrigger>
         </TabsList>
         <TabsContent value="configure">
-          <div className={cn("space-y-6")}>
+          <Alert className="mb-4 bg-yellow-50 border-yellow-200">
+            <AlertDescription className="text-yellow-700 font-semibold">
+              <strong>Important:</strong> Follow the two-step guide below to set
+              up your Voucher Network & Checkout Benefits. Our team is here to
+              assist you throughout the process.
+            </AlertDescription>
+          </Alert>
+          <div className="flex justify-between mt-6">
+            <Button
+              onClick={prevStep}
+              disabled={currentStep === 0}
+              variant="outline"
+            >
+              Previous Step
+            </Button>
+            <Button
+              onClick={nextStep}
+              disabled={
+                currentStep === totalSteps - 1 ||
+                (currentStep === 0 && !allSetupStepsCompleted)
+              }
+            >
+              {currentStep === totalSteps - 1 ? "Finish Setup" : "Next Step"}
+            </Button>
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Setup Progress</CardTitle>
+              <CardDescription>
+                Complete both steps to activate Voucher Network & Checkout
+                Benefits
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Progress
+                value={((currentStep + 1) / totalSteps) * 100}
+                className="w-full"
+              />
+              <p className="mt-2 text-sm text-gray-600">
+                Step {currentStep + 1} of {totalSteps}
+              </p>
+            </CardContent>
+          </Card>
+
+          {renderSetupStep(currentStep)}
+          <div className="flex justify-between mt-6">
+            <Button
+              onClick={prevStep}
+              disabled={currentStep === 0}
+              variant="outline"
+            >
+              Previous Step
+            </Button>
+            <Button
+              onClick={nextStep}
+              disabled={
+                currentStep === totalSteps - 1 ||
+                (currentStep === 0 && !allSetupStepsCompleted)
+              }
+            >
+              {currentStep === totalSteps - 1 ? "Finish Setup" : "Next Step"}
+            </Button>
+          </div>
+          {/* <div className="space-y-6">
             <Alert
               className={cn(
                 `${
@@ -183,7 +386,7 @@ export function SovendusVoucherNetwork({
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-          </div>
+          </div> */}
         </TabsContent>
         <TabsContent value="benefits">
           <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-6 mb-8")}>
