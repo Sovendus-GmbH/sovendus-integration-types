@@ -15,28 +15,6 @@ import {
 
 import { getOptimizeConfig, handleCheckoutProductsConversion } from "../utils";
 
-// export interface SovendusThankYouPageConfig {
-//   settings: SovendusAppSettings;
-//   sessionId: string | undefined;
-//   timestamp: string | undefined;
-//   orderId: string | undefined;
-//   orderValue: string | undefined;
-//   orderCurrency: string | undefined;
-//   usedCouponCodes: string | undefined;
-//   iframeContainerId: string;
-//   integrationType: string;
-//   consumerFirstName: string | undefined;
-//   consumerLastName: string | undefined;
-//   consumerEmail: string | undefined;
-//   consumerStreet: string | undefined;
-//   consumerStreetNumber: string | undefined;
-//   consumerZipcode: string | undefined;
-//   consumerCity: string | undefined;
-//   consumerCountry: CountryCodes | "UK";
-//   consumerLanguage: LanguageCodes | undefined;
-//   consumerPhone: string | undefined;
-// }
-
 interface ThankYouWindow extends Window {
   sovThankyouConfig: SovendusThankYouPageConfig;
   sovIframes: ConversionsType[];
@@ -220,7 +198,7 @@ function getLanguageSettings(
     return undefined;
   }
   window.sovThankyouStatus.countryCodePassedOnByPlugin = true;
-  const countrySettings = settings.countries[country];
+  const countrySettings = settings.countries?.[country];
   const languagesSettings = countrySettings?.languages;
   if (!languagesSettings) {
     return undefined;

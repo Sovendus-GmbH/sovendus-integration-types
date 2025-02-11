@@ -56,7 +56,6 @@ export default function SovendusBackendForm({
     type: "success" | "error" | "loading";
   } | null>(null);
   const buttonsDisabled = notificationState?.type === "loading";
-  console.log("currentStoredSettings", buttonsDisabled);
   const handleSave = async (open: boolean): Promise<void> => {
     if (!open) {
       const hasUnsavedChanges =
