@@ -10,8 +10,8 @@ import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
 import type {
   CountryCodes,
-  type SovendusAppSettings,
-  type VoucherNetworkSettings,
+  SovendusAppSettings,
+  VoucherNetworkSettings,
 } from "sovendus-integration-types";
 import { LANGUAGES_BY_COUNTRIES } from "sovendus-integration-types";
 

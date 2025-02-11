@@ -1,10 +1,10 @@
 import type { Dispatch, JSX, SetStateAction } from "react";
 import React from "react";
 import type {
-  type CountryCodes,
+  CountryCodes,
   OptimizeCountry,
-  type OptimizeSettings,
-  type SovendusAppSettings,
+  OptimizeSettings,
+  SovendusAppSettings,
 } from "sovendus-integration-types";
 import { COUNTRIES } from "sovendus-integration-types";
 
