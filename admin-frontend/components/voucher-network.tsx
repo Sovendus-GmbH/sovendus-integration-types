@@ -126,6 +126,9 @@ export function SovendusVoucherNetwork({
                     handleSetupStepChange("goToSettings")
                   }
                 />
+                TODO: In der Vorschau im Checkout Editor würde das Banner nur
+                angezeigt werden wenn Sprache und Lieferland zusammen passen und
+                das jeweilige Land aktiviert ist
                 <Label htmlFor="goToSettings">
                   {
                     'Go to "Settings" -> "Checkout" -> click on "Customize" to customize your checkout pages'
