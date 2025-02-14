@@ -1,5 +1,4 @@
 import type {
-  ConversionsType,
   LanguageCodes,
   SovConsumerType,
   SovendusAppSettings,
@@ -13,7 +12,7 @@ import {
   LANGUAGES_BY_COUNTRIES,
 } from "sovendus-integration-types";
 
-import { getOptimizeConfig, handleCheckoutProductsConversion } from "../utils";
+import { handleCheckoutProductsConversion } from "../utils";
 
 interface ThankYouWindow extends Window {
   sovThankyouConfig: SovendusThankYouPageConfig;
@@ -229,3 +228,8 @@ function detectLanguageCode(): LanguageCodes {
 }
 
 void sovendusThankYou();
+
+function clearCookie(cookieName: string): void {
+  const domain = window.location.hostname;
+  document.cookie = `${cookieName}=;secure;samesite=strict;expires=Thu, 01 Jan 1970 00:00:00 UTC;domain=${domain};path=/;`;
+}

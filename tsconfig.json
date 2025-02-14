@@ -44,8 +44,8 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "admin-frontend/**/*.ts",
-    "admin-frontend/**/*.tsx",
+    "integration-settings-ui/**/*.ts",
+    "integration-settings-ui/**/*.tsx",
     "../admin-frontend/**/*.ts",
     "../admin-frontend/**/*.tsx"
   ],

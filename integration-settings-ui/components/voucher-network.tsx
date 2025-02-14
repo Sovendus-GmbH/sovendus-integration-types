@@ -18,7 +18,7 @@ import { LANGUAGES_BY_COUNTRIES } from "sovendus-integration-types";
 import {
   EnabledVoucherNetworkCountries,
   isVnEnabled,
-} from "../../settings/app-settings";
+} from "../../integration-settings/app-settings";
 import { cn } from "../lib/utils";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
 import {

@@ -19,7 +19,7 @@ import { COUNTRIES } from "sovendus-integration-types";
 import {
   EnabledOptimizeCountries,
   isOptimizeEnabled,
-} from "../../settings/app-settings";
+} from "../../integration-settings/app-settings";
 import { cn } from "../lib/utils";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
 import { CountryOptions } from "./optimize-country-options";

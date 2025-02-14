@@ -6,7 +6,7 @@ import type { SovendusAppSettings } from "sovendus-integration-types";
 import {
   EnabledOptimizeCountries,
   EnabledVoucherNetworkCountries,
-} from "../../settings/app-settings";
+} from "../../integration-settings/app-settings";
 import { cn } from "../lib/utils";
 import { SovendusCheckoutProducts } from "./checkout-products";
 import { ConfigurationDialog } from "./confirmation-dialog";

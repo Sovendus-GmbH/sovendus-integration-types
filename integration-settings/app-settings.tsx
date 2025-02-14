@@ -12,7 +12,7 @@ import type {
 } from "sovendus-integration-types";
 import { COUNTRIES, LANGUAGES_BY_COUNTRIES } from "sovendus-integration-types";
 
-import { cn } from "../admin-frontend/lib/utils";
+import { cn } from "../integration-settings-ui/lib/utils";
 
 export function EnabledVoucherNetworkCountries({
   currentSettings,
