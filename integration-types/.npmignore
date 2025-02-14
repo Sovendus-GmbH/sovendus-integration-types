@@ -1,0 +1,16 @@
+# Exclude source files since only compiled output is needed
+src/
+
+# Exclude TypeScript configuration and other build configs
+tsconfig.json
+.eslintrc.json
+
+# Exclude lock files (if you prefer not to include them)
+package-lock.json
+yarn.lock
+
+# Exclude development directories and logs
+node_modules/
+.vscode/
+.idea/
+*.log
