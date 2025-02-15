@@ -32,7 +32,7 @@ export function CountryOptions({
   countryCodes,
 }: CountryOptionsProps): JSX.Element {
   const getCountryStatus = (countryKey: CountryCodes): string => {
-    const country = currentSettings.countrySpecificIds[countryKey];
+    const country = currentSettings.countries?.ids?.[countryKey];
     if (!country?.optimizeId) {
       return "Not configured";
     }
@@ -57,20 +57,20 @@ export function CountryOptions({
   ): void => {
     setCurrentSettings((prevState) => {
       if (
-        !!prevState.optimize.countrySpecificIds[countryKey]?.optimizeId &&
-        prevState.optimize.countrySpecificIds[countryKey].isEnabled !== checked
+        !!prevState.optimize.countries?.ids[countryKey]?.optimizeId &&
+        prevState.optimize.countries?.ids[countryKey].isEnabled !== checked
       ) {
         return {
           ...prevState,
           optimize: {
             ...prevState.optimize,
             countrySpecificIds: {
-              ...prevState.optimize.countrySpecificIds,
+              ...prevState.optimize.countries?.ids,
               [countryKey]: {
-                ...prevState.optimize.countrySpecificIds[countryKey],
+                ...prevState.optimize.countries?.ids[countryKey],
                 isEnabled:
-                  !!prevState.optimize.countrySpecificIds[countryKey]
-                    ?.optimizeId && checked,
+                  !!prevState.optimize.countries?.ids[countryKey]?.optimizeId &&
+                  checked,
               },
             },
           },
@@ -86,7 +86,7 @@ export function CountryOptions({
   ): void => {
     setCurrentSettings((prevState) => {
       if (
-        prevState.optimize.countrySpecificIds[countryKey]?.optimizeId !==
+        prevState.optimize?.countries?.ids[countryKey]?.optimizeId !==
         newOptimizeId
       ) {
         return {
@@ -94,9 +94,9 @@ export function CountryOptions({
           optimize: {
             ...prevState.optimize,
             countrySpecificIds: {
-              ...prevState.optimize.countrySpecificIds,
+              ...prevState.optimize?.countries?.ids,
               [countryKey]: {
-                ...prevState.optimize.countrySpecificIds[countryKey],
+                ...prevState.optimize?.countries?.ids[countryKey],
                 optimizeId: newOptimizeId,
               },
             },
@@ -119,7 +119,7 @@ export function CountryOptions({
                   {getCountryStatus(countryKey)}
                 </span>
                 {isCountryEnabled(
-                  currentSettings.countrySpecificIds[countryKey],
+                  currentSettings?.countries?.ids[countryKey],
                 ) && (
                   <Badge variant="outline" className={cn("ml-2")}>
                     Enabled
@@ -134,7 +134,7 @@ export function CountryOptions({
                 <Switch
                   id={`${countryKey}-enabled`}
                   checked={
-                    currentSettings.countrySpecificIds[countryKey]?.isEnabled ||
+                    currentSettings?.countries?.ids[countryKey]?.isEnabled ||
                     false
                   }
                   onCheckedChange={(checked): void =>
@@ -150,8 +150,8 @@ export function CountryOptions({
                 <Input
                   id={`${countryKey}-id`}
                   value={
-                    currentSettings.countrySpecificIds[countryKey]
-                      ?.optimizeId || ""
+                    currentSettings?.countries?.ids[countryKey]?.optimizeId ||
+                    ""
                   }
                   onChange={(e): void =>
                     handleCountryChange(countryKey, e.target.value)
@@ -164,5 +164,63 @@ export function CountryOptions({
         </AccordionItem>
       ))}
     </Accordion>
+  );
+}
+
+export function EnabledOptimizeCountries({
+  currentSettings,
+}: {
+  currentSettings: OptimizeSettings;
+}): JSX.Element {
+  let statusMessage: string;
+  if (
+    currentSettings.settingsType === "simple" &&
+    currentSettings.simple?.globalEnabled &&
+    currentSettings.simple?.globalId
+  ) {
+    statusMessage = `Enabled in all Countries (${currentSettings.simple.globalId})`;
+  } else if (
+    currentSettings.countries?.ids &&
+    currentSettings.settingsType === "country"
+  ) {
+    const enabledCountries = currentSettings?.countries?.ids
+      ? Object.entries(currentSettings?.countries?.ids)
+          .filter(
+            ([countryKey, data]) =>
+              data.isEnabled &&
+              data.optimizeId &&
+              COUNTRIES[countryKey as CountryCodes],
+          )
+          .map(([countryKey]) => COUNTRIES[countryKey as CountryCodes])
+          .join(", ")
+      : undefined;
+    statusMessage = enabledCountries
+      ? `Enabled for: ${enabledCountries}`
+      : "No countries enabled";
+  } else {
+    statusMessage = "No countries enabled";
+  }
+
+  return (
+    <p
+      className={cn(
+        "text-sm",
+        isOptimizeEnabled(currentSettings) ? "text-green-600" : "text-red-600",
+      )}
+    >
+      {statusMessage}
+    </p>
+  );
+}
+
+export function isOptimizeEnabled(currentSettings: OptimizeSettings): boolean {
+  return !!(
+    (currentSettings.settingsType === "simple" &&
+      currentSettings.simple?.globalEnabled) ||
+    (currentSettings.settingsType === "country" &&
+      currentSettings.countries?.ids &&
+      Object.values(currentSettings.countries.ids).some(
+        (country) => country.isEnabled,
+      ))
   );
 }

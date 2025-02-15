@@ -37,14 +37,14 @@ export function CountryOptions({
     languageKey: LanguageCodes,
   ): string => {
     const country =
-      currentSettings.countries[countryKey]?.languages[languageKey];
+      currentSettings.countries?.[countryKey]?.languages[languageKey];
     if (!country?.trafficMediumNumber || !country?.trafficSourceNumber) {
       return "Not configured";
     }
     if (!country.isEnabled) {
       return "Disabled";
     }
-    return `Source: ${country.trafficSourceNumber}, Medium: ${country.trafficMediumNumber}`;
+    return `Source: ${country.trafficSourceNumbers}, Medium: ${country.trafficMediumNumbers}`;
   };
 
   const isCountryEnabled = (
@@ -66,7 +66,7 @@ export function CountryOptions({
   ): void => {
     setCurrentSettings((prevState) => {
       const element =
-        prevState.voucherNetwork.countries[countryKey]?.languages?.[
+        prevState.voucherNetwork.countries?.[countryKey]?.languages?.[
           languageKey
         ];
       if (
@@ -81,9 +81,10 @@ export function CountryOptions({
             countries: {
               ...prevState.voucherNetwork.countries,
               [countryKey]: {
-                ...prevState.voucherNetwork.countries[countryKey],
+                ...prevState.voucherNetwork.countries?.[countryKey],
                 languages: {
-                  ...prevState.voucherNetwork.countries[countryKey]?.languages,
+                  ...prevState.voucherNetwork.countries?.[countryKey]
+                    ?.languages,
                   [languageKey]: {
                     ...element,
                     isEnabled:
@@ -110,7 +111,7 @@ export function CountryOptions({
     setCurrentSettings((prevState) => {
       const newValue = String(parseInt(`${value}`, 10));
       const element =
-        prevState.voucherNetwork.countries[countryKey]?.languages?.[
+        prevState.voucherNetwork.countries?.[countryKey]?.languages?.[
           languageKey
         ];
       if (element?.[field] !== newValue) {
@@ -121,9 +122,10 @@ export function CountryOptions({
             countries: {
               ...prevState.voucherNetwork.countries,
               [countryKey]: {
-                ...prevState.voucherNetwork.countries[countryKey],
+                ...prevState.voucherNetwork.countries?.[countryKey],
                 languages: {
-                  ...prevState.voucherNetwork.countries[countryKey]?.languages,
+                  ...prevState.voucherNetwork.countries?.[countryKey]
+                    ?.languages,
                   [languageKey]: {
                     ...element,
                     [field]: newValue,
@@ -198,7 +200,7 @@ function CountrySettings({
   ) => void;
 }): JSX.Element {
   const currentElement =
-    currentSettings.countries[countryKey]?.languages[languageKey];
+    currentSettings.countries?.[countryKey]?.languages[languageKey];
   const isEnabled = isCountryEnabled(currentElement);
   const trafficSourceNumber = parseInt(
     currentElement?.trafficSourceNumber || "",
@@ -289,4 +291,61 @@ function CountrySettings({
       </AccordionContent>
     </AccordionItem>
   );
+}
+
+export function EnabledVoucherNetworkCountries({
+  currentSettings,
+}: {
+  currentSettings: VoucherNetworkSettings;
+}): JSX.Element {
+  const enabledLocales: string[] = [];
+  if (currentSettings.countries) {
+    for (const [countryCode, country] of Object.entries(
+      currentSettings.countries,
+    )) {
+      for (const [languageKey, language] of Object.entries(country.languages)) {
+        if (
+          language.isEnabled &&
+          language.trafficMediumNumber &&
+          language.trafficSourceNumber
+        ) {
+          const countryName = LANGUAGES_BY_COUNTRIES[
+            countryCode as CountryCodes
+          ][languageKey as LanguageCodes] as string;
+
+          enabledLocales.push(countryName);
+        }
+      }
+    }
+  }
+  return (
+    <p
+      className={cn(
+        "text-sm",
+        isVnEnabled(currentSettings) ? "text-green-600" : "text-red-600",
+      )}
+    >
+      {enabledLocales.length > 0 ? (
+        <>
+          <span>Enabled for: </span>
+          {enabledLocales.join(", ")}
+        </>
+      ) : (
+        <span>No countries enabled</span>
+      )}
+    </p>
+  );
+}
+
+export function isVnEnabled(currentSettings: VoucherNetworkSettings): boolean {
+  return currentSettings.countries
+    ? Object.values(currentSettings.countries).some((country) =>
+        Object.values(country.languages)?.some(
+          (lang) =>
+            lang.isEnabled &&
+            lang.trafficMediumNumber &&
+            lang.trafficSourceNumber,
+        ),
+      )
+    : false;
 }

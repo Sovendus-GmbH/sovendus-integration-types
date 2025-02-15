@@ -16,13 +16,13 @@ import type {
 } from "sovendus-integration-types";
 import { COUNTRIES } from "sovendus-integration-types";
 
-import {
-  EnabledOptimizeCountries,
-  isOptimizeEnabled,
-} from "../../integration-settings/app-settings";
 import { cn } from "../lib/utils";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
-import { CountryOptions } from "./optimize-country-options";
+import {
+  CountryOptions,
+  EnabledOptimizeCountries,
+  isOptimizeEnabled,
+} from "./optimize-country-options";
 import {
   Accordion,
   AccordionContent,
@@ -53,25 +53,36 @@ export function SovendusOptimize({
     field: "globalId" | "globalEnabled",
     value: string | boolean,
   ): void => {
-    setCurrentSettings((prevState) => ({
-      ...prevState,
-      optimize: {
-        ...prevState.optimize,
-        [field]: value,
-      },
-    }));
+    setCurrentSettings(
+      (prevState) =>
+        ({
+          ...prevState,
+          optimize: {
+            ...prevState.optimize,
+            simple: {
+              globalId: undefined,
+              globalEnabled: false,
+              ...prevState.optimize.simple,
+              [field]: value,
+            },
+          },
+        }) satisfies SovendusAppSettings,
+    );
   };
 
   const handleGlobalOptimizeIdChange = (
     value: "global" | "country-specific",
   ): void => {
-    setCurrentSettings((prevState) => ({
-      ...prevState,
-      optimize: {
-        ...prevState.optimize,
-        useGlobalId: value === "global" ? true : false,
-      },
-    }));
+    setCurrentSettings(
+      (prevState) =>
+        ({
+          ...prevState,
+          optimize: {
+            ...prevState.optimize,
+            settingsType: value === "global" ? "simple" : "country",
+          },
+        }) satisfies SovendusAppSettings,
+    );
   };
   const optimizeEnabled = isOptimizeEnabled(currentOptimizeSettings);
   return (
@@ -199,7 +210,7 @@ export function SovendusOptimize({
                 <AccordionContent className={cn("p-4 bg-white")}>
                   <Tabs
                     defaultValue={
-                      currentOptimizeSettings.useGlobalId
+                      currentOptimizeSettings.settingsType === "simple"
                         ? "global"
                         : "country-specific"
                     }
@@ -238,7 +249,9 @@ export function SovendusOptimize({
                         <div className={cn("flex items-center space-x-2")}>
                           <Switch
                             id="global-id-enabled"
-                            checked={currentOptimizeSettings.globalEnabled}
+                            checked={
+                              currentOptimizeSettings.settingsType === "simple"
+                            }
                             onCheckedChange={(checked): void =>
                               handleGlobalChange("globalEnabled", checked)
                             }
@@ -251,7 +264,9 @@ export function SovendusOptimize({
                           <Label htmlFor="global-id">Global Optimize ID</Label>
                           <Input
                             id="global-id"
-                            value={currentOptimizeSettings.globalId || ""}
+                            value={
+                              currentOptimizeSettings.simple?.globalId || ""
+                            }
                             onChange={(e): void =>
                               handleGlobalChange("globalId", e.target.value)
                             }

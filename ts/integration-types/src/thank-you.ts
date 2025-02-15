@@ -1,7 +1,6 @@
-import type { ExplicitAnyType } from "sovendus-integration-types";
-
 import type {
   EnvironmentType,
+  ExplicitAnyType,
   VersionsOptionsType,
   VersionsType,
 } from "./general";

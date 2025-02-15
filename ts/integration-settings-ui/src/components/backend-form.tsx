@@ -3,18 +3,16 @@ import type { JSX } from "react";
 import React, { useState } from "react";
 import type { SovendusAppSettings } from "sovendus-integration-types";
 
-import {
-  EnabledOptimizeCountries,
-  EnabledVoucherNetworkCountries,
-} from "../../integration-settings/app-settings";
 import { cn } from "../lib/utils";
 import { SovendusCheckoutProducts } from "./checkout-products";
 import { ConfigurationDialog } from "./confirmation-dialog";
 import { Notification } from "./notification";
 import { SovendusOptimize } from "./optimize";
+import { EnabledOptimizeCountries } from "./optimize-country-options";
 import { ProductCard } from "./product-card";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { SovendusVoucherNetwork } from "./voucher-network";
+import { EnabledVoucherNetworkCountries } from "./voucher-network-country-options";
 
 export interface AdditionalStep {
   title: string;
@@ -80,7 +78,9 @@ export default function SovendusBackendForm({
       } catch (error) {
         setActiveConfig(prevActiveConfig);
         setNotificationState({
-          message: `Failed to save settings, error: ${error?.message || JSON.stringify(error)}`,
+          message: `Failed to save settings, error: ${
+            error?.message || JSON.stringify(error)
+          }`,
           type: "error",
         });
       }
@@ -91,15 +91,17 @@ export default function SovendusBackendForm({
     active: boolean;
     details: JSX.Element;
   } => {
-    const enabledCountries = Object.entries(
-      currentSettings.voucherNetwork.countries,
-    )
-      .filter(([_, country]) =>
-        Object.values(country.languages).some((lang) => lang.isEnabled),
-      )
-      .map(([code]) => code);
+    const enabledCountries =
+      currentSettings.voucherNetwork.countries &&
+      Object.entries(currentSettings.voucherNetwork.countries)
+        .filter(([_, country]) =>
+          Object.values(country.languages).some((lang) => lang.isEnabled),
+        )
+        .map(([code]) => code);
 
-    const isActive = enabledCountries.length > 0;
+    const isActive = enabledCountries?.length
+      ? enabledCountries.length > 0
+      : false;
 
     return {
       active: isActive,
@@ -116,15 +118,18 @@ export default function SovendusBackendForm({
     details: React.JSX.Element;
   } => {
     const isGlobalEnabled =
-      currentSettings.optimize.useGlobalId &&
-      currentSettings.optimize.globalEnabled;
-    const enabledCountries = Object.entries(
-      currentSettings.optimize.countrySpecificIds,
-    )
-      .filter(([_, data]) => data.isEnabled)
-      .map(([code]) => code);
+      currentSettings.optimize?.simple?.globalId &&
+      currentSettings.optimize?.simple?.globalEnabled;
+    const enabledCountries =
+      currentSettings.optimize.countries &&
+      Object.entries(currentSettings.optimize.countries.ids)
+        .filter(([_, data]) => data.isEnabled)
+        .map(([code]) => code);
 
-    const isActive = isGlobalEnabled || enabledCountries.length > 0;
+    const isActive =
+      isGlobalEnabled ||
+      (enabledCountries?.length && enabledCountries.length > 0) ||
+      false;
 
     return {
       active: isActive,

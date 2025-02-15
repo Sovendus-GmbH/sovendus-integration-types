@@ -15,10 +15,6 @@ import type {
 } from "sovendus-integration-types";
 import { LANGUAGES_BY_COUNTRIES } from "sovendus-integration-types";
 
-import {
-  EnabledVoucherNetworkCountries,
-  isVnEnabled,
-} from "../../integration-settings/app-settings";
 import { cn } from "../lib/utils";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
 import {
@@ -31,7 +27,11 @@ import { Alert, AlertDescription } from "./ui/alert";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { CountryOptions } from "./voucher-network-country-options";
+import {
+  CountryOptions,
+  EnabledVoucherNetworkCountries,
+  isVnEnabled,
+} from "./voucher-network-country-options";
 
 interface SovendusVoucherNetworkProps {
   currentSettings: VoucherNetworkSettings;

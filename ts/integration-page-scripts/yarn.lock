@@ -3,9 +3,9 @@
 
 
 sovendus-integration-types@^1.1.0:
-  version "1.0.25"
-  resolved "https://registry.yarnpkg.com/sovendus-integration-types/-/sovendus-integration-types-1.0.25.tgz#4f2fe51002f6c37d2d51b8e267168aecdf8daabf"
-  integrity sha512-NsTnyG3OIRRIccm55BJwH0iBWHepQ9tsLNd8O/x0L0CGAl1vQzORFPt/ztqIBvfXP5x3GJL6DxUdQ4pm9S6Bew==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/sovendus-integration-types/-/sovendus-integration-types-1.1.0.tgz#70e42ac3add1ab023e3688c682b3d18e263800c8"
+  integrity sha512-Gpdg1UZs8993VSYKn1QL5J5ZO3gJYxNDcKIuKX145sjFO9kxVRwZjQv0tZTAwY9ayqodanGuzwOZPQQyOAFGaQ==
 
 tsc@^2.0.4:
   version "2.0.4"

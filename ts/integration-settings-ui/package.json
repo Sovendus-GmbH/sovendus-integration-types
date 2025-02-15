@@ -20,6 +20,7 @@
   },
   "scripts": {
     "build": "rm -rf ./dist && tsc -p ./tsconfig.json",
+    "lint": "cd .. && yarn lint",
     "release": "yarn lint && yarn build && npm publish"
   },
   "repository": {
@@ -61,11 +62,19 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.0.5",
     "lucide-react": "^0.474.0",
-    "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7",
-    "sovendus-integration-types": "^1.1.0",
+    "postcss": "^8.5.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "sovendus-integration-types": "^1.1.0",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss": "^4.0.6",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "optionalDependencies": {
+    "@tailwindcss/vite": "^4.0.6",
+    "@vitejs/plugin-react": "^4.3.4",
+    "sovendus-builder": "^1.1.11",
+    "vite": "^6.1.0"
   },
   "devDependencies": {
     "typescript": "^5.7.3"

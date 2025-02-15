@@ -1,7 +1,7 @@
 import type {
   LanguageCodes,
-  SovConsumerType,
   SovendusAppSettings,
+  SovendusConsumerType,
   SovendusThankYouPageConfig,
   SovendusThankYouPageStatus,
   VoucherNetworkLanguage,
@@ -17,7 +17,7 @@ import { handleCheckoutProductsConversion } from "../utils";
 interface ThankYouWindow extends Window {
   sovThankyouConfig: SovendusThankYouPageConfig;
   sovIframes: ConversionsType[];
-  sovConsumer: SovConsumerType;
+  sovConsumer: SovendusConsumerType;
   sovThankyouStatus: SovendusThankYouPageStatus;
 }
 
