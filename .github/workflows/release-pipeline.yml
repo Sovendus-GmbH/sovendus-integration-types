@@ -1,4 +1,4 @@
-name: PHP Compatibility & Lint Checks
+name: Release Pipeline
 
 on:
   push:
@@ -24,20 +24,71 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn setup
         working-directory: ./ts
 
       - name: Run linter
         run: yarn lint
         working-directory: ./ts
 
-      - name: Run tests
-        run: yarn test
-        working-directory: ./ts
-
       - name: Build package
         run: yarn build
         working-directory: ./ts
+
+  publish-npm:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install dependencies
+        working-directory: ./ts
+        run: yarn install
+
+      - name: Install Snyk CLI
+        working-directory: ./ts
+        run: npm install -g snyk
+
+      - name: Snyk Monitor Multiple Lock Files
+        working-directory: ./ts
+        run: |
+          # Monitor root yarn.lock
+          snyk monitor --org=${{ secrets.SNYK_ORG_KEY }} --project-name="/github/${{ github.repository }}/root" --file=yarn.lock || true
+
+          # Monitor lock files in subdirectories
+          find . -name "yarn.lock" -not -path "./node_modules/*" -exec dirname {} \; | while read dir; do
+            snyk monitor --org=${{ secrets.SNYK_ORG_KEY }} \
+              --project-name="/github/${{ github.repository }}${dir#.}" \
+              --file="$dir/yarn.lock" || true
+          done
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Publish integration-page-scripts to npm
+        working-directory: ./ts/integration-page-scripts
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish integration-settings-ui to npm
+        working-directory: ./ts/integration-settings-ui
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish integration-types to npm
+        working-directory: ./ts/integration-types
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   php_checks:
     runs-on: ubuntu-latest

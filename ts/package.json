@@ -1,13 +1,12 @@
 {
     "name": "sovendus-plugins-core",
-    "version": "2.5.2",
     "description": "Sovendus Integration Plugins Core used as a base for Sovendus Integration Plugins. Take a look at the README.md for more information.",
     "private": true,
     "scripts": {
         "setup": "yarn install && cd integration-settings-ui && yarn install && cd ../integration-page-scripts && yarn install && cd ../integration-types && yarn install",
         "build": "cd integration-settings-ui && yarn build && cd ../integration-page-scripts && yarn build && cd ../integration-types && yarn build",
         "lint": "eslint . --ext .ts,.tsx --config .eslintrc.json",
-        "lerna": "npx lerna version 3.0.0 --force-publish --yes --loglevel verbose"
+        "release": "yarn lint && yarn build && lerna version"
     },
     "devDependencies": {
         "@types/eslint": "9.6.1",
