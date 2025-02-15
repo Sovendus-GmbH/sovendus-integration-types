@@ -3,7 +3,6 @@ import type { SovDebugLevel } from "./general";
 import type { SovendusPageUrlParams } from "./plugin-page";
 import type { SovendusAppSettings } from "./plugin-settings";
 import type {
-  ProfityAppType,
   SovCbVnApplicationType,
   VariableIdentifiersType,
 } from "./thank-you";
@@ -32,7 +31,7 @@ export interface SovendusThankYouPageConfig {
 }
 
 export interface IntegrationDataType {
-  data: SovendusThankYouCookieData | undefined;
+  data: PublicThankYouCookieData | undefined;
   status: {
     integrationLoaderStarted: boolean;
     integrationParametersLoaded: boolean;
@@ -93,8 +92,8 @@ export const thankyouInterfaceData: {
 
 export interface SovendusVNConversionsType {
   trafficSourceNumber?: string | undefined | number;
-  shopId?: string | undefined | number;
-  shopNumber?: string | undefined | number;
+  // shopId?: string | undefined | number;
+  // shopNumber?: string | undefined | number;
   trafficMediumNumber?: string | undefined | number;
   sessionId?: string | undefined;
   timestamp?: string | undefined | number;
@@ -105,7 +104,7 @@ export interface SovendusVNConversionsType {
   usedCouponCode?: string | undefined;
   iframeContainerId?: string;
   integrationType?: string;
-  alreadyExecuted?: boolean;
+  // alreadyExecuted?: boolean;
 }
 
 export type RedemptionApiRequestData = {
@@ -117,14 +116,14 @@ export type RedemptionApiRequestData = {
   sessionId: string | undefined;
 };
 
-export interface SovendusThankYouCookieData extends SovendusPageUrlParams {
-  orderValue: string | undefined;
-  orderCurrency: string | undefined;
+export interface PublicThankYouCookieData extends SovendusPageUrlParams {
+  orderValue: number | undefined;
+  orderCurrency: SovendusOrderCurrencies | undefined;
   orderId: string | undefined;
 }
 
 export type PublicThankYouCookieInterface = {
-  [interfaceKey in keyof SovendusThankYouCookieData]: {
+  [interfaceKey in keyof PublicThankYouCookieData]: {
     cookieName: string;
     persistent?: boolean;
   };
@@ -151,7 +150,7 @@ export interface SovendusPublicConversionWindow extends Window {
     string,
     any,
   ][];
-  profity?: ProfityAppType;
+  // profity?: ProfityAppType;
 
   // diagnostic infos
   // sovIntegrationInfo?: IntegrationDataType;

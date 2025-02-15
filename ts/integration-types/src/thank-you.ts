@@ -1,6 +1,7 @@
+import type { ExplicitAnyType } from "sovendus-integration-types";
+
 import type {
   EnvironmentType,
-  ExplicitAnyType,
   VersionsOptionsType,
   VersionsType,
 } from "./general";
@@ -25,12 +26,6 @@ export interface EventMessagePayloadType extends PublicApiSettingsType {
 export type PublicApiSettingsType = {
   action: string;
   url?: string | undefined;
-};
-
-export type StorageType = {
-  setItem: (key: string, value: ExplicitAnyType) => void;
-  getItem: (key: string) => ExplicitAnyType;
-  [key: string]: ExplicitAnyType;
 };
 
 // legacy
@@ -67,6 +62,12 @@ export interface SovendusCbVnConversionWindow
   sovApi?: VersionsOptionsType;
   sovApplication: InitializedSovApplicationType;
 }
+
+export type StorageType = {
+  setItem: (key: string, value: ExplicitAnyType) => void;
+  getItem: (key: string) => ExplicitAnyType;
+  [key: string]: ExplicitAnyType;
+};
 
 export interface SovCbVnApplicationType {
   update?: (() => void) | undefined;
