@@ -1,6 +1,6 @@
 {
   "name": "sovendus-integration-scripts",
-  "version": "1.0.0",
+  "version": "2.5.2",
   "license": "GPL-3.0-only",
   "private": false,
   "description": "Sovendus Integration Scripts - checkout the docs at developer-hub.sovendus.com",
