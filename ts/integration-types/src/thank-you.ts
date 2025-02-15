@@ -1,11 +1,10 @@
-import type { CountryCodes, LanguageCodes } from "./countries";
 import type {
   EnvironmentType,
   ExplicitAnyType,
   VersionsOptionsType,
   VersionsType,
 } from "./general";
-
+import type { SovendusPublicConversionWindow } from "./plugin-thankyou";
 
 export enum VariableIdentifiersType {
   integrationIdentifier_sovIframes = "sovIframes",
@@ -26,6 +25,12 @@ export interface EventMessagePayloadType extends PublicApiSettingsType {
 export type PublicApiSettingsType = {
   action: string;
   url?: string | undefined;
+};
+
+export type StorageType = {
+  setItem: (key: string, value: ExplicitAnyType) => void;
+  getItem: (key: string) => ExplicitAnyType;
+  [key: string]: ExplicitAnyType;
 };
 
 // legacy

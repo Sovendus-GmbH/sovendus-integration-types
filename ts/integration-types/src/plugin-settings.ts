@@ -16,15 +16,19 @@ export interface VoucherNetworkSettings {
 
 export interface OptimizeSettings {
   settingsType: SettingsType;
-  simple?: {
-    globalId: string | undefined;
-    globalEnabled: boolean;
-  };
-  countries?: {
-    fallBackEnabled: boolean;
-    fallBackId: string | undefined;
-    ids: { [key in CountryCodes]?: OptimizeCountry };
-  };
+  simple?:
+    | {
+        globalId: string | undefined;
+        globalEnabled: boolean;
+      }
+    | undefined;
+  countries?:
+    | {
+        fallBackEnabled: boolean;
+        fallBackId: string | undefined;
+        ids: { [key in CountryCodes]?: OptimizeCountry };
+      }
+    | undefined;
 }
 
 export interface VoucherNetworkSettingsSimple {

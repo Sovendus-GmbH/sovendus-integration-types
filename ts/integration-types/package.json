@@ -19,8 +19,7 @@
     "./dist/*": "./dist/*"
   },
   "scripts": {
-    "build": "rm -rf ./dist && tsc --project ../tsconfig.json",
-    "lint": "eslint ./src --ext .ts --config ../.eslintrc.json",
+    "build": "rm -rf ./dist && tsc --project ./tsconfig.json",
     "release": "yarn lint && yarn build && npm publish"
   },
   "repository": {

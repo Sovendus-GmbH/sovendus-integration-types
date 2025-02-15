@@ -1,6 +1,12 @@
 import type { CountryCodes, LanguageCodes } from "./countries";
 import type { SovDebugLevel } from "./general";
+import type { SovendusPageUrlParams } from "./plugin-page";
 import type { SovendusAppSettings } from "./plugin-settings";
+import type {
+  ProfityAppType,
+  SovCbVnApplicationType,
+  VariableIdentifiersType,
+} from "./thank-you";
 
 export interface SovendusThankyouPageData {
   sovThankyouPageConfig: SovendusThankYouPageConfig;
@@ -22,11 +28,11 @@ export interface SovendusThankYouPageConfig {
     // or only one
     usedCouponCode: string | undefined;
   };
-  customerData: SovConsumerType;
+  customerData: SovendusConsumerType;
 }
 
 export interface IntegrationDataType {
-  data: IntegrationParameters | undefined;
+  data: SovendusThankYouCookieData | undefined;
   status: {
     integrationLoaderStarted: boolean;
     integrationParametersLoaded: boolean;
@@ -62,20 +68,17 @@ export const thankyouInterfaceData: {
 } = {
   // keys that are used to look for values in cookies
   cookieData: {
-    optimizeId: { cookieName: "sovOptimizeId", persistent: true },
-    couponCode: { cookieName: "sovCouponCode" },
+    sovCouponCode: { cookieName: "sovCouponCode" },
     orderValue: { cookieName: "sovOrderValue" },
     orderCurrency: { cookieName: "sovOrderCurrency" },
     orderId: { cookieName: "sovOrderId" },
-    sessionId: { cookieName: "sovSessionId" },
-    checkoutProductsToken: { cookieName: "sovReqToken" },
-    checkoutProductsId: { cookieName: "sovReqProductId" },
-    legacy_profityId: { cookieName: "puid" },
-    debug: { cookieName: "sovDebugLevel", persistent: true },
+    sovReqToken: { cookieName: "sovReqToken" },
+    sovReqProductId: { cookieName: "sovReqProductId" },
+    puid: { cookieName: "puid" },
+    sovDebugLevel: { cookieName: "sovDebugLevel", persistent: true },
   },
   // keys that are used to look for values in window[VariableIdentifiersType]
   windowVariableData: {
-    optimizeId: { alias: ["optimizeId"] },
     trafficSourceNumber: {
       alias: ["trafficSourceNumber", "shopId", "shopNumber"],
     },
@@ -84,7 +87,6 @@ export const thankyouInterfaceData: {
     orderCurrency: { alias: ["orderCurrency"] },
     orderId: { alias: ["orderId"] },
     sessionId: { alias: ["sessionId"] },
-    checkoutProductsToken: { alias: ["sovReqToken"] },
     iframeContainerId: { alias: ["iframeContainerId"], storeAll: true },
   },
 };
@@ -94,7 +96,6 @@ export interface SovendusVNConversionsType {
   shopId?: string | undefined | number;
   shopNumber?: string | undefined | number;
   trafficMediumNumber?: string | undefined | number;
-  optimizeId?: string | undefined | number;
   sessionId?: string | undefined;
   timestamp?: string | undefined | number;
   orderId?: string | undefined | number;
@@ -107,19 +108,6 @@ export interface SovendusVNConversionsType {
   alreadyExecuted?: boolean;
 }
 
-export type IntegrationParameters = {
-  [key in IntegrationParameterKeysType]?: string;
-};
-
-export type IntegrationParameterKeysType =
-  | RedemptionApiRequestDataKeys
-  | "optimizeId"
-  | "checkoutProductsToken"
-  | "checkoutProductsId"
-  | "legacy_profityId"
-  | "iframeContainerId"
-  | "debug";
-
 export type RedemptionApiRequestData = {
   trafficSourceNumber: string;
   couponCode: string;
@@ -129,48 +117,21 @@ export type RedemptionApiRequestData = {
   sessionId: string | undefined;
 };
 
-export interface PublicThankYouCookieInterface extends SovendusPageUrlParams {
-  sovCouponCode: string | undefined;
-  sovReqToken: string | undefined;
-  sovReqProductId: string | undefined;
-  puid: string | undefined;
-  sovDebugLevel: SovDebugLevel;
-  optimizeId: string | undefined;
+export interface SovendusThankYouCookieData extends SovendusPageUrlParams {
+  orderValue: string | undefined;
+  orderCurrency: string | undefined;
+  orderId: string | undefined;
 }
 
-export type PublicThankYouCookieInterfaceKeys =
-  | "optimizeId"
-  | "orderValue"
-  | "orderCurrency"
-  | "orderId"
-  | "sessionId";
-
 export type PublicThankYouCookieInterface = {
-  [interfaceKey in PublicThankYouCookieInterfaceKeys]: {
+  [interfaceKey in keyof SovendusThankYouCookieData]: {
     cookieName: string;
     persistent?: boolean;
   };
 };
 
-export type StorageType = {
-  setItem: (key: string, value: ExplicitAnyType) => void;
-  getItem: (key: string) => ExplicitAnyType;
-  [key: string]: ExplicitAnyType;
-};
-
-export type PublicThankYouVariableInterfaceKeys =
-  | "optimizeId"
-  | "trafficSourceNumber"
-  | "couponCode"
-  | "orderValue"
-  | "orderCurrency"
-  | "orderId"
-  | "sessionId"
-  | "iframeContainerId"
-  | "checkoutProductsToken";
-
 export type PublicThankYouVariableInterface = {
-  [interfaceKey in PublicThankYouVariableInterfaceKeys]: {
+  [interfaceKey in keyof SovendusVNConversionsType]: {
     alias: string[];
     storeAll?: true;
   };
@@ -178,22 +139,22 @@ export type PublicThankYouVariableInterface = {
 
 export interface SovendusPublicConversionWindow extends Window {
   // from partner provided
-  sovIframes?: SovConversionsType[];
-  sovConsumer?: SovConsumerType;
+  sovIframes?: SovendusVNConversionsType[];
+  sovConsumer?: SovendusConsumerType;
   AWIN?: AwinConversion;
 
   // legacy
   [VariableIdentifiersType.legacy_integrationIdentifier_sovAbo]?:
-    | SovConversionsType[]
-    | SovConversionsType;
+    | SovendusVNConversionsType[]
+    | SovendusVNConversionsType;
   [VariableIdentifiersType.legacy_integrationIdentifier_gconData]?: [
     string,
-    ExplicitAnyType,
+    any,
   ][];
   profity?: ProfityAppType;
 
   // diagnostic infos
-  sovIntegrationInfo?: IntegrationDataType;
+  // sovIntegrationInfo?: IntegrationDataType;
   sovApplication?: SovCbVnApplicationType;
 }
 

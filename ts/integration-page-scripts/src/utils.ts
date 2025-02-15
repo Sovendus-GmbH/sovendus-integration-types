@@ -1,14 +1,11 @@
-import { sovReqProductIdKey, sovReqTokenKey } from "../page-scripts/constants";
+import { sovReqProductIdKey, sovReqTokenKey } from "./constants";
 
 export async function handleCheckoutProductsConversion(
   checkoutProducts: boolean,
   getCookie: (
     name: string,
   ) => Promise<string | undefined> | (string | undefined),
-  setCookie: (
-    name: string,
-    value?: string | undefined,
-  ) => Promise<string> | string,
+  setCookie: (name: string, value?: string) => Promise<string> | string,
 ): Promise<boolean> {
   if (checkoutProducts) {
     const sovReqToken = await getCookie(sovReqTokenKey);
