@@ -41,13 +41,6 @@
     "suppressImplicitAnyIndexErrors": false,
     "noStrictGenericChecks": false
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "integration-settings-ui/**/*.ts",
-    "integration-settings-ui/**/*.tsx",
-    "../admin-frontend/**/*.ts",
-    "../admin-frontend/**/*.tsx"
-  ],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["./node_modules"]
 }

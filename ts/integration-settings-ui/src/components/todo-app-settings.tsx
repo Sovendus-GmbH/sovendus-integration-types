@@ -20,6 +20,7 @@ export function EnabledVoucherNetworkCountries({
   currentSettings: VoucherNetworkSettings;
 }): JSX.Element {
   const enabledLocales: string[] = [];
+  
   for (const [countryCode, country] of Object.entries(
     currentSettings.countries,
   )) {

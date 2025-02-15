@@ -11,6 +11,34 @@ on:
       - dev
 
 jobs:
+  ts_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: yarn install
+        working-directory: ./ts
+
+      - name: Run linter
+        run: yarn lint
+        working-directory: ./ts
+
+      - name: Run tests
+        run: yarn test
+        working-directory: ./ts
+
+      - name: Build package
+        run: yarn build
+        working-directory: ./ts
+
   php_checks:
     runs-on: ubuntu-latest
 
@@ -28,6 +56,7 @@ jobs:
           coverage: none
 
       - name: Install PHPCompatibility and PHP_CodeSniffer
+        working-directory: ./php
         run: |
           composer global require "squizlabs/php_codesniffer"
           composer global require "phpcompatibility/php-compatibility"
@@ -45,15 +74,18 @@ jobs:
           $PHPCS_PATH -i
 
       - name: Run PHP 7.0 Compatibility Check
+        working-directory: ./php
         run: |
           ~/.composer/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 7.0-7.0 . || exit 1
 
       - name: Lint PHP Files
+        working-directory: ./php
         run: |
           find . -name "*.php" -print0 | xargs -0 -n1 php -l
         continue-on-error: false
 
       - name: Install PHPStan for Static Analysis
+        working-directory: ./php
         run: |
           composer require --dev phpstan/phpstan
           vendor/bin/phpstan analyse -c phpstan.neon || exit 1

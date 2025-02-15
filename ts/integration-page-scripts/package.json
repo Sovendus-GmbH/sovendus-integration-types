@@ -1,16 +1,16 @@
 {
-  "name": "sovendus-integration-types",
-  "version": "1.1.0",
-  "license": "MIT",
+  "name": "sovendus-integration-scripts",
+  "version": "1.0.0",
+  "license": "GPL-3.0-only",
   "private": false,
-  "description": "Sovendus Integration Types - checkout the docs at developer-hub.sovendus.com",
+  "description": "Sovendus Integration Scripts - checkout the docs at developer-hub.sovendus.com",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "rm-rf ./dist && tsc --project tsconfig.json",
+    "build": "rm-rf ./dist && tsc --project ../tsconfig.json",
     "lint": "eslint ./src --ext .ts --config .eslintrc.json",
     "release": "yarn lint && yarn build && npm publish"
   },
@@ -24,8 +24,6 @@
     "eslint-plugin-unused-imports": "^4.1.4",
     "prettier": "^3.5.1",
     "prettier-eslint": "^16.3.0",
-    "tsc": "^2.0.4",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.24.0"
+    "tsc": "^2.0.4"
   }
 }
