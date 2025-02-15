@@ -1,3 +1,4 @@
+import { defaultSovendusPageConfig } from "integration-types/src";
 import type {
   CountryCodes,
   OptimizeSettings,
@@ -107,7 +108,7 @@ export class SovendusPage {
     } catch (error) {
       console.error("Sovendus App - Error while storing url params", error);
     }
-    return defaultPageConfig.urlData;
+    return defaultSovendusPageConfig.urlData;
   }
 
   shouldSetCookie(
@@ -193,20 +194,20 @@ export class SovendusPage {
           SovendusAppSettings["checkoutProducts"]
         >(
           config?.settings?.checkoutProducts,
-          defaultPageConfig.settings.checkoutProducts,
+          defaultSovendusPageConfig.settings.checkoutProducts,
         ),
         version: Versions.TWO,
       },
       integrationType: getRightSettingValue<
         SovendusPageConfig["integrationType"]
-      >(config?.integrationType, defaultPageConfig.integrationType),
+      >(config?.integrationType, defaultSovendusPageConfig.integrationType),
       country: getRightSettingValue<SovendusPageConfig["country"]>(
         config?.country,
-        defaultPageConfig.country,
+        defaultSovendusPageConfig.country,
       ),
       urlData: getRightSettingValue<SovendusPageConfig["urlData"]>(
         config?.urlData,
-        defaultPageConfig.urlData,
+        defaultSovendusPageConfig.urlData,
       ),
     } satisfies SovendusPageConfig;
   }
@@ -215,33 +216,33 @@ export class SovendusPage {
     return {
       countries: getRightSettingValue<VoucherNetworkSettings["countries"]>(
         config?.settings?.voucherNetwork?.countries,
-        defaultPageConfig.settings.voucherNetwork.countries,
+        defaultSovendusPageConfig.settings.voucherNetwork.countries,
       ),
       simple: getRightSettingValue<VoucherNetworkSettings["simple"]>(
         config?.settings?.voucherNetwork?.simple,
-        defaultPageConfig.settings.voucherNetwork.simple,
+        defaultSovendusPageConfig.settings.voucherNetwork.simple,
       ),
       settingType: getRightSettingValue<VoucherNetworkSettings["settingType"]>(
         config?.settings?.voucherNetwork?.settingType,
-        defaultPageConfig.settings.voucherNetwork.settingType,
+        defaultSovendusPageConfig.settings.voucherNetwork.settingType,
       ),
       anyCountryEnabled: getRightSettingValue<
         VoucherNetworkSettings["anyCountryEnabled"]
       >(
         config?.settings?.voucherNetwork?.anyCountryEnabled,
-        defaultPageConfig.settings.voucherNetwork.anyCountryEnabled,
+        defaultSovendusPageConfig.settings.voucherNetwork.anyCountryEnabled,
       ),
       iframeContainerId: getRightSettingValue<
         VoucherNetworkSettings["iframeContainerId"]
       >(
         config?.settings?.voucherNetwork?.iframeContainerId,
-        defaultPageConfig.settings.voucherNetwork.iframeContainerId,
+        defaultSovendusPageConfig.settings.voucherNetwork.iframeContainerId,
       ),
       cookieTracking: getRightSettingValue<
         VoucherNetworkSettings["cookieTracking"]
       >(
         config?.settings?.voucherNetwork?.cookieTracking,
-        defaultPageConfig.settings.voucherNetwork.cookieTracking,
+        defaultSovendusPageConfig.settings.voucherNetwork.cookieTracking,
       ),
     };
   }
@@ -249,11 +250,11 @@ export class SovendusPage {
   getOptimizeConfig(config: Partial<SovendusPageConfig>): OptimizeSettings {
     const globalId = getRightSettingValue<OptimizeSettings["globalId"]>(
       config?.settings?.optimize?.globalId,
-      defaultPageConfig.settings.optimize.globalId,
+      defaultSovendusPageConfig.settings.optimize.globalId,
     );
     const useGlobalId = getRightSettingValue<OptimizeSettings["useGlobalId"]>(
       config?.settings?.optimize?.useGlobalId,
-      defaultPageConfig.settings.optimize.useGlobalId,
+      defaultSovendusPageConfig.settings.optimize.useGlobalId,
     );
     const globalEnabled = getRightSettingValue<
       OptimizeSettings["globalEnabled"]
@@ -264,7 +265,7 @@ export class SovendusPage {
       globalEnabled,
       fallBackId: getRightSettingValue<OptimizeSettings["fallBackId"]>(
         config?.settings?.optimize?.fallBackId,
-        defaultPageConfig.settings.optimize.fallBackId,
+        defaultSovendusPageConfig.settings.optimize.fallBackId,
       ),
       fallBackEnabled: getRightSettingValue<
         OptimizeSettings["fallBackEnabled"]
@@ -282,7 +283,7 @@ export class SovendusPage {
         OptimizeSettings["countrySpecificIds"]
       >(
         config?.settings?.optimize?.countrySpecificIds,
-        defaultPageConfig.settings.optimize.countrySpecificIds,
+        defaultSovendusPageConfig.settings.optimize.countrySpecificIds,
       ),
     };
   }
