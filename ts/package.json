@@ -7,7 +7,7 @@
         "setup": "yarn install && cd integration-settings-ui && yarn install && cd ../integration-page-scripts && yarn install && cd ../integration-types && yarn install",
         "build": "cd integration-settings-ui && yarn build && cd ../integration-page-scripts && yarn build && cd ../integration-types && yarn build",
         "lint": "eslint . --ext .ts,.tsx --config .eslintrc.json",
-        "lerna": "npx lerna version"
+        "lerna": "npx lerna version 3.0.0 --force-publish --yes --loglevel verbose"
     },
     "devDependencies": {
         "@types/eslint": "9.6.1",

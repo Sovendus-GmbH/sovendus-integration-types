@@ -2,10 +2,15 @@
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "version": "2.5.2",
   "packages": [
-    "integration-page-scripts/",
-    "integration-settings-ui/",
-    "integration-types/",
-    "./"
+    "integration-page-scripts",
+    "integration-settings-ui",
+    "integration-types"
   ],
-  "npmClient": "yarn"
+  "npmClient": "yarn",
+  "command": {
+    "version": {
+      "exact": true,
+      "forcePublish": true
+    }
+  }
 }
