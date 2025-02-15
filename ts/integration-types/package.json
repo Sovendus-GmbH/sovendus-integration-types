@@ -1,6 +1,6 @@
 {
   "name": "sovendus-integration-types",
-  "version": "2.5.2",
+  "version": "3.0.0",
   "license": "MIT",
   "private": false,
   "description": "Sovendus Integration Types - checkout the docs at developer-hub.sovendus.com",
@@ -45,7 +45,7 @@
     }
   ],
   "devDependencies": {
-    "typescript": "^5.7.3",
-    "tsc": "^2.0.4"
+    "tsc": "^2.0.4",
+    "typescript": "^5.7.3"
   }
 }
