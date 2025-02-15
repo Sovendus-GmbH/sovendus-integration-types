@@ -1,5 +1,5 @@
 import type { CountryCodes, LanguageCodes } from "./countries";
-import type { SovDebugLevel } from "./general";
+import type { ExplicitAnyType, SovDebugLevel } from "./general";
 import type { SovendusPageUrlParams } from "./plugin-page";
 import type { SovendusAppSettings } from "./plugin-settings";
 import type {
@@ -148,7 +148,7 @@ export interface SovendusPublicConversionWindow extends Window {
     | SovendusVNConversionsType;
   [VariableIdentifiersType.legacy_integrationIdentifier_gconData]?: [
     string,
-    any,
+    ExplicitAnyType,
   ][];
   // profity?: ProfityAppType;
 

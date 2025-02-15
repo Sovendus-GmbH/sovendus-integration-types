@@ -1,15 +1,19 @@
-import { defaultSovendusPageConfig } from "integration-types/src";
 import type {
   CountryCodes,
   OptimizeSettings,
   SovendusAppSettings,
   SovendusPageConfig,
+  SovendusPageData,
   SovendusPageUrlParams,
-  SovPageData,
   SovPageStatus,
   VoucherNetworkSettings,
 } from "sovendus-integration-types";
-import { Versions } from "sovendus-integration-types";
+import {
+  defaultSovendusPageConfig,
+  Versions,
+} from "sovendus-integration-types";
+
+import { getPerformanceTime } from "../utils";
 
 export class SovendusPage {
   // Standard implementation of the Sovendus page script
@@ -36,26 +40,42 @@ export class SovendusPage {
   // eslint-disable-next-line @typescript-eslint/require-await
   async main(
     settings: SovendusPageConfig,
-    onDone: ({ sovPageConfig, sovPageStatus }: Partial<SovPageData>) => void,
+    onDone: ({
+      sovPageConfig,
+      sovPageStatus,
+    }: Partial<SovendusPageData>) => void,
   ): Promise<void> {
     const sovPageStatus = this.initializeStatus();
     if (!settings) {
-      sovPageStatus.sovPageConfigFound = false;
+      sovPageStatus.status.sovPageConfigFound = true;
       onDone({ sovPageStatus });
       console.error("sovPageConfig is not defined");
       return;
     }
     const sovPageConfig: SovendusPageConfig = this.getSovendusConfig(settings);
-    sovPageConfig.urlData = this.lookForUrlParamsToStore(sovPageStatus);
+    sovPageStatus.urlData = this.lookForUrlParamsToStore(sovPageStatus);
     this.sovendusOptimize(sovPageConfig, sovPageStatus);
     onDone({ sovPageStatus, sovPageConfig });
   }
 
   initializeStatus(): SovPageStatus {
     return {
-      sovPageConfigFound: false,
-      loadedOptimize: false,
-      storedCookies: false,
+      integrationScriptVersion: undefined,
+      urlData: {
+        sovCouponCode: undefined,
+        sovReqToken: undefined,
+        sovReqProductId: undefined,
+        puid: undefined,
+        sovDebugLevel: undefined,
+      },
+      status: {
+        sovPageConfigFound: false,
+        loadedOptimize: false,
+        storedCookies: false,
+      },
+      times: {
+        integrationLoaderStart: getPerformanceTime(),
+      },
     };
   }
   getCookieKeys(): (keyof SovendusPageUrlParams)[] {
@@ -85,7 +105,8 @@ export class SovendusPage {
       const paramValue =
         urlParams?.get(dataKey) || scriptUrlParams?.get(dataKey);
       if (paramValue) {
-        pageViewData[dataKey] = paramValue;
+        pageViewData[dataKey] =
+          paramValue as unknown as SovendusPageUrlParams[keyof SovendusPageUrlParams];
       }
     });
     return pageViewData;

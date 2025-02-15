@@ -23,3 +23,7 @@ export async function handleCheckoutProductsConversion(
   }
   return false;
 }
+
+export function getPerformanceTime(): number {
+  return window.performance?.now?.() || 0;
+}

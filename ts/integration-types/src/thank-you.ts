@@ -86,7 +86,7 @@ export interface SovCbVnApplicationType {
     consumerProps: ConsumerPropsType[];
   };
   stickyBanner?: { closeInstance: (instance: Instance) => void };
-  messageListener?: (ev: MessageEvent<any>) => void;
+  messageListener?: (ev: MessageEvent<ExplicitAnyType>) => void;
   resizeListenerAdded?: boolean;
 }
 
@@ -115,7 +115,7 @@ export interface InitializedSovApplicationType
   sovImplement: {
     init: () => void;
   };
-  messageListener: (ev: MessageEvent<any>) => void;
+  messageListener: (ev: MessageEvent<ExplicitAnyType>) => void;
   resizeListenerAdded: boolean;
 }
 
@@ -159,7 +159,7 @@ export interface BasePropertiesType {
   resizeListenerAdded: boolean;
   sessionUuid: string;
   sovTrackingForceSendTimeSpan: number;
-  store: any;
+  store: ExplicitAnyType;
   sovStorage: StorageType;
   timestamp: number;
 }
