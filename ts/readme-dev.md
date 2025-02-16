@@ -1,4 +1,4 @@
-# Sovendus-Builder Developer guide
+# Sovendus-Plugins-Core Developer guide
 
 ## Contributing
 
@@ -14,6 +14,7 @@ If you want to contribute or report issues, please follow these steps:
 To build the project from source, run:
 
 ```bash
+yarn setup
 yarn build
 ```
 
@@ -22,7 +23,7 @@ yarn build
 To run linting and tests, use:
 
 ```bash
-yarn lint && yarn test
+yarn lint
 ```
 
 ## Publishing

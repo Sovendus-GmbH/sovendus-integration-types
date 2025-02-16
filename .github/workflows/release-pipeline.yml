@@ -72,11 +72,11 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Publish integration-page-scripts to npm
-        working-directory: ./ts/integration-page-scripts
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - name: Publish integration-page-scripts to npm
+      #   working-directory: ./ts/integration-page-scripts
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish integration-settings-ui to npm
         working-directory: ./ts/integration-settings-ui

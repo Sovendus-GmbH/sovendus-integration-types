@@ -38,25 +38,28 @@ export function CountryOptions({
   ): string => {
     const country =
       currentSettings.countries?.[countryKey]?.languages[languageKey];
-    if (!country?.trafficMediumNumber || !country?.trafficSourceNumber) {
+    if (
+      !cleanTrafficNumbers(country?.trafficMediumNumbers)?.length ||
+      !cleanTrafficNumbers(country?.trafficSourceNumbers)?.length
+    ) {
       return "Not configured";
     }
-    if (!country.isEnabled) {
+    if (!country?.isEnabled) {
       return "Disabled";
     }
-    return `Source: ${country.trafficSourceNumbers}, Medium: ${country.trafficMediumNumbers}`;
+    return `Source: ${country.trafficSourceNumbers[0]}, Medium: ${country.trafficMediumNumbers[0]}`;
   };
 
   const isCountryEnabled = (
     country: VoucherNetworkLanguage | undefined,
+    isEnabled?: boolean,
   ): boolean => {
     return (
-      (country?.isEnabled &&
-        country.trafficSourceNumber &&
-        /^\d+$/.test(country.trafficSourceNumber) &&
-        country.trafficMediumNumber &&
-        /^\d+$/.test(country.trafficMediumNumber)) ||
-      false
+      !!(
+        (isEnabled !== undefined ? isEnabled : country?.isEnabled) &&
+        cleanTrafficNumbers(country?.trafficSourceNumbers)?.length &&
+        cleanTrafficNumbers(country?.trafficMediumNumbers)?.length
+      ) || false
     );
   };
   const handleEnabledChange = (
@@ -69,11 +72,7 @@ export function CountryOptions({
         prevState.voucherNetwork.countries?.[countryKey]?.languages?.[
           languageKey
         ];
-      if (
-        element?.trafficMediumNumber &&
-        element?.trafficSourceNumber &&
-        checked !== element.isEnabled
-      ) {
+      if (element && isCountryEnabled(element)) {
         const newState = {
           ...prevState,
           voucherNetwork: {
@@ -88,8 +87,10 @@ export function CountryOptions({
                   [languageKey]: {
                     ...element,
                     isEnabled:
-                      element.trafficMediumNumber &&
-                      element.trafficSourceNumber &&
+                      cleanTrafficNumbers(element.trafficMediumNumbers)
+                        ?.length &&
+                      cleanTrafficNumbers(element.trafficSourceNumbers)
+                        ?.length &&
                       checked,
                   },
                 },
@@ -105,16 +106,25 @@ export function CountryOptions({
   const handleIdChange = (
     countryKey: CountryCodes,
     languageKey: LanguageCodes,
-    field: "trafficSourceNumber" | "trafficMediumNumber",
-    value: string,
+    field: "trafficSourceNumbers" | "trafficMediumNumbers",
+    values: string[],
   ): void => {
     setCurrentSettings((prevState) => {
-      const newValue = String(parseInt(`${value}`, 10));
+      const newValues = values.map((value) => String(parseInt(`${value}`, 10)));
       const element =
         prevState.voucherNetwork.countries?.[countryKey]?.languages?.[
           languageKey
         ];
-      if (element?.[field] !== newValue) {
+      if (JSON.stringify(element?.[field]) !== JSON.stringify(newValues)) {
+        const newElement: VoucherNetworkLanguage = {
+          iframeContainerId: "",
+          trafficMediumNumbers: [],
+          trafficSourceNumbers: [],
+          isEnabled: false,
+          ...element,
+          [field]: newValues,
+        };
+        const isEnabled = isCountryEnabled(newElement, true);
         const newState = {
           ...prevState,
           voucherNetwork: {
@@ -127,13 +137,8 @@ export function CountryOptions({
                   ...prevState.voucherNetwork.countries?.[countryKey]
                     ?.languages,
                   [languageKey]: {
-                    ...element,
-                    [field]: newValue,
-                    isEnabled:
-                      (field === "trafficSourceNumber"
-                        ? !isNaN(Number(element?.trafficMediumNumber))
-                        : !isNaN(Number(element?.trafficSourceNumber))) &&
-                      !isNaN(Number(newValue)),
+                    ...newElement,
+                    isEnabled,
                   },
                 },
               },
@@ -195,18 +200,18 @@ function CountrySettings({
   handleIdChange: (
     countryKey: CountryCodes,
     languageKey: LanguageCodes,
-    field: "trafficSourceNumber" | "trafficMediumNumber",
-    value: string,
+    field: "trafficSourceNumbers" | "trafficMediumNumbers",
+    value: string[],
   ) => void;
 }): JSX.Element {
   const currentElement =
     currentSettings.countries?.[countryKey]?.languages[languageKey];
   const isEnabled = isCountryEnabled(currentElement);
   const trafficSourceNumber = parseInt(
-    currentElement?.trafficSourceNumber || "",
+    cleanTrafficNumbers(currentElement?.trafficSourceNumbers)?.[0] || "",
   );
   const trafficMediumNumber = parseInt(
-    currentElement?.trafficMediumNumber || "",
+    cleanTrafficNumbers(currentElement?.trafficMediumNumbers)?.[0] || "",
   );
   return (
     <AccordionItem value={countryKey} key={countryKey}>
@@ -259,8 +264,8 @@ function CountrySettings({
                   handleIdChange(
                     countryKey,
                     languageKey,
-                    "trafficSourceNumber",
-                    e.target.value,
+                    "trafficSourceNumbers",
+                    [e.target.value],
                   )
                 }
                 placeholder="Enter Traffic Source Number"
@@ -279,8 +284,8 @@ function CountrySettings({
                   handleIdChange(
                     countryKey,
                     languageKey,
-                    "trafficMediumNumber",
-                    e.target.value,
+                    "trafficMediumNumbers",
+                    [e.target.value],
                   )
                 }
                 placeholder="Enter Traffic Medium Number"
@@ -306,8 +311,8 @@ export function EnabledVoucherNetworkCountries({
       for (const [languageKey, language] of Object.entries(country.languages)) {
         if (
           language.isEnabled &&
-          language.trafficMediumNumber &&
-          language.trafficSourceNumber
+          cleanTrafficNumbers(language.trafficMediumNumbers)?.length &&
+          cleanTrafficNumbers(language.trafficSourceNumbers)?.length
         ) {
           const countryName = LANGUAGES_BY_COUNTRIES[
             countryCode as CountryCodes
@@ -337,15 +342,26 @@ export function EnabledVoucherNetworkCountries({
   );
 }
 
-export function isVnEnabled(currentSettings: VoucherNetworkSettings): boolean {
+export function isVnEnabled(
+  currentSettings: VoucherNetworkSettings,
+  isEnabled?: boolean,
+): boolean {
   return currentSettings.countries
     ? Object.values(currentSettings.countries).some((country) =>
         Object.values(country.languages)?.some(
           (lang) =>
-            lang.isEnabled &&
-            lang.trafficMediumNumber &&
-            lang.trafficSourceNumber,
+            (isEnabled !== undefined ? isEnabled : lang.isEnabled) &&
+            cleanTrafficNumbers(lang.trafficMediumNumbers)?.length &&
+            cleanTrafficNumbers(lang.trafficSourceNumbers)?.length,
         ),
       )
     : false;
+}
+
+function cleanTrafficNumbers(
+  trafficNumbers: string[] | undefined,
+): string[] | undefined {
+  return trafficNumbers
+    ?.map((num) => num.trim())
+    .filter((num) => num && /^\d+$/.test(num) && !isNaN(Number(String(num))));
 }

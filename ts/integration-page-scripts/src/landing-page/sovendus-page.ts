@@ -1,5 +1,4 @@
 import type {
-  CountryCodes,
   OptimizeSettings,
   SovendusAppSettings,
   SovendusPageConfig,
@@ -8,8 +7,10 @@ import type {
   SovPageStatus,
   VoucherNetworkSettings,
 } from "sovendus-integration-types";
+import { CountryCodes } from "sovendus-integration-types";
 import {
   defaultSovendusPageConfig,
+  sovendusPageApis,
   Versions,
 } from "sovendus-integration-types";
 
@@ -105,8 +106,7 @@ export class SovendusPage {
       const paramValue =
         urlParams?.get(dataKey) || scriptUrlParams?.get(dataKey);
       if (paramValue) {
-        pageViewData[dataKey] =
-          paramValue as unknown as SovendusPageUrlParams[keyof SovendusPageUrlParams];
+        pageViewData[dataKey] = paramValue;
       }
     });
     return pageViewData;
@@ -288,25 +288,26 @@ export class SovendusPage {
         config?.settings?.optimize?.fallBackId,
         defaultSovendusPageConfig.settings.optimize.fallBackId,
       ),
-      fallBackEnabled: getRightSettingValue<
-        OptimizeSettings["fallBackEnabled"]
-      >(
-        config?.settings?.optimize?.fallBackEnabled,
-        !!config?.settings?.optimize?.fallBackId,
-      ),
       anyCountryEnabled: getRightSettingValue<
         OptimizeSettings["anyCountryEnabled"]
       >(
         config?.settings?.optimize?.anyCountryEnabled,
-        globalEnabled || !!config?.settings?.optimize?.countrySpecificIds,
+        globalEnabled || !!config?.settings?.optimize?.countries?.ids,
       ),
-      countrySpecificIds: getRightSettingValue<
-        OptimizeSettings["countrySpecificIds"]
-      >(
-        config?.settings?.optimize?.countrySpecificIds,
-        defaultSovendusPageConfig.settings.optimize.countrySpecificIds,
-      ),
-    };
+      countries: {
+        fallBackEnabled,
+        fallBackId: getRightSettingValue<
+          OptimizeSettings["countries"]["fallBackId"]
+        >(
+          config?.settings?.optimize?.fallBackEnabled,
+          !!config?.settings?.optimize?.fallBackId,
+        ),
+        ids: getRightSettingValue<OptimizeSettings["countries"]["ids"]>(
+          config?.settings?.optimize?.countries?.ids,
+          defaultSovendusPageConfig.settings.optimize.countries?.ids,
+        ),
+      },
+    } satisfies OptimizeSettings;
   }
 
   sovendusOptimize(
@@ -320,33 +321,40 @@ export class SovendusPage {
     const script = document.createElement("script");
     script.async = true;
     script.type = "application/javascript";
-    script.src = `${pageApis.optimize}${optimizeId}`;
+    script.src = `${sovendusPageApis.optimize}${optimizeId}`;
     document.head.appendChild(script);
-    sovPageStatus.loadedOptimize = true;
+    sovPageStatus.status.loadedOptimize = true;
   }
 
   getOptimizeId(sovPageConfig: SovendusPageConfig): string | undefined {
-    if (sovPageConfig?.settings?.optimize?.useGlobalId) {
+    if (sovPageConfig?.settings?.optimize?.settingsType === "simple") {
       if (
-        sovPageConfig?.settings?.optimize?.globalEnabled !== false &&
-        sovPageConfig?.settings?.optimize?.globalId
+        sovPageConfig?.settings?.optimize?.simple?.globalEnabled !== false &&
+        sovPageConfig?.settings?.optimize?.simple?.globalId
       ) {
-        return sovPageConfig.settings.optimize.globalId;
+        return sovPageConfig.settings.optimize.simple.globalId;
       }
     } else {
-      if (sovPageConfig.settings.optimize.countrySpecificIds) {
-        const countryCode: CountryCodes | undefined =
+      if (sovPageConfig.settings.optimize?.countries?.ids) {
+        const uncleanedCountryCode: CountryCodes | "UK" | undefined =
           sovPageConfig.country || this.detectCountryCode();
+        const countryCode =
+          uncleanedCountryCode === "UK"
+            ? CountryCodes.GB
+            : uncleanedCountryCode;
         if (countryCode) {
           const countryElement =
-            sovPageConfig.settings.optimize.countrySpecificIds[countryCode];
+            sovPageConfig.settings.optimize.countries?.ids?.[countryCode];
           return countryElement?.isEnabled
             ? countryElement?.optimizeId
             : undefined;
         }
         const fallbackId: string | undefined =
-          sovPageConfig?.settings?.optimize?.fallBackId;
-        if (sovPageConfig.settings.optimize.fallBackEnabled && fallbackId) {
+          sovPageConfig?.settings?.optimize?.countries?.fallBackId;
+        if (
+          sovPageConfig.settings.optimize?.countries.fallBackEnabled &&
+          fallbackId
+        ) {
           return fallbackId;
         }
       }

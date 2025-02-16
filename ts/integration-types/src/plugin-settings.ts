@@ -8,23 +8,27 @@ export interface SovendusAppSettings {
 }
 
 export interface VoucherNetworkSettings {
+  settingType: SettingsType;
   countries?: { [key in CountryCodes]?: VoucherNetworkCountry };
   simple?: VoucherNetworkSettingsSimple;
-  settingType: SettingsType;
   cookieTracking: boolean;
 }
 
 export interface OptimizeSettings {
   settingsType: SettingsType;
-  simple?: {
-    globalId: string | undefined;
-    globalEnabled: boolean;
-  };
-  countries?: {
-    fallBackEnabled: boolean;
-    fallBackId: string | undefined;
-    ids: { [key in CountryCodes]?: OptimizeCountry };
-  };
+  simple?: OptimizeSettingsSimple;
+  countries?: OptimizeSettingsCountries;
+}
+
+export interface OptimizeSettingsCountries {
+  fallBackEnabled: boolean;
+  fallBackId: string | undefined;
+  ids: { [key in CountryCodes]?: OptimizeCountry };
+}
+
+export interface OptimizeSettingsSimple {
+  globalId: string | undefined;
+  globalEnabled: boolean;
 }
 
 export interface VoucherNetworkSettingsSimple {
