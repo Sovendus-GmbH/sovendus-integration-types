@@ -9,10 +9,10 @@ export function getOptimizeId(
 ): string | undefined {
   if (settings?.optimize?.settingsType === "simple") {
     if (
-      settings?.optimize?.simple?.globalEnabled !== false &&
-      settings?.optimize?.simple?.globalId
+      settings?.optimize?.simple?.isEnabled !== false &&
+      settings?.optimize?.simple?.optimizeId
     ) {
-      return settings.optimize.simple.globalId;
+      return settings.optimize.simple.optimizeId;
     }
   } else {
     if (settings.optimize?.countries?.ids) {

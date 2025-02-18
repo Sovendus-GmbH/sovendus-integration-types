@@ -16,6 +16,7 @@ export interface VoucherNetworkSettings {
 
 export interface VoucherNetworkSettingsCountries {
   fallBackIds: VoucherNetworkLanguage | undefined;
+  iframeContainerQuerySelector: string | undefined;
   ids: { [key in CountryCodes]?: VoucherNetworkCountry };
 }
 
@@ -44,10 +45,12 @@ export interface OptimizeCountry {
 
 export interface VoucherNetworkLanguage {
   isEnabled: boolean;
-  trafficSourceNumbers: string[];
-  trafficMediumNumbers: string[];
-  iframeContainerId: string;
+  trafficSourceNumber: string;
+  trafficMediumNumber: string;
+  iframeContainerQuerySelector: string | undefined;
 }
+
+export const defaultIframeContainerId = "sovendus-container";
 
 export enum Versions {
   ONE = "1",

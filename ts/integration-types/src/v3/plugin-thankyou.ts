@@ -36,10 +36,13 @@ export interface IntegrationDataType {
   status: {
     integrationLoaderStarted: boolean;
     sovThankyouConfigFound: boolean;
+    countryCodePassedOnByPlugin: boolean;
     integrationParametersLoaded: boolean;
     checkoutProductsPixelFired: boolean;
     loadedOptimize: boolean;
     voucherNetworkLinkTrackingSuccess: boolean;
+    voucherNetworkIframeContainerFound: boolean;
+    voucherNetworkIframeContainerIdFound: boolean;
     integrationLoaderVnCbStarted: boolean;
     integrationLoaderDone: boolean;
   };

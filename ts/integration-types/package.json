@@ -1,22 +1,23 @@
 {
   "name": "sovendus-integration-types",
-  "version": "3.2.1",
+  "version": "3.3.5",
   "license": "MIT",
   "private": false,
   "description": "Sovendus Integration Types - checkout the docs at developer-hub.sovendus.com",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/v3/index.js",
+  "types": "dist/v3/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "import": "./dist/v3/index.js",
+      "require": "./dist/v3/index.js"
     },
-    "./src/*": "./src/*",
-    "./dist/*": "./dist/*"
+    "./v2/*": "./dist/v2/*",
+    "./v3/*": "./dist/v3/*"
   },
   "scripts": {
     "build": "rm -rf ./dist && tsc --project ./tsconfig.json",

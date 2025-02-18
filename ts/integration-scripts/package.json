@@ -1,6 +1,6 @@
 {
   "name": "sovendus-integration-scripts",
-  "version": "3.1.6",
+  "version": "3.3.5",
   "license": "GPL-3.0-only",
   "private": false,
   "description": "Sovendus Integration Scripts - checkout the docs at developer-hub.sovendus.com",
@@ -21,7 +21,8 @@
   },
   "scripts": {
     "build": "rm -rf ./dist && tsc --project ./tsconfig.json",
-    "lint": "cd .. && yarn lint:types"
+    "lint": "cd .. && yarn lint:types",
+    "release": "yarn install && yarn lint && yarn build && npm publish"
   },
   "repository": {
     "type": "git",
@@ -45,7 +46,7 @@
     }
   ],
   "dependencies": {
-    "sovendus-integration-types": "3.2.0"
+    "sovendus-integration-types": "3.3.5"
   },
   "devDependencies": {
     "tsc": "^2.0.4",

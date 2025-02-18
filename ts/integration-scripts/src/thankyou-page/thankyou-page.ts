@@ -7,23 +7,16 @@ import type {
   SovendusThankyouPageData,
   SovendusVNConversionsType,
   VoucherNetworkLanguage,
-  VoucherNetworkSettings,
-  VoucherNetworkSettingsSimple,
 } from "sovendus-integration-types";
 import {
   CountryCodes,
+  defaultIframeContainerId,
   LANGUAGES_BY_COUNTRIES,
 } from "sovendus-integration-types";
 
 import { integrationScriptVersion } from "../constants";
 import { getOptimizeId } from "../optimize-utils";
-import { getPerformanceTime, loggerError } from "../utils";
-
-// interface ParsedThankYouPageConfig {
-//   optimizeId: string | undefined;
-//   voucherNetwork: VoucherNetworkLanguage | undefined;
-//   checkoutProducts: boolean;
-// }
+import { detectCountryCode, getPerformanceTime, loggerError } from "../utils";
 
 export class SovendusThankyouPage {
   async main(
@@ -34,7 +27,6 @@ export class SovendusThankyouPage {
     }: Partial<SovendusThankyouPageData>) => void,
   ): Promise<void> {
     const sovThankyouStatus = this.initializeStatus();
-    this.processConfig(sovThankyouConfig, sovThankyouStatus);
     try {
       if (!sovThankyouConfig) {
         sovThankyouStatus.status.sovThankyouConfigFound = false;
@@ -43,10 +35,7 @@ export class SovendusThankyouPage {
         return;
       }
       sovThankyouStatus.status.sovThankyouConfigFound = true;
-      // using string literal "UK" intentionally despite type mismatch as some systems might return UK instead of GB
-      if (sovThankyouConfig.customerData?.consumerCountry === "UK") {
-        sovThankyouConfig.customerData.consumerCountry = CountryCodes.GB;
-      }
+      this.processConfig(sovThankyouConfig, sovThankyouStatus);
 
       this.handleVoucherNetwork(sovThankyouConfig, sovThankyouStatus);
       await this.handleCheckoutProductsConversion(
@@ -61,9 +50,28 @@ export class SovendusThankyouPage {
     onDone({ sovThankyouConfig, sovThankyouStatus });
   }
 
-  processConfig(sovThankyouConfig: SovendusThankYouPageConfig): void {
+  processConfig(
+    sovThankyouConfig: SovendusThankYouPageConfig,
+    sovThankyouStatus: IntegrationDataType,
+  ): void {
     this.handleVoucherCode(sovThankyouConfig);
     this.handleStreet(sovThankyouConfig);
+    this.handleCountryCode(sovThankyouConfig, sovThankyouStatus);
+  }
+
+  handleCountryCode(
+    sovThankyouConfig: SovendusThankYouPageConfig,
+    sovThankyouStatus: IntegrationDataType,
+  ): void {
+    // using string literal "UK" intentionally despite type mismatch as some systems might return UK instead of GB
+    if (sovThankyouConfig.customerData.consumerCountry === "UK") {
+      sovThankyouConfig.customerData.consumerCountry = CountryCodes.GB;
+    }
+    if (!sovThankyouConfig.customerData.consumerCountry) {
+      sovThankyouStatus.status.countryCodePassedOnByPlugin = false;
+      sovThankyouConfig.customerData.consumerCountry =
+        sovThankyouConfig.customerData.consumerCountry || detectCountryCode();
+    }
   }
 
   handleOptimizeConversion(
@@ -106,7 +114,7 @@ export class SovendusThankyouPage {
     // This regex looks for a street number at the end of the string.
     // It expects the number to start with at least one digit, possibly followed by digits, spaces, dashes, or slashes,
     // and optionally ending with a letter.
-    const numberRegex = /(\d[\d\s\/-]*[a-zA-Z]?)$/;
+    const numberRegex = /(\d[\d\s/-]*[a-zA-Z]?)$/;
     const match = trimmedStreet.match(numberRegex);
 
     if (match && match.index !== undefined) {
@@ -145,6 +153,9 @@ export class SovendusThankyouPage {
         voucherNetworkLinkTrackingSuccess: false,
         integrationLoaderVnCbStarted: false,
         integrationLoaderDone: false,
+        voucherNetworkIframeContainerIdFound: false,
+        voucherNetworkIframeContainerFound: false,
+        countryCodePassedOnByPlugin: false,
       },
       data: {
         orderValue: undefined,
@@ -167,22 +178,29 @@ export class SovendusThankyouPage {
     sovThankyouConfig: SovendusThankYouPageConfig,
     sovThankyouStatus: IntegrationDataType,
   ): void {
-    const { trafficSourceNumber, trafficMediumNumber, iframeContainerId } =
+    const voucherNetworkConfig =
       this.getVoucherNetworkConfig(sovThankyouConfig);
     // TODO handle multiple coupon codes
     const couponCode = sovThankyouConfig.orderData.usedCouponCodes?.[0];
-    if (trafficSourceNumber && trafficMediumNumber) {
+    if (
+      voucherNetworkConfig?.trafficSourceNumber &&
+      voucherNetworkConfig?.trafficMediumNumber
+    ) {
+      const iframeContainerId = this.handleSovendusVoucherNetworkDivContainer(
+        voucherNetworkConfig,
+        sovThankyouStatus,
+      );
       window.sovIframes = window.sovIframes || [];
       window.sovIframes.push({
-        trafficSourceNumber: trafficSourceNumber,
-        trafficMediumNumber: trafficMediumNumber,
+        trafficSourceNumber: voucherNetworkConfig.trafficSourceNumber,
+        trafficMediumNumber: voucherNetworkConfig.trafficMediumNumber,
         sessionId: sovThankyouConfig.orderData.sessionId,
         timestamp: sovThankyouConfig.orderData.timestamp,
         orderId: sovThankyouConfig.orderData.orderId,
         orderValue: sovThankyouConfig.orderData.orderValue,
         orderCurrency: sovThankyouConfig.orderData.orderCurrency,
         usedCouponCode: couponCode,
-        iframeContainerId: config.iframeContainerId,
+        iframeContainerId: iframeContainerId,
         integrationType: sovThankyouConfig.integrationType,
       });
       window.sovConsumer = {
@@ -199,28 +217,58 @@ export class SovendusThankyouPage {
         consumerLanguage: sovThankyouConfig.customerData.consumerLanguage,
       };
 
-      const sovendusDiv = document.createElement("div");
-      sovendusDiv.id = "sovendus-integration-container";
-      const rootElement =
-        config.settings.voucherNetwork.iframeContainerId &&
-        document.querySelector(
-          config.settings.voucherNetwork.iframeContainerId,
-        );
-      if (rootElement) {
-        rootElement.appendChild(sovendusDiv);
-      } else {
-        document.body.appendChild(sovendusDiv);
-      }
-
       const script = document.createElement("script");
       script.type = "text/javascript";
       script.async = true;
       script.src =
         "https://api.sovendus.com/sovabo/common/js/flexibleIframe.js";
       document.body.appendChild(script);
-      window.sovThankyouStatus.loadedVoucherNetwork = true;
+      sovThankyouStatus.status.integrationLoaderVnCbStarted = true;
       sovThankyouStatus.times.integrationLoaderVnCbStart = getPerformanceTime();
     }
+  }
+
+  handleSovendusVoucherNetworkDivContainer(
+    voucherNetworkConfig: VoucherNetworkLanguage,
+    sovThankyouStatus: IntegrationDataType,
+  ): string {
+    const iframeContainerId = defaultIframeContainerId;
+    const rootElement =
+      iframeContainerId && document.getElementById(iframeContainerId);
+    if (!rootElement) {
+      if (voucherNetworkConfig.iframeContainerQuerySelector) {
+        const iframeContainer = document.querySelector(
+          voucherNetworkConfig.iframeContainerQuerySelector,
+        ) as HTMLElement | null;
+        if (iframeContainer) {
+          const sovendusDiv = document.createElement("div");
+          sovendusDiv.id = defaultIframeContainerId;
+          iframeContainer.appendChild(sovendusDiv);
+          sovThankyouStatus.status.voucherNetworkIframeContainerIdFound = true;
+          sovThankyouStatus.status.voucherNetworkIframeContainerFound = true;
+        } else {
+          sovThankyouStatus.status.voucherNetworkIframeContainerFound = false;
+          sovThankyouStatus.status.voucherNetworkIframeContainerIdFound = true;
+          loggerError(
+            `Voucher Network custom iframe container ${voucherNetworkConfig.iframeContainerQuerySelector} not found`,
+            "ThankyouPage",
+          );
+          return "";
+        }
+      } else {
+        sovThankyouStatus.status.voucherNetworkIframeContainerFound = false;
+        sovThankyouStatus.status.voucherNetworkIframeContainerIdFound = false;
+        loggerError(
+          "Voucher Network iframe container not found",
+          "ThankyouPage",
+        );
+        return "";
+      }
+    } else {
+      sovThankyouStatus.status.voucherNetworkIframeContainerFound = true;
+      sovThankyouStatus.status.voucherNetworkIframeContainerIdFound = true;
+    }
+    return iframeContainerId;
   }
 
   async handleCheckoutProductsConversion(
@@ -265,37 +313,26 @@ export class SovendusThankyouPage {
 
   getVoucherNetworkConfig(
     sovThankyouConfig: SovendusThankYouPageConfig,
-  ): VoucherNetworkSettingsSimple | undefined {
-    const languageSettings = this.getLanguageSettings(
-      settings,
-      country,
-      language,
-    );
-    if (
-      !languageSettings ||
-      !languageSettings.isEnabled ||
-      !languageSettings.trafficMediumNumber ||
-      !languageSettings.trafficSourceNumber
-    ) {
-      return undefined;
+  ): VoucherNetworkLanguage | undefined {
+    if (sovThankyouConfig.settings.voucherNetwork.settingType === "simple") {
+      return sovThankyouConfig.settings.voucherNetwork.simple;
     }
-    return {
-      trafficMediumNumber: languageSettings.trafficMediumNumber,
-      trafficSourceNumber: languageSettings.trafficSourceNumber,
-    };
+    if (sovThankyouConfig.settings.voucherNetwork.settingType === "country") {
+      return this.getVoucherNetworkCountryBasedSettings(sovThankyouConfig);
+    }
+    return undefined;
   }
 
-  getLanguageSettings(
-    settings: VoucherNetworkSettings,
-    country: CountryCodes | undefined,
-    language: LanguageCodes | undefined,
+  getVoucherNetworkCountryBasedSettings(
+    sovThankyouConfig: SovendusThankYouPageConfig,
   ): VoucherNetworkLanguage | undefined {
-    if (!country) {
-      window.sovThankyouStatus.countryCodePassedOnByPlugin = false;
+    const country = sovThankyouConfig.customerData
+      .consumerCountry as CountryCodes;
+    if (!sovThankyouConfig.customerData.consumerCountry) {
       return undefined;
     }
-    window.sovThankyouStatus.countryCodePassedOnByPlugin = true;
-    const countrySettings = settings.countries?.[country];
+    const countrySettings =
+      sovThankyouConfig.settings.voucherNetwork.countries?.ids?.[country];
     const languagesSettings = countrySettings?.languages;
     if (!languagesSettings) {
       return undefined;
@@ -304,15 +341,32 @@ export class SovendusThankyouPage {
     if (languagesAvailable?.length === 1) {
       const language = languagesAvailable[0] as LanguageCodes;
       const languageSettings = languagesSettings[language];
-      return languageSettings;
+      return {
+        isEnabled: languageSettings?.isEnabled || false,
+        trafficSourceNumber: languageSettings?.trafficSourceNumber || "",
+        trafficMediumNumber: languageSettings?.trafficMediumNumber || "",
+        ...languageSettings,
+        iframeContainerQuerySelector:
+          sovThankyouConfig.settings.voucherNetwork.countries
+            ?.iframeContainerQuerySelector ||
+          languageSettings?.iframeContainerQuerySelector,
+      };
     }
     if (languagesAvailable?.length > 1) {
-      const languageKey = language || this.detectLanguageCode();
+      const languageKey =
+        sovThankyouConfig.customerData.consumerLanguage ||
+        this.detectLanguageCode();
       const languageSettings = languagesSettings[languageKey];
       if (!languageSettings) {
         return undefined;
       }
-      return languageSettings;
+      return {
+        ...languageSettings,
+        iframeContainerQuerySelector:
+          sovThankyouConfig.settings.voucherNetwork.countries
+            ?.iframeContainerQuerySelector ||
+          languageSettings?.iframeContainerQuerySelector,
+      };
     }
     return undefined;
   }

@@ -4812,10 +4812,10 @@ sovendus-builder@^1.1.11:
     react-dom "^19.0.0"
     tailwindcss "^4.0.6"
 
-sovendus-integration-types@3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/sovendus-integration-types/-/sovendus-integration-types-3.2.1.tgz#dd0a5fb414e0c124d0ae7b3f8f1f4bf4ca2e05b9"
-  integrity sha512-lZY1S8yR9AiQJIKjGDFFhvmG/kHZKsq91Eqj1QpnBlRZC406ACvuCv/kOAe3HUOyNWyKyhBGPXKjIgPhCaUgNQ==
+sovendus-integration-types@3.3.5:
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/sovendus-integration-types/-/sovendus-integration-types-3.3.5.tgz#2fcf82a8a4b04ef12a97e91e3c809c40b38654ec"
+  integrity sha512-shJubET+mf8AOboi0wnsqmNCmT6S2GJxLpWl5uHv6p0ZIXVb/Gw7yicuyRwKQN6N/h9eX6RjR8KRMVjUK9D9SQ==
 
 space-separated-tokens@^2.0.0:
   version "2.0.2"

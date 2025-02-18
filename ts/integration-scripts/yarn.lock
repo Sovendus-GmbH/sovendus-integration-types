@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-sovendus-integration-types@3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/sovendus-integration-types/-/sovendus-integration-types-3.2.0.tgz#120b70bd3bc7e0df8bf7aa03275b1bd7a4faab41"
-  integrity sha512-NQHmeijrGvw66wwV4cHfEwH2ScDffOMxBmyWpjO7uSdq//XtHBa40er0AZ3pDuyEq8FrlcbaOKa787e02Xil4A==
+sovendus-integration-types@3.3.5:
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/sovendus-integration-types/-/sovendus-integration-types-3.3.5.tgz#2fcf82a8a4b04ef12a97e91e3c809c40b38654ec"
+  integrity sha512-shJubET+mf8AOboi0wnsqmNCmT6S2GJxLpWl5uHv6p0ZIXVb/Gw7yicuyRwKQN6N/h9eX6RjR8KRMVjUK9D9SQ==
 
 tsc@^2.0.4:
   version "2.0.4"

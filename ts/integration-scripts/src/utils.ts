@@ -66,4 +66,3 @@ export function detectCountryCode(): CountryCodes | undefined {
     getCountryFromPagePath()
   );
 }
-
