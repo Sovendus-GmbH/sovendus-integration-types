@@ -4,7 +4,7 @@ Sovendus Plugins Core is a collection of tools and utilities that are used acros
 
 ## Packages in this repository
 
-### [Sovendus Integration Page Scripts](./integration-page-scripts/README.md)
+### [Sovendus Integration Page Scripts](./integration-scripts/README.md)
 
 A collection of scripts used to handle Sovendus integration.
 

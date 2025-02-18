@@ -9,14 +9,19 @@ export interface SovendusAppSettings {
 
 export interface VoucherNetworkSettings {
   settingType: SettingsType;
-  countries?: { [key in CountryCodes]?: VoucherNetworkCountry };
-  simple?: VoucherNetworkSettingsSimple;
+  countries?: VoucherNetworkSettingsCountries;
+  simple?: VoucherNetworkLanguage;
   cookieTracking: boolean;
+}
+
+export interface VoucherNetworkSettingsCountries {
+  fallBackIds: VoucherNetworkLanguage | undefined;
+  ids: { [key in CountryCodes]?: VoucherNetworkCountry };
 }
 
 export interface OptimizeSettings {
   settingsType: SettingsType;
-  simple?: OptimizeSettingsSimple;
+  simple?: OptimizeCountry;
   countries?: OptimizeSettingsCountries;
 }
 
@@ -24,16 +29,6 @@ export interface OptimizeSettingsCountries {
   fallBackEnabled: boolean;
   fallBackId: string | undefined;
   ids: { [key in CountryCodes]?: OptimizeCountry };
-}
-
-export interface OptimizeSettingsSimple {
-  globalId: string | undefined;
-  globalEnabled: boolean;
-}
-
-export interface VoucherNetworkSettingsSimple {
-  trafficSourceNumber: string | undefined;
-  trafficMediumNumber: string | undefined;
 }
 
 export type SettingsType = "simple" | "country" | undefined;

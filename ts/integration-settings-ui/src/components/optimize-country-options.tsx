@@ -175,10 +175,10 @@ export function EnabledOptimizeCountries({
   let statusMessage: string;
   if (
     currentSettings.settingsType === "simple" &&
-    currentSettings.simple?.globalEnabled &&
-    currentSettings.simple?.globalId
+    currentSettings.simple?.isEnabled &&
+    currentSettings.simple?.optimizeId
   ) {
-    statusMessage = `Enabled in all Countries (${currentSettings.simple.globalId})`;
+    statusMessage = `Enabled in all Countries (${currentSettings.simple.optimizeId})`;
   } else if (
     currentSettings.countries?.ids &&
     currentSettings.settingsType === "country"
@@ -216,7 +216,7 @@ export function EnabledOptimizeCountries({
 export function isOptimizeEnabled(currentSettings: OptimizeSettings): boolean {
   return !!(
     (currentSettings.settingsType === "simple" &&
-      currentSettings.simple?.globalEnabled) ||
+      currentSettings.simple?.isEnabled) ||
     (currentSettings.settingsType === "country" &&
       currentSettings.countries?.ids &&
       Object.values(currentSettings.countries.ids).some(

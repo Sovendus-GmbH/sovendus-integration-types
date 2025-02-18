@@ -50,7 +50,7 @@ export function SovendusOptimize({
   additionalSteps,
 }: SovendusOptimizeProps): JSX.Element {
   const handleGlobalChange = (
-    field: "globalId" | "globalEnabled",
+    field: "optimizeId" | "isEnabled",
     value: string | boolean,
   ): void => {
     setCurrentSettings(
@@ -59,9 +59,10 @@ export function SovendusOptimize({
           ...prevState,
           optimize: {
             ...prevState.optimize,
+            settingsType: "simple",
             simple: {
-              globalId: undefined,
-              globalEnabled: false,
+              optimizeId: "",
+              isEnabled: false,
               ...prevState.optimize.simple,
               [field]: value,
             },
@@ -253,7 +254,7 @@ export function SovendusOptimize({
                               currentOptimizeSettings.settingsType === "simple"
                             }
                             onCheckedChange={(checked): void =>
-                              handleGlobalChange("globalEnabled", checked)
+                              handleGlobalChange("isEnabled", checked)
                             }
                           />
                           <Label htmlFor="global-id-enabled">
@@ -265,10 +266,10 @@ export function SovendusOptimize({
                           <Input
                             id="global-id"
                             value={
-                              currentOptimizeSettings.simple?.globalId || ""
+                              currentOptimizeSettings.simple?.optimizeId || ""
                             }
                             onChange={(e): void =>
-                              handleGlobalChange("globalId", e.target.value)
+                              handleGlobalChange("optimizeId", e.target.value)
                             }
                             placeholder="Enter Global Optimize ID"
                           />

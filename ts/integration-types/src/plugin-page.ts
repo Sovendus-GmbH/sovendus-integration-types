@@ -11,18 +11,11 @@ export const sovendusPageApis = {
 export const defaultSovendusPageConfig: SovendusPageConfig = {
   settings: {
     voucherNetwork: {
-      countries: undefined,
-      simple: undefined,
       settingType: undefined,
       cookieTracking: true,
     },
     optimize: {
       settingsType: undefined,
-      simple: {
-        globalEnabled: false,
-        globalId: undefined,
-      },
-      countries: undefined,
     },
     checkoutProducts: true,
     version: Versions.THREE,

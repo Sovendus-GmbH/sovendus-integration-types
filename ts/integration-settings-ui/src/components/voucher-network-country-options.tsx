@@ -37,7 +37,7 @@ export function CountryOptions({
     languageKey: LanguageCodes,
   ): string => {
     const country =
-      currentSettings.countries?.[countryKey]?.languages[languageKey];
+      currentSettings.countries?.ids?.[countryKey]?.languages[languageKey];
     if (
       !cleanTrafficNumbers(country?.trafficMediumNumbers)?.length ||
       !cleanTrafficNumbers(country?.trafficSourceNumbers)?.length
@@ -69,7 +69,7 @@ export function CountryOptions({
   ): void => {
     setCurrentSettings((prevState) => {
       const element =
-        prevState.voucherNetwork.countries?.[countryKey]?.languages?.[
+        prevState.voucherNetwork.countries?.ids?.[countryKey]?.languages?.[
           languageKey
         ];
       if (element && isCountryEnabled(element)) {
@@ -80,18 +80,21 @@ export function CountryOptions({
             countries: {
               ...prevState.voucherNetwork.countries,
               [countryKey]: {
-                ...prevState.voucherNetwork.countries?.[countryKey],
-                languages: {
-                  ...prevState.voucherNetwork.countries?.[countryKey]
-                    ?.languages,
-                  [languageKey]: {
-                    ...element,
-                    isEnabled:
-                      cleanTrafficNumbers(element.trafficMediumNumbers)
-                        ?.length &&
-                      cleanTrafficNumbers(element.trafficSourceNumbers)
-                        ?.length &&
-                      checked,
+                ...prevState.voucherNetwork.countries,
+                ids: {
+                  ...prevState.voucherNetwork.countries?.ids?.[countryKey],
+                  languages: {
+                    ...prevState.voucherNetwork.countries?.ids?.[countryKey]
+                      ?.languages,
+                    [languageKey]: {
+                      ...element,
+                      isEnabled:
+                        cleanTrafficNumbers(element.trafficMediumNumbers)
+                          ?.length &&
+                        cleanTrafficNumbers(element.trafficSourceNumbers)
+                          ?.length &&
+                        checked,
+                    },
                   },
                 },
               },
@@ -112,7 +115,7 @@ export function CountryOptions({
     setCurrentSettings((prevState) => {
       const newValues = values.map((value) => String(parseInt(`${value}`, 10)));
       const element =
-        prevState.voucherNetwork.countries?.[countryKey]?.languages?.[
+        prevState.voucherNetwork.countries?.ids?.[countryKey]?.languages?.[
           languageKey
         ];
       if (JSON.stringify(element?.[field]) !== JSON.stringify(newValues)) {
@@ -125,20 +128,26 @@ export function CountryOptions({
           [field]: newValues,
         };
         const isEnabled = isCountryEnabled(newElement, true);
-        const newState = {
+        const newState: SovendusAppSettings = {
           ...prevState,
           voucherNetwork: {
             ...prevState.voucherNetwork,
+            settingType: "country",
+            cookieTracking: true,
             countries: {
               ...prevState.voucherNetwork.countries,
-              [countryKey]: {
-                ...prevState.voucherNetwork.countries?.[countryKey],
-                languages: {
-                  ...prevState.voucherNetwork.countries?.[countryKey]
-                    ?.languages,
-                  [languageKey]: {
-                    ...newElement,
-                    isEnabled,
+              fallBackIds: undefined,
+              ids: {
+                ...prevState.voucherNetwork.countries?.ids,
+                [countryKey]: {
+                  ...prevState.voucherNetwork.countries?.ids?.[countryKey],
+                  languages: {
+                    ...prevState.voucherNetwork.countries?.ids?.[countryKey]
+                      ?.languages,
+                    [languageKey]: {
+                      ...newElement,
+                      isEnabled,
+                    },
                   },
                 },
               },
@@ -205,7 +214,7 @@ function CountrySettings({
   ) => void;
 }): JSX.Element {
   const currentElement =
-    currentSettings.countries?.[countryKey]?.languages[languageKey];
+    currentSettings.countries?.ids?.[countryKey]?.languages[languageKey];
   const isEnabled = isCountryEnabled(currentElement);
   const trafficSourceNumber = parseInt(
     cleanTrafficNumbers(currentElement?.trafficSourceNumbers)?.[0] || "",
@@ -304,21 +313,25 @@ export function EnabledVoucherNetworkCountries({
   currentSettings: VoucherNetworkSettings;
 }): JSX.Element {
   const enabledLocales: string[] = [];
-  if (currentSettings.countries) {
+  if (currentSettings.countries?.ids) {
     for (const [countryCode, country] of Object.entries(
-      currentSettings.countries,
+      currentSettings.countries.ids,
     )) {
-      for (const [languageKey, language] of Object.entries(country.languages)) {
-        if (
-          language.isEnabled &&
-          cleanTrafficNumbers(language.trafficMediumNumbers)?.length &&
-          cleanTrafficNumbers(language.trafficSourceNumbers)?.length
-        ) {
-          const countryName = LANGUAGES_BY_COUNTRIES[
-            countryCode as CountryCodes
-          ][languageKey as LanguageCodes] as string;
+      if (country.languages) {
+        for (const [languageKey, language] of Object.entries(
+          country.languages,
+        )) {
+          if (
+            language.isEnabled &&
+            cleanTrafficNumbers(language.trafficMediumNumbers)?.length &&
+            cleanTrafficNumbers(language.trafficSourceNumbers)?.length
+          ) {
+            const countryName = LANGUAGES_BY_COUNTRIES[
+              countryCode as CountryCodes
+            ][languageKey as LanguageCodes] as string;
 
-          enabledLocales.push(countryName);
+            enabledLocales.push(countryName);
+          }
         }
       }
     }
@@ -346,8 +359,8 @@ export function isVnEnabled(
   currentSettings: VoucherNetworkSettings,
   isEnabled?: boolean,
 ): boolean {
-  return currentSettings.countries
-    ? Object.values(currentSettings.countries).some((country) =>
+  return currentSettings.countries?.ids
+    ? Object.values(currentSettings.countries?.ids).some((country) =>
         Object.values(country.languages)?.some(
           (lang) =>
             (isEnabled !== undefined ? isEnabled : lang.isEnabled) &&

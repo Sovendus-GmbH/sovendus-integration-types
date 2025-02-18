@@ -22,13 +22,6 @@ npm install sovendus-integration-types
 bun install sovendus-integration-types
 ```
 
-## Publishing
-
-```bash
-yarn install
-npm run release
-```
-
 ## Contributing
 
 If you want to contribute or report issues, please follow these steps:

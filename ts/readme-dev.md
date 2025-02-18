@@ -28,4 +28,4 @@ yarn lint
 
 ## Publishing
 
-To publish the packages, create and push a new version tag on this repository or open a pull request.
+TODO

@@ -8,8 +8,8 @@ import type {
 } from "./thank-you";
 
 export interface SovendusThankyouPageData {
-  sovThankyouPageConfig: SovendusThankYouPageConfig;
-  sovThankyouPageStatus: IntegrationDataType;
+  sovThankyouConfig: SovendusThankYouPageConfig;
+  sovThankyouStatus: IntegrationDataType;
 }
 
 export interface SovendusThankYouPageConfig {
@@ -31,24 +31,22 @@ export interface SovendusThankYouPageConfig {
 }
 
 export interface IntegrationDataType {
+  integrationScriptVersion: string;
   data: PublicThankYouCookieData | undefined;
   status: {
     integrationLoaderStarted: boolean;
+    sovThankyouConfigFound: boolean;
     integrationParametersLoaded: boolean;
     checkoutProductsPixelFired: boolean;
+    loadedOptimize: boolean;
+    voucherNetworkLinkTrackingSuccess: boolean;
     integrationLoaderVnCbStarted: boolean;
     integrationLoaderDone: boolean;
-
-    shouldSendRedemption?: boolean;
-    RedemptionSent?: boolean;
   };
   times: {
     integrationLoaderStart: number | undefined;
     integrationLoaderVnCbStart?: number;
     integrationLoaderDone?: number;
-    VnCbLoaderStart?: number;
-    vnCbLoaderInitDone?: number;
-    vnCbLoaderDone?: number;
   };
 }
 

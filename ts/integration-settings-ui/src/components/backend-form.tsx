@@ -1,6 +1,6 @@
 import { BarChart2, Gift, ShoppingBagIcon } from "lucide-react";
 import type { JSX } from "react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { SovendusAppSettings } from "sovendus-integration-types";
 
 import { cn } from "../lib/utils";
@@ -53,6 +53,7 @@ export default function SovendusBackendForm({
     message: string;
     type: "success" | "error" | "loading";
   } | null>(null);
+  useSettingsSaveOnLoad(saveSettings, currentStoredSettings);
   const buttonsDisabled = notificationState?.type === "loading";
   const handleSave = async (open: boolean): Promise<void> => {
     if (!open) {
@@ -79,7 +80,7 @@ export default function SovendusBackendForm({
         setActiveConfig(prevActiveConfig);
         setNotificationState({
           message: `Failed to save settings, error: ${
-            error?.message || JSON.stringify(error)
+            (error as Error)?.message || JSON.stringify(error)
           }`,
           type: "error",
         });
@@ -92,10 +93,12 @@ export default function SovendusBackendForm({
     details: JSX.Element;
   } => {
     const enabledCountries =
-      currentSettings.voucherNetwork.countries &&
-      Object.entries(currentSettings.voucherNetwork.countries)
-        .filter(([_, country]) =>
-          Object.values(country.languages).some((lang) => lang.isEnabled),
+      currentSettings.voucherNetwork?.countries?.ids &&
+      Object.entries(currentSettings.voucherNetwork.countries.ids)
+        .filter(
+          ([_, country]) =>
+            country.languages &&
+            Object.values(country.languages).some((lang) => lang.isEnabled),
         )
         .map(([code]) => code);
 
@@ -118,8 +121,8 @@ export default function SovendusBackendForm({
     details: React.JSX.Element;
   } => {
     const isGlobalEnabled =
-      currentSettings.optimize?.simple?.globalId &&
-      currentSettings.optimize?.simple?.globalEnabled;
+      currentSettings.optimize?.simple?.optimizeId &&
+      currentSettings.optimize?.simple?.isEnabled;
     const enabledCountries =
       currentSettings.optimize.countries &&
       Object.entries(currentSettings.optimize.countries.ids)
@@ -275,4 +278,20 @@ export default function SovendusBackendForm({
       </ConfigurationDialog>
     </div>
   );
+}
+
+function useSettingsSaveOnLoad(
+  saveSettings: (data: SovendusAppSettings) => Promise<SovendusAppSettings>,
+  currentStoredSettings: SovendusAppSettings,
+): void {
+  useEffect(() => {
+    // Save settings in case there any settings migrations
+    if (
+      currentStoredSettings.optimize ||
+      currentStoredSettings.voucherNetwork ||
+      currentStoredSettings.checkoutProducts
+    ) {
+      void saveSettings(currentStoredSettings);
+    }
+  }, []);
 }

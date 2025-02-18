@@ -3,6 +3,7 @@
     "jsx": "react",
     "target": "ESNext",
     "module": "Preserve",
+    // "module": "NodeNext",
     "skipLibCheck": true,
     "types": ["node"],
     "outDir": "dist",
@@ -39,5 +40,5 @@
     "declarationMap": true
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["./node_modules", "**/dist"]
+  "exclude": ["**/node_modules", "**/dist"]
 }
