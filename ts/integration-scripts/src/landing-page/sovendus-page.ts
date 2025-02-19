@@ -7,8 +7,11 @@ import type {
 import { sovendusPageApis } from "sovendus-integration-types";
 
 import { integrationScriptVersion } from "../constants.js";
-import { getOptimizeId } from "../optimize-utils.js";
-import { getPerformanceTime, loggerError } from "../utils.js";
+import {
+  getOptimizeId,
+  getPerformanceTime,
+  loggerError,
+} from "../shared-utils.js";
 
 export class SovendusPage {
   // Standard implementation of the Sovendus page script
@@ -152,14 +155,13 @@ export class SovendusPage {
     return true;
   }
 
-  setCookie(cookieName: string, value: string): string {
+  setCookie(cookieName: string, value: string): void {
     const path = "/";
     const expireDate = new Date();
     expireDate.setTime(expireDate.getTime() + 24 * 60 * 60 * 1000 * 30); // 30 days
     const domain = window.location.hostname;
     const cookieString = `${cookieName}=${value};secure;samesite=strict;expires=${expireDate.toUTCString()};domain=${domain};path=${path}`;
     document.cookie = cookieString;
-    return value || "";
   }
 
   sovendusOptimize(
@@ -179,10 +181,5 @@ export class SovendusPage {
     script.src = `${sovendusPageApis.optimize}${optimizeId}`;
     document.head.appendChild(script);
     sovPageStatus.status.loadedOptimize = true;
-  }
-
-  getParamFromUrl(pageHref: string, key: string): string | undefined {
-    const url = new URL(pageHref);
-    return url.searchParams.get(key) || undefined;
   }
 }

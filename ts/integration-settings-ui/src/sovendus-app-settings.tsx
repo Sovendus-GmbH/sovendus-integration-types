@@ -1,12 +1,11 @@
 import "./app.css";
 
 import type { JSX } from "react";
-import React from "react";
 import type { SovendusAppSettings } from "sovendus-integration-types";
 
 import SovendusBackendForm from "./components/backend-form";
 
-interface SovendusSettingsProps {
+export interface SovendusSettingsProps {
   currentStoredSettings: SovendusAppSettings;
   saveSettings: (data: SovendusAppSettings) => Promise<SovendusAppSettings>;
   zoomedVersion?: boolean;

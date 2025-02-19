@@ -25,7 +25,7 @@ export interface AdditionalSteps {
   voucherNetwork?: AdditionalStep;
 }
 
-interface SovendusBackendFormProps {
+export interface SovendusBackendFormProps {
   currentStoredSettings: SovendusAppSettings;
   saveSettings: (data: SovendusAppSettings) => Promise<SovendusAppSettings>;
   additionalSteps?: AdditionalSteps;

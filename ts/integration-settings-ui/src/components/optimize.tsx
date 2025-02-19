@@ -8,7 +8,6 @@ import {
   Target,
 } from "lucide-react";
 import type { Dispatch, JSX, SetStateAction } from "react";
-import React from "react";
 import type {
   CountryCodes,
   OptimizeSettings,

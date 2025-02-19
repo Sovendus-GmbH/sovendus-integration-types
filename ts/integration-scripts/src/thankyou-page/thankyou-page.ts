@@ -15,8 +15,12 @@ import {
 } from "sovendus-integration-types";
 
 import { integrationScriptVersion } from "../constants";
-import { getOptimizeId } from "../optimize-utils";
-import { detectCountryCode, getPerformanceTime, loggerError } from "../utils";
+import {
+  detectCountryCode,
+  getOptimizeId,
+  getPerformanceTime,
+  loggerError,
+} from "../shared-utils";
 
 export class SovendusThankyouPage {
   async main(
@@ -35,14 +39,14 @@ export class SovendusThankyouPage {
         return;
       }
       sovThankyouStatus.status.sovThankyouConfigFound = true;
-      this.processConfig(sovThankyouConfig, sovThankyouStatus);
+      await this.processConfig(sovThankyouConfig, sovThankyouStatus);
 
       this.handleVoucherNetwork(sovThankyouConfig, sovThankyouStatus);
       await this.handleCheckoutProductsConversion(
         sovThankyouConfig,
         sovThankyouStatus,
       );
-      this.handleOptimizeConversion(sovThankyouConfig, sovThankyouStatus);
+      await this.handleOptimizeConversion(sovThankyouConfig, sovThankyouStatus);
       sovThankyouStatus.times.integrationLoaderDone = getPerformanceTime();
     } catch (error) {
       loggerError("Error in SovendusThankyouPage.main", "ThankyouPage", error);
@@ -50,11 +54,11 @@ export class SovendusThankyouPage {
     onDone({ sovThankyouConfig, sovThankyouStatus });
   }
 
-  processConfig(
+  async processConfig(
     sovThankyouConfig: SovendusThankYouPageConfig,
     sovThankyouStatus: IntegrationDataType,
-  ): void {
-    this.handleVoucherCode(sovThankyouConfig);
+  ): Promise<void> {
+    await this.handleVoucherCode(sovThankyouConfig);
     this.handleStreet(sovThankyouConfig);
     this.handleCountryCode(sovThankyouConfig, sovThankyouStatus);
   }
@@ -74,10 +78,10 @@ export class SovendusThankyouPage {
     }
   }
 
-  handleOptimizeConversion(
+  async handleOptimizeConversion(
     sovThankyouConfig: SovendusThankYouPageConfig,
     sovThankyouStatus: IntegrationDataType,
-  ): void {
+  ): Promise<void> {
     const optimizeId = getOptimizeId(
       sovThankyouConfig.settings,
       sovThankyouConfig.customerData.consumerCountry,
@@ -87,6 +91,22 @@ export class SovendusThankyouPage {
     }
     // TODO handle multiple coupon codes
     const couponCode = sovThankyouConfig.orderData.usedCouponCodes?.[0];
+    await this.handleOptimizeConversionScript(
+      optimizeId,
+      couponCode,
+      sovThankyouConfig,
+      sovThankyouStatus,
+    );
+  }
+
+  // Is async in case the plugin needs to wait for the script to load
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async handleOptimizeConversionScript(
+    optimizeId: string,
+    couponCode: string | undefined,
+    sovThankyouConfig: SovendusThankYouPageConfig,
+    sovThankyouStatus: IntegrationDataType,
+  ): Promise<void> {
     const script = document.createElement("script");
     script.type = "text/javascript";
     script.async = true;
@@ -125,8 +145,10 @@ export class SovendusThankyouPage {
     return [street, ""];
   }
 
-  handleVoucherCode(sovThankyouConfig: SovendusThankYouPageConfig): void {
-    const couponFromCookie = this.getCookie("sovCouponCode");
+  async handleVoucherCode(
+    sovThankyouConfig: SovendusThankYouPageConfig,
+  ): Promise<void> {
+    const couponFromCookie = await this.getCookie("sovCouponCode");
     if (couponFromCookie) {
       sovThankyouConfig.orderData.usedCouponCode = couponFromCookie;
       return;
@@ -184,7 +206,8 @@ export class SovendusThankyouPage {
     const couponCode = sovThankyouConfig.orderData.usedCouponCodes?.[0];
     if (
       voucherNetworkConfig?.trafficSourceNumber &&
-      voucherNetworkConfig?.trafficMediumNumber
+      voucherNetworkConfig?.trafficMediumNumber &&
+      voucherNetworkConfig?.isEnabled
     ) {
       const iframeContainerId = this.handleSovendusVoucherNetworkDivContainer(
         voucherNetworkConfig,
@@ -239,7 +262,7 @@ export class SovendusThankyouPage {
       if (voucherNetworkConfig.iframeContainerQuerySelector) {
         const iframeContainer = document.querySelector(
           voucherNetworkConfig.iframeContainerQuerySelector,
-        ) as HTMLElement | null;
+        );
         if (iframeContainer) {
           const sovendusDiv = document.createElement("div");
           sovendusDiv.id = defaultIframeContainerId;
@@ -277,8 +300,8 @@ export class SovendusThankyouPage {
   ): Promise<boolean> {
     const { checkoutProducts } = sovThankyouConfig.settings;
     if (checkoutProducts) {
-      const sovReqToken = this.getCookie("sovReqToken");
-      const sovReqProductId = this.getCookie("sovReqProductId");
+      const sovReqToken = await this.getCookie("sovReqToken");
+      const sovReqProductId = await this.getCookie("sovReqProductId");
       if (sovReqToken && sovReqProductId) {
         // remove the cookies
         this.clearCookie("sovReqToken");
@@ -292,7 +315,12 @@ export class SovendusThankyouPage {
     }
     return false;
   }
-  getCookie(name: keyof SovendusPageUrlParams): string | undefined {
+
+  // make it async as some platforms might need to wait for the cookies
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async getCookie(
+    name: keyof SovendusPageUrlParams,
+  ): Promise<string | undefined> {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) {

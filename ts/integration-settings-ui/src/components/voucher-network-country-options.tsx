@@ -1,5 +1,4 @@
 import type { Dispatch, JSX, SetStateAction } from "react";
-import React from "react";
 import type {
   CountryCodes,
   LanguageCodes,

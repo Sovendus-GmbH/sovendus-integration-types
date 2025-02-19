@@ -6,7 +6,7 @@ import {
   Package,
   Users,
 } from "lucide-react";
-import React, { type Dispatch, type JSX, type SetStateAction } from "react";
+import { type Dispatch, type JSX, type SetStateAction } from "react";
 import type { SovendusAppSettings } from "sovendus-integration-types";
 
 import { cn } from "../lib/utils";

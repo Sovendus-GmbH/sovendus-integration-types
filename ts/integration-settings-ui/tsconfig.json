@@ -1,16 +1,19 @@
 {
   "compilerOptions": {
-    "jsx": "react",
     "target": "ESNext",
-    "module": "Preserve",
-    "skipLibCheck": true,
-    "types": ["node"],
+    "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "declarationDir": "dist",
     "outDir": "dist",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "types": ["node"],
     "noEmitOnError": true,
     "removeComments": true,
     "allowJs": false,
     "checkJs": false,
-    "esModuleInterop": true,
     "strict": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -38,6 +41,12 @@
     "declaration": true,
     "declarationMap": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "vite.config.ts",
+    "tailwind.config.ts",
+    "postcss.config.js"
+  ],
   "exclude": ["./node_modules", "./dist"]
 }

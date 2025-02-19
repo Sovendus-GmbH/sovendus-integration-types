@@ -80,14 +80,6 @@
     --font-size-5xl: 4.55rem;
   }
 
-  body {
-    @apply bg-background text-foreground;
-  }
-
-  * {
-    @apply border-border;
-  }
-
   /* Font size utility classes */
   .text-base {
     font-size: var(--font-size-base);

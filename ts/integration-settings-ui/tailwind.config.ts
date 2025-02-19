@@ -3,7 +3,7 @@ import twa from "tailwindcss-animate";
 
 const config: Config = {
   // prefix: "tw-",
-  darkMode: ["class"],
+  darkMode: "class",
   content: [
     "./admin-frontend/**/*.{js,jsx,ts,tsx}",
     "../admin-frontend/**/*.{js,jsx,ts,tsx}",

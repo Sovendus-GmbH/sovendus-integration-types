@@ -1,4 +1,38 @@
-import type { CountryCodes } from "sovendus-integration-types";
+import type { SovendusAppSettings } from "sovendus-integration-types";
+import { CountryCodes } from "sovendus-integration-types";
+
+export function getOptimizeId(
+  settings: SovendusAppSettings,
+  country: CountryCodes | "UK" | undefined,
+): string | undefined {
+  if (settings?.optimize?.settingsType === "simple") {
+    if (
+      settings?.optimize?.simple?.isEnabled !== false &&
+      settings?.optimize?.simple?.optimizeId
+    ) {
+      return settings.optimize.simple.optimizeId;
+    }
+  } else {
+    if (settings.optimize?.countries?.ids) {
+      const uncleanedCountryCode: CountryCodes | "UK" | undefined =
+        country || detectCountryCode();
+      const countryCode =
+        uncleanedCountryCode === "UK" ? CountryCodes.GB : uncleanedCountryCode;
+      if (countryCode) {
+        const countryElement = settings.optimize.countries?.ids?.[countryCode];
+        return countryElement?.isEnabled
+          ? countryElement?.optimizeId
+          : undefined;
+      }
+      const fallbackId: string | undefined =
+        settings?.optimize?.countries?.fallBackId;
+      if (settings.optimize?.countries.fallBackEnabled && fallbackId) {
+        return fallbackId;
+      }
+    }
+  }
+  return undefined;
+}
 
 export function getPerformanceTime(): number {
   return window.performance?.now?.() || 0;
@@ -11,6 +45,15 @@ export function loggerError(
 ): void {
   // eslint-disable-next-line no-console
   console.error(`Sovendus App [${pageType}] - ${message}`, ...other);
+}
+
+export function loggerInfo(
+  message: string,
+  pageType: "LandingPage" | "ThankyouPage",
+  ...other: unknown[]
+): void {
+  // eslint-disable-next-line no-console
+  console.log(`Sovendus App [${pageType}] - ${message}`, ...other);
 }
 
 function getCountryCodeFromHtmlTag(): CountryCodes | undefined {
