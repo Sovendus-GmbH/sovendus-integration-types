@@ -1,6 +1,9 @@
 import type { CountryCodes } from "./countries";
 import type { SovDebugLevel } from "./general";
-import { type SovendusAppSettings, Versions } from "./plugin-settings";
+import {
+  defaultSovendusAppSettings,
+  type SovendusAppSettings,
+} from "./plugin-settings";
 
 export const sovendusPageApis = {
   // this only gets called when a optimize id is set
@@ -9,17 +12,7 @@ export const sovendusPageApis = {
 } as const;
 
 export const defaultSovendusPageConfig: SovendusPageConfig = {
-  settings: {
-    voucherNetwork: {
-      settingType: undefined,
-      cookieTracking: true,
-    },
-    optimize: {
-      settingsType: undefined,
-    },
-    checkoutProducts: true,
-    version: Versions.THREE,
-  },
+  settings: defaultSovendusAppSettings,
   country: undefined,
   integrationType: "",
 } as const;
@@ -40,7 +33,6 @@ export interface SovendusPageConfig {
 export type SovendusPageUrlParams = {
   sovCouponCode: string | undefined;
   sovReqToken: string | undefined;
-  sovReqProductId: string | undefined;
   puid: string | undefined;
   sovDebugLevel: SovDebugLevel;
 };
@@ -51,6 +43,7 @@ export interface SovPageStatus {
   urlData: SovendusPageUrlParams;
   status: {
     sovPageConfigFound: boolean;
+    countryCodePassedOnByPlugin: boolean;
     loadedOptimize: boolean;
     storedCookies: boolean;
   };

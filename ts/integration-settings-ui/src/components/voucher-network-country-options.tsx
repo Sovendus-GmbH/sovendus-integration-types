@@ -50,13 +50,12 @@ export function CountryOptions({
     country: VoucherNetworkLanguage | undefined,
     isEnabled?: boolean,
   ): boolean => {
-    return (
-      !!(
-        (isEnabled !== undefined ? isEnabled : country?.isEnabled) &&
-        country?.trafficSourceNumber &&
-        country?.trafficMediumNumber
-      ) || false
+    const _isEnabled = !!(
+      (isEnabled !== undefined ? isEnabled : country?.isEnabled) &&
+      country?.trafficSourceNumber &&
+      country?.trafficMediumNumber
     );
+    return _isEnabled;
   };
   const handleEnabledChange = (
     countryKey: CountryCodes,
@@ -68,33 +67,32 @@ export function CountryOptions({
         prevState.voucherNetwork.countries?.ids?.[countryKey]?.languages?.[
           languageKey
         ];
-      if (element && isCountryEnabled(element)) {
-        const newState = {
+      if (element) {
+        const newState: SovendusAppSettings = {
           ...prevState,
           voucherNetwork: {
             ...prevState.voucherNetwork,
             countries: {
+              fallBackIds: undefined,
+              iframeContainerQuerySelector: undefined,
               ...prevState.voucherNetwork.countries,
-              [countryKey]: {
-                ...prevState.voucherNetwork.countries,
-                ids: {
+              ids: {
+                ...prevState.voucherNetwork.countries?.ids,
+                [countryKey]: {
                   ...prevState.voucherNetwork.countries?.ids?.[countryKey],
                   languages: {
                     ...prevState.voucherNetwork.countries?.ids?.[countryKey]
                       ?.languages,
                     [languageKey]: {
                       ...element,
-                      isEnabled:
-                        element.trafficMediumNumber &&
-                        element.trafficSourceNumber &&
-                        checked,
+                      isEnabled: checked,
                     },
                   },
                 },
               },
             },
           },
-        } as SovendusAppSettings;
+        };
         return newState;
       }
       return prevState;
@@ -104,22 +102,25 @@ export function CountryOptions({
     countryKey: CountryCodes,
     languageKey: LanguageCodes,
     field: "trafficSourceNumber" | "trafficMediumNumber",
-    values: string[],
+    value: string,
   ): void => {
     setCurrentSettings((prevState) => {
-      const newValues = values.map((value) => String(parseInt(`${value}`, 10)));
+      const newValue = parseInt(`${value}`, 10);
+      const cleanedValue = isNaN(parseInt(String(newValue), 10))
+        ? ""
+        : String(newValue);
       const element =
         prevState.voucherNetwork.countries?.ids?.[countryKey]?.languages?.[
           languageKey
         ];
-      if (JSON.stringify(element?.[field]) !== JSON.stringify(newValues)) {
+      if (element?.[field] !== cleanedValue) {
         const newElement: VoucherNetworkLanguage = {
           iframeContainerQuerySelector: "",
           trafficMediumNumber: "",
           trafficSourceNumber: "",
           isEnabled: false,
           ...element,
-          [field]: newValues,
+          [field]: cleanedValue,
         };
         const isEnabled = isCountryEnabled(newElement, true);
         const newState: SovendusAppSettings = {
@@ -205,7 +206,7 @@ function CountrySettings({
     countryKey: CountryCodes,
     languageKey: LanguageCodes,
     field: "trafficSourceNumber" | "trafficMediumNumber",
-    value: string[],
+    value: string,
   ) => void;
 }): JSX.Element {
   const currentElement =
@@ -261,15 +262,13 @@ function CountrySettings({
               </Label>
               <Input
                 id={`${countryKey}-source`}
-                value={
-                  isNaN(trafficSourceNumber) ? undefined : trafficSourceNumber
-                }
+                value={trafficSourceNumber || ""}
                 onChange={(e): void =>
                   handleIdChange(
                     countryKey,
                     languageKey,
                     "trafficSourceNumber",
-                    [e.target.value],
+                    e.target.value,
                   )
                 }
                 placeholder="Enter Traffic Source Number"
@@ -281,15 +280,13 @@ function CountrySettings({
               </Label>
               <Input
                 id={`${countryKey}-medium`}
-                value={
-                  isNaN(trafficMediumNumber) ? undefined : trafficMediumNumber
-                }
+                value={trafficMediumNumber || ""}
                 onChange={(e): void =>
                   handleIdChange(
                     countryKey,
                     languageKey,
                     "trafficMediumNumber",
-                    [e.target.value],
+                    e.target.value,
                   )
                 }
                 placeholder="Enter Traffic Medium Number"

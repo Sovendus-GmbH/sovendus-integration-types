@@ -41,41 +41,32 @@ export function CountryOptions({
     return `Optimize ID: ${country.optimizeId}`;
   };
 
-  const isCountryEnabled = (country: OptimizeCountry | undefined): boolean => {
-    return (
-      (country?.isEnabled &&
-        country.optimizeId &&
-        /^\d+$/.test(country.optimizeId)) ||
-      false
-    );
-  };
-
   const handleEnabledChange = (
     countryKey: CountryCodes,
     checked: boolean,
   ): void => {
     setCurrentSettings((prevState) => {
-      if (
-        !!prevState.optimize.countries?.ids[countryKey]?.optimizeId &&
-        prevState.optimize.countries?.ids[countryKey].isEnabled !== checked
-      ) {
-        return {
-          ...prevState,
-          optimize: {
-            ...prevState.optimize,
-            countrySpecificIds: {
+      return {
+        ...prevState,
+        optimize: {
+          ...prevState.optimize,
+          countries: {
+            fallBackEnabled: false,
+            fallBackId: undefined,
+            ...prevState.optimize.countries?.ids,
+            ids: {
               ...prevState.optimize.countries?.ids,
               [countryKey]: {
                 ...prevState.optimize.countries?.ids[countryKey],
-                isEnabled:
-                  !!prevState.optimize.countries?.ids[countryKey]?.optimizeId &&
+                isEnabled: isOptimizeElementEnabled(
+                  prevState.optimize.countries?.ids[countryKey],
                   checked,
+                ),
               },
             },
           },
-        };
-      }
-      return prevState;
+        },
+      } satisfies SovendusAppSettings;
     });
   };
 
@@ -92,15 +83,20 @@ export function CountryOptions({
           ...prevState,
           optimize: {
             ...prevState.optimize,
-            countrySpecificIds: {
+            countries: {
+              fallBackEnabled: false,
+              fallBackId: undefined,
               ...prevState.optimize?.countries?.ids,
-              [countryKey]: {
-                ...prevState.optimize?.countries?.ids[countryKey],
-                optimizeId: newOptimizeId,
+              ids: {
+                ...prevState.optimize?.countries?.ids,
+                [countryKey]: {
+                  ...prevState.optimize?.countries?.ids[countryKey],
+                  optimizeId: newOptimizeId,
+                },
               },
             },
           },
-        };
+        } satisfies SovendusAppSettings;
       }
       return prevState;
     });
@@ -117,7 +113,7 @@ export function CountryOptions({
                 <span className={cn("text-sm text-muted-foreground")}>
                   {getCountryStatus(countryKey)}
                 </span>
-                {isCountryEnabled(
+                {isOptimizeElementEnabled(
                   currentSettings?.countries?.ids[countryKey],
                 ) && (
                   <Badge variant="outline" className={cn("ml-2")}>
@@ -186,8 +182,7 @@ export function EnabledOptimizeCountries({
       ? Object.entries(currentSettings?.countries?.ids)
           .filter(
             ([countryKey, data]) =>
-              data.isEnabled &&
-              data.optimizeId &&
+              isOptimizeElementEnabled(data) &&
               COUNTRIES[countryKey as CountryCodes],
           )
           .map(([countryKey]) => COUNTRIES[countryKey as CountryCodes])
@@ -212,14 +207,27 @@ export function EnabledOptimizeCountries({
   );
 }
 
+export function isOptimizeElementEnabled(
+  currentSettings: OptimizeCountry | undefined,
+  newEnableState?: boolean,
+): boolean {
+  return !!(
+    (newEnableState !== undefined
+      ? newEnableState
+      : currentSettings?.isEnabled) &&
+    currentSettings?.optimizeId &&
+    /^\d+$/.test(currentSettings.optimizeId)
+  );
+}
+
 export function isOptimizeEnabled(currentSettings: OptimizeSettings): boolean {
   return !!(
     (currentSettings.settingsType === "simple" &&
-      currentSettings.simple?.isEnabled) ||
+      isOptimizeElementEnabled(currentSettings.simple)) ||
     (currentSettings.settingsType === "country" &&
       currentSettings.countries?.ids &&
-      Object.values(currentSettings.countries.ids).some(
-        (country) => country.isEnabled,
+      Object.values(currentSettings.countries.ids).some((country) =>
+        isOptimizeElementEnabled(country),
       ))
   );
 }

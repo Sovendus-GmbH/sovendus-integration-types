@@ -1,11 +1,51 @@
 import type { CountryCodes, LanguageCodes } from "./countries";
 import type { ExplicitAnyType, SovDebugLevel } from "./general";
 import type { SovendusPageUrlParams } from "./plugin-page";
-import type { SovendusAppSettings } from "./plugin-settings";
+import {
+  defaultSovendusAppSettings,
+  type SovendusAppSettings,
+} from "./plugin-settings";
 import type {
   SovCbVnApplicationType,
   VariableIdentifiersType,
 } from "./thank-you";
+
+export const defaultSovendusThankyouPageConfig: SovendusThankYouPageConfig = {
+  settings: defaultSovendusAppSettings,
+  integrationType: "",
+  sovDebugLevel: undefined,
+  orderData: {},
+  customerData: {},
+} as const;
+
+// don't remove from interface, only add to it
+export const thankyouInterfaceData: {
+  cookieData: PublicThankYouCookieInterface;
+  windowVariableData: PublicThankYouVariableInterface;
+} = {
+  // keys that are used to look for values in cookies
+  cookieData: {
+    sovCouponCode: { cookieName: "sovCouponCode" },
+    orderValue: { cookieName: "sovOrderValue" },
+    orderCurrency: { cookieName: "sovOrderCurrency" },
+    orderId: { cookieName: "sovOrderId" },
+    sovReqToken: { cookieName: "sovReqToken" },
+    puid: { cookieName: "puid" },
+    sovDebugLevel: { cookieName: "sovDebugLevel", persistent: true },
+  },
+  // keys that are used to look for values in window[VariableIdentifiersType]
+  windowVariableData: {
+    trafficSourceNumber: {
+      alias: ["trafficSourceNumber", "shopId", "shopNumber"],
+    },
+    couponCode: { alias: ["couponCode", "usedCouponCode"] },
+    orderValue: { alias: ["orderValue"] },
+    orderCurrency: { alias: ["orderCurrency"] },
+    orderId: { alias: ["orderId"] },
+    sessionId: { alias: ["sessionId"] },
+    iframeContainerId: { alias: ["iframeContainerId"], storeAll: true },
+  },
+};
 
 export interface SovendusThankyouPageData {
   sovThankyouConfig: SovendusThankYouPageConfig;
@@ -21,15 +61,14 @@ export interface SovendusThankYouPageConfig {
   integrationType: string;
   sovDebugLevel: SovDebugLevel | undefined;
   orderData: {
-    sessionId: string | undefined;
-    timestamp: string | undefined;
-    orderId: string | undefined;
-    orderValue: string | undefined;
-    orderCurrency: SovendusOrderCurrencies | undefined;
+    sessionId?: string | undefined;
+    orderId?: string | undefined;
+    orderValue?: string | undefined;
+    orderCurrency?: SovendusOrderCurrencies | undefined;
     // multiple coupon codes can be used
-    usedCouponCodes: string[] | undefined;
+    usedCouponCodes?: string[] | undefined;
     // or only one
-    usedCouponCode: string | undefined;
+    usedCouponCode?: string | undefined;
   };
   customerData: SovendusConsumerType;
 }
@@ -65,43 +104,12 @@ export interface SovendusThankYouPageStatus {
   countryCodePassedOnByPlugin: boolean;
 }
 
-// don't remove from interface, only add to it
-export const thankyouInterfaceData: {
-  cookieData: PublicThankYouCookieInterface;
-  windowVariableData: PublicThankYouVariableInterface;
-} = {
-  // keys that are used to look for values in cookies
-  cookieData: {
-    sovCouponCode: { cookieName: "sovCouponCode" },
-    orderValue: { cookieName: "sovOrderValue" },
-    orderCurrency: { cookieName: "sovOrderCurrency" },
-    orderId: { cookieName: "sovOrderId" },
-    sovReqToken: { cookieName: "sovReqToken" },
-    sovReqProductId: { cookieName: "sovReqProductId" },
-    puid: { cookieName: "puid" },
-    sovDebugLevel: { cookieName: "sovDebugLevel", persistent: true },
-  },
-  // keys that are used to look for values in window[VariableIdentifiersType]
-  windowVariableData: {
-    trafficSourceNumber: {
-      alias: ["trafficSourceNumber", "shopId", "shopNumber"],
-    },
-    couponCode: { alias: ["couponCode", "usedCouponCode"] },
-    orderValue: { alias: ["orderValue"] },
-    orderCurrency: { alias: ["orderCurrency"] },
-    orderId: { alias: ["orderId"] },
-    sessionId: { alias: ["sessionId"] },
-    iframeContainerId: { alias: ["iframeContainerId"], storeAll: true },
-  },
-};
-
 export interface SovendusVNConversionsType {
   trafficSourceNumber?: string | undefined | number;
   // shopId?: string | undefined | number;
   // shopNumber?: string | undefined | number;
   trafficMediumNumber?: string | undefined | number;
   sessionId?: string | undefined;
-  timestamp?: string | undefined | number;
   orderId?: string | undefined | number;
   orderValue?: string | undefined | number;
   orderCurrency?: SovendusOrderCurrencies | undefined;
@@ -186,9 +194,9 @@ export interface SovendusConsumerType {
   consumerStreetWithNumber?: string | undefined;
   consumerCity?: string | undefined;
 
-  consumerCountry: undefined | CountryCodes | "UK"; // UK is a special case, can be GB or UK
+  consumerCountry?: undefined | CountryCodes | "UK"; // UK is a special case, can be GB or UK
   // if possible pass on the language, we have a fallback but it might not be as accurate
-  consumerLanguage: LanguageCodes | undefined;
+  consumerLanguage?: LanguageCodes | undefined;
 }
 
 export type SovendusSalutation = "Mr." | "Mrs.";

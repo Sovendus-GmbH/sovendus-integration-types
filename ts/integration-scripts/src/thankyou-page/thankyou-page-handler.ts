@@ -16,9 +16,10 @@ import {
 
 import { integrationScriptVersion } from "../constants";
 import {
-  detectCountryCode,
+  getCountryCodeFromHtmlTag,
+  getCountryFromDomain,
+  getCountryFromPagePath,
   getOptimizeId,
-  getPerformanceTime,
   loggerError,
   throwErrorOnSSR,
 } from "../shared-utils";
@@ -48,7 +49,8 @@ export class SovendusThankyouPage {
         sovThankyouStatus,
       );
       await this.handleOptimizeConversion(sovThankyouConfig, sovThankyouStatus);
-      sovThankyouStatus.times.integrationLoaderDone = getPerformanceTime();
+      sovThankyouStatus.times.integrationLoaderDone = this.getPerformanceTime();
+      sovThankyouStatus.status.integrationLoaderDone = true;
     } catch (error) {
       loggerError("Error in SovendusThankyouPage.main", "ThankyouPage", error);
     }
@@ -75,7 +77,8 @@ export class SovendusThankyouPage {
     if (!sovThankyouConfig.customerData.consumerCountry) {
       sovThankyouStatus.status.countryCodePassedOnByPlugin = false;
       sovThankyouConfig.customerData.consumerCountry =
-        sovThankyouConfig.customerData.consumerCountry || detectCountryCode();
+        sovThankyouConfig.customerData.consumerCountry ||
+        this.detectCountryCode();
     }
   }
 
@@ -156,7 +159,8 @@ export class SovendusThankyouPage {
   ): Promise<void> {
     const couponFromCookie = await this.getCookie("sovCouponCode");
     if (couponFromCookie) {
-      sovThankyouConfig.orderData.usedCouponCode = couponFromCookie;
+      this.clearCookie("sovCouponCode");
+      sovThankyouConfig.orderData.usedCouponCodes = [couponFromCookie];
       return;
     }
     if (sovThankyouConfig.orderData.usedCouponCode) {
@@ -191,12 +195,11 @@ export class SovendusThankyouPage {
         orderId: undefined,
         sovCouponCode: undefined,
         sovReqToken: undefined,
-        sovReqProductId: undefined,
         puid: undefined,
         sovDebugLevel: undefined,
       },
       times: {
-        integrationLoaderStart: getPerformanceTime(),
+        integrationLoaderStart: this.getPerformanceTime(),
       },
     };
     return sovThankyouStatus;
@@ -230,7 +233,6 @@ export class SovendusThankyouPage {
         trafficSourceNumber: voucherNetworkConfig.trafficSourceNumber,
         trafficMediumNumber: voucherNetworkConfig.trafficMediumNumber,
         sessionId: sovThankyouConfig.orderData.sessionId,
-        timestamp: sovThankyouConfig.orderData.timestamp,
         orderId: sovThankyouConfig.orderData.orderId,
         orderValue: sovThankyouConfig.orderData.orderValue,
         orderCurrency: sovThankyouConfig.orderData.orderCurrency,
@@ -259,7 +261,8 @@ export class SovendusThankyouPage {
         "https://api.sovendus.com/sovabo/common/js/flexibleIframe.js";
       document.body.appendChild(script);
       sovThankyouStatus.status.integrationLoaderVnCbStarted = true;
-      sovThankyouStatus.times.integrationLoaderVnCbStart = getPerformanceTime();
+      sovThankyouStatus.times.integrationLoaderVnCbStart =
+        this.getPerformanceTime();
     }
   }
 
@@ -319,9 +322,8 @@ export class SovendusThankyouPage {
     const { checkoutProducts } = sovThankyouConfig.settings;
     if (checkoutProducts) {
       const sovReqToken = await this.getCookie("sovReqToken");
-      const sovReqProductId = await this.getCookie("sovReqProductId");
-      if (sovReqToken && sovReqProductId) {
-        // remove the cookies
+      if (sovReqToken) {
+        // remove the cooky
         this.clearCookie("sovReqToken");
         const pixelUrl = `https://press-order-api.sovendus.com/ext/image?sovReqToken=${decodeURIComponent(sovReqToken)}`;
         await fetch(pixelUrl);
@@ -349,7 +351,7 @@ export class SovendusThankyouPage {
     return undefined;
   }
 
-  clearCookie(name: keyof SovendusPageUrlParams): string {
+  clearCookie(name: keyof SovendusPageUrlParams): void {
     throwErrorOnSSR({
       methodName: "clearCookie",
       pageType: "ThankyouPage",
@@ -362,7 +364,6 @@ export class SovendusThankyouPage {
     const cookieString = `${name}=;secure;samesite=strict;expires=Thu, 01 Jan 1970 00:00:00 UTC;domain=${domain};path=${path}`;
 
     document.cookie = cookieString;
-    return "";
   }
 
   getVoucherNetworkConfig(
@@ -436,6 +437,23 @@ export class SovendusThankyouPage {
       return htmlLang as LanguageCodes;
     }
     return navigator.language.split("-")[0] as LanguageCodes;
+  }
+
+  getPerformanceTime(): number {
+    throwErrorOnSSR({
+      methodName: "getPerformanceTime",
+      pageType: "ThankyouPage",
+      requiresWindow: true,
+    });
+    return window.performance?.now?.() || 0;
+  }
+
+  detectCountryCode(): CountryCodes | undefined {
+    return (
+      getCountryCodeFromHtmlTag() ||
+      getCountryFromDomain() ||
+      getCountryFromPagePath()
+    );
   }
 }
 

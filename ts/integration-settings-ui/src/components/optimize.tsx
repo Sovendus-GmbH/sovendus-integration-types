@@ -10,7 +10,9 @@ import {
 import type { Dispatch, JSX, SetStateAction } from "react";
 import type {
   CountryCodes,
+  OptimizeCountry,
   OptimizeSettings,
+  SettingsType,
   SovendusAppSettings,
 } from "sovendus-integration-types";
 import { COUNTRIES } from "sovendus-integration-types";
@@ -20,6 +22,7 @@ import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
 import {
   CountryOptions,
   EnabledOptimizeCountries,
+  isOptimizeElementEnabled,
   isOptimizeEnabled,
 } from "./optimize-country-options";
 import {
@@ -52,36 +55,34 @@ export function SovendusOptimize({
     field: "optimizeId" | "isEnabled",
     value: string | boolean,
   ): void => {
-    setCurrentSettings(
-      (prevState) =>
-        ({
-          ...prevState,
-          optimize: {
-            ...prevState.optimize,
-            settingsType: "simple",
-            simple: {
-              optimizeId: "",
-              isEnabled: false,
-              ...prevState.optimize.simple,
-              [field]: value,
-            },
-          },
-        } satisfies SovendusAppSettings),
-    );
+    setCurrentSettings((prevState) => {
+      const newSettings: OptimizeCountry = {
+        optimizeId: "",
+        isEnabled: false,
+        ...prevState.optimize.simple,
+        [field]: value,
+      };
+      newSettings.isEnabled = isOptimizeElementEnabled(newSettings, !!value);
+      return {
+        ...prevState,
+        optimize: {
+          ...prevState.optimize,
+          settingsType: "simple",
+          simple: newSettings,
+        },
+      } satisfies SovendusAppSettings;
+    });
   };
 
-  const handleGlobalOptimizeIdChange = (
-    value: "global" | "country-specific",
-  ): void => {
+  const handleGlobalOptimizeIdChange = (value: SettingsType): void => {
     setCurrentSettings(
-      (prevState) =>
-        ({
-          ...prevState,
-          optimize: {
-            ...prevState.optimize,
-            settingsType: value === "global" ? "simple" : "country",
-          },
-        } satisfies SovendusAppSettings),
+      (prevState): SovendusAppSettings => ({
+        ...prevState,
+        optimize: {
+          ...prevState.optimize,
+          settingsType: value,
+        },
+      }),
     );
   };
   const optimizeEnabled = isOptimizeEnabled(currentOptimizeSettings);
@@ -192,7 +193,12 @@ export function SovendusOptimize({
               </Card>
             )}
 
-            <Accordion type="single" collapsible className={cn("w-full mt-8")}>
+            <Accordion
+              type="single"
+              defaultValue="optimize-settings"
+              collapsible
+              className={cn("w-full mt-8")}
+            >
               <AccordionItem
                 value="optimize-settings"
                 className={cn(
@@ -210,20 +216,16 @@ export function SovendusOptimize({
                 <AccordionContent className={cn("p-4 bg-white")}>
                   <Tabs
                     defaultValue={
-                      currentOptimizeSettings.settingsType === "simple"
-                        ? "global"
-                        : "country-specific"
+                      currentOptimizeSettings.settingsType || "simple"
                     }
                     onValueChange={(value): void =>
-                      handleGlobalOptimizeIdChange(
-                        value as "global" | "country-specific",
-                      )
+                      handleGlobalOptimizeIdChange(value as SettingsType)
                     }
                     className={cn("border rounded-md")}
                   >
                     <TabsList className={cn("grid w-full grid-cols-2 mb-2")}>
                       <TabsTrigger
-                        value="global"
+                        value="simple"
                         className={cn(
                           "data-[state=active]:bg-green-100 data-[state=active]:text-green-800 data-[state=active]:border-b-2",
                         )}
@@ -231,7 +233,7 @@ export function SovendusOptimize({
                         Global Optimize ID
                       </TabsTrigger>
                       <TabsTrigger
-                        value="country-specific"
+                        value="country"
                         className={cn(
                           "data-[state=active]:bg-green-100 data-[state=active]:text-green-800 data-[state=active]:border-b-2",
                         )}
@@ -239,7 +241,7 @@ export function SovendusOptimize({
                         Country-specific Optimize ID's
                       </TabsTrigger>
                     </TabsList>
-                    <TabsContent value="global" className={cn("p-4")}>
+                    <TabsContent value="simple" className={cn("p-4")}>
                       <Alert className={cn("bg-blue-50 border-blue-200")}>
                         <AlertDescription className={cn("text-blue-700")}>
                           Use one Optimize ID for all countries
@@ -248,22 +250,22 @@ export function SovendusOptimize({
                       <div className={cn("space-y-4 mt-4")}>
                         <div className={cn("flex items-center space-x-2")}>
                           <Switch
-                            id="global-id-enabled"
+                            id="simple-id-enabled"
                             checked={
-                              currentOptimizeSettings.settingsType === "simple"
+                              currentOptimizeSettings.simple?.isEnabled || false
                             }
                             onCheckedChange={(checked): void =>
                               handleGlobalChange("isEnabled", checked)
                             }
                           />
-                          <Label htmlFor="global-id-enabled">
+                          <Label htmlFor="simple-id-enabled">
                             Enable Global ID
                           </Label>
                         </div>
                         <div className={cn("space-y-2")}>
-                          <Label htmlFor="global-id">Global Optimize ID</Label>
+                          <Label htmlFor="simple-id">Global Optimize ID</Label>
                           <Input
-                            id="global-id"
+                            id="simple-id"
                             value={
                               currentOptimizeSettings.simple?.optimizeId || ""
                             }
@@ -275,7 +277,7 @@ export function SovendusOptimize({
                         </div>
                       </div>
                     </TabsContent>
-                    <TabsContent value="country-specific" className={cn("p-4")}>
+                    <TabsContent value="country" className={cn("p-4")}>
                       <Alert className={cn("bg-blue-50 border-blue-200")}>
                         <AlertDescription className={cn("text-blue-700")}>
                           Use different Optimize ID's for each country

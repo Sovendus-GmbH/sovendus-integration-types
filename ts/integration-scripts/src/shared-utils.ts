@@ -14,8 +14,7 @@ export function getOptimizeId(
     }
   } else {
     if (settings.optimize?.countries?.ids) {
-      const uncleanedCountryCode: CountryCodes | "UK" | undefined =
-        country || detectCountryCode();
+      const uncleanedCountryCode: CountryCodes | "UK" | undefined = country;
       const countryCode =
         uncleanedCountryCode === "UK" ? CountryCodes.GB : uncleanedCountryCode;
       if (countryCode) {
@@ -32,15 +31,6 @@ export function getOptimizeId(
     }
   }
   return undefined;
-}
-
-export function getPerformanceTime(): number {
-  throwErrorOnSSR({
-    methodName: "getPerformanceTime",
-    pageType: "LandingPage",
-    requiresWindow: true,
-  });
-  return window.performance?.now?.() || 0;
 }
 
 export function throwErrorOnSSR({
@@ -82,7 +72,7 @@ export function loggerInfo(
   console.log(`Sovendus App [${pageType}] - ${message}`, ...other);
 }
 
-function getCountryCodeFromHtmlTag(): CountryCodes | undefined {
+export function getCountryCodeFromHtmlTag(): CountryCodes | undefined {
   throwErrorOnSSR({
     methodName: "getCountryCodeFromHtmlTag",
     pageType: "LandingPage",
@@ -93,7 +83,7 @@ function getCountryCodeFromHtmlTag(): CountryCodes | undefined {
   return countryCode ? (countryCode.toUpperCase() as CountryCodes) : undefined;
 }
 
-function getCountryFromDomain(): CountryCodes | undefined {
+export function getCountryFromDomain(): CountryCodes | undefined {
   throwErrorOnSSR({
     methodName: "getCountryFromDomain",
     pageType: "LandingPage",
@@ -131,7 +121,7 @@ function getCountryFromDomain(): CountryCodes | undefined {
     | undefined;
 }
 
-function getCountryFromPagePath(): CountryCodes | undefined {
+export function getCountryFromPagePath(): CountryCodes | undefined {
   throwErrorOnSSR({
     methodName: "getCountryFromDomain",
     pageType: "LandingPage",
@@ -141,12 +131,4 @@ function getCountryFromPagePath(): CountryCodes | undefined {
   const pathParts = path.split("/");
   const country = pathParts[1];
   return country?.toUpperCase() as CountryCodes | undefined;
-}
-
-export function detectCountryCode(): CountryCodes | undefined {
-  return (
-    getCountryCodeFromHtmlTag() ||
-    getCountryFromDomain() ||
-    getCountryFromPagePath()
-  );
 }

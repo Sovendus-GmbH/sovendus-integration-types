@@ -150,7 +150,12 @@ export function SovendusVoucherNetwork({
               </Card>
             )}
 
-            <Accordion type="single" collapsible className={cn("w-full mt-8")}>
+            <Accordion
+              type="single"
+              defaultValue="step1"
+              collapsible
+              className={cn("w-full mt-8")}
+            >
               <AccordionItem
                 value="step1"
                 className={cn(

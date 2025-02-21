@@ -4,12 +4,15 @@ import type {
   SovendusPageUrlParams,
   SovPageStatus,
 } from "sovendus-integration-types";
+import { CountryCodes } from "sovendus-integration-types";
 import { sovendusPageApis } from "sovendus-integration-types";
 
 import { integrationScriptVersion } from "../constants.js";
 import {
+  getCountryCodeFromHtmlTag,
+  getCountryFromDomain,
+  getCountryFromPagePath,
   getOptimizeId,
-  getPerformanceTime,
   loggerError,
   throwErrorOnSSR,
 } from "../shared-utils.js";
@@ -28,9 +31,8 @@ export class SovendusPage {
     "puid",
     // Optional link based conversion tracking for Sovendus Voucher Network
     "sovCouponCode",
-    // Keys used for Sovendus Checkout Products
+    // Key used for Sovendus Checkout Products
     "sovReqToken",
-    "sovReqProductId",
     // used to enable debug mode for the testing process.
     "sovDebugLevel",
   ] as const as (keyof SovendusPageUrlParams)[];
@@ -45,6 +47,8 @@ export class SovendusPage {
     }: Partial<SovendusPageData>) => void,
   ): Promise<void> {
     const sovPageStatus = this.initializeStatus();
+    this.processConfig(sovPageConfig, sovPageStatus);
+
     try {
       if (!sovPageConfig) {
         sovPageStatus.status.sovPageConfigFound = true;
@@ -54,6 +58,7 @@ export class SovendusPage {
       }
       sovPageStatus.urlData = this.lookForUrlParamsToStore(sovPageStatus);
       this.sovendusOptimize(sovPageConfig, sovPageStatus);
+      sovPageStatus.times.integrationLoaderDone = this.getPerformanceTime();
     } catch (error) {
       loggerError("Crash in SovendusPage.main", "LandingPage", error);
     }
@@ -66,7 +71,6 @@ export class SovendusPage {
       urlData: {
         sovCouponCode: undefined,
         sovReqToken: undefined,
-        sovReqProductId: undefined,
         puid: undefined,
         sovDebugLevel: undefined,
       },
@@ -74,9 +78,10 @@ export class SovendusPage {
         sovPageConfigFound: false,
         loadedOptimize: false,
         storedCookies: false,
+        countryCodePassedOnByPlugin: false,
       },
       times: {
-        integrationLoaderStart: getPerformanceTime(),
+        integrationLoaderStart: this.getPerformanceTime(),
       },
     };
   }
@@ -107,7 +112,6 @@ export class SovendusPage {
     const pageViewData: SovendusPageUrlParams = {
       sovCouponCode: undefined,
       sovReqToken: undefined,
-      sovReqProductId: undefined,
       puid: undefined,
       sovDebugLevel: undefined,
     };
@@ -149,7 +153,6 @@ export class SovendusPage {
     return {
       sovCouponCode: undefined,
       sovReqToken: undefined,
-      sovReqProductId: undefined,
       puid: undefined,
       sovDebugLevel: undefined,
     };
@@ -185,11 +188,6 @@ export class SovendusPage {
     sovPageConfig: SovendusPageConfig,
     sovPageStatus: SovPageStatus,
   ): void {
-    throwErrorOnSSR({
-      methodName: "sovendusOptimize",
-      pageType: "LandingPage",
-      requiresDocument: true,
-    });
     const optimizeId = getOptimizeId(
       sovPageConfig.settings,
       sovPageConfig.country,
@@ -197,11 +195,62 @@ export class SovendusPage {
     if (!optimizeId) {
       return;
     }
+    this.handleOptimizeScript(optimizeId, sovPageConfig, sovPageStatus);
+    sovPageStatus.status.loadedOptimize = true;
+  }
+
+  handleOptimizeScript(
+    optimizeId: string,
+    _sovPageConfig: SovendusPageConfig,
+    _sovPageStatus: SovPageStatus,
+  ): void {
+    throwErrorOnSSR({
+      methodName: "sovendusOptimize",
+      pageType: "LandingPage",
+      requiresDocument: true,
+    });
     const script = document.createElement("script");
     script.async = true;
     script.type = "application/javascript";
     script.src = `${sovendusPageApis.optimize}${optimizeId}`;
     document.head.appendChild(script);
-    sovPageStatus.status.loadedOptimize = true;
+  }
+
+  processConfig(
+    sovPageConfig: SovendusPageConfig,
+    sovPageStatus: SovPageStatus,
+  ): void {
+    this.handleCountryCode(sovPageConfig, sovPageStatus);
+  }
+
+  handleCountryCode(
+    sovPageConfig: SovendusPageConfig,
+    sovPageStatus: SovPageStatus,
+  ): void {
+    // using string literal "UK" intentionally despite type mismatch as some systems might return UK instead of GB
+    if (sovPageConfig.country === "UK") {
+      sovPageConfig.country = CountryCodes.GB;
+    }
+    if (!sovPageConfig.country) {
+      sovPageStatus.status.countryCodePassedOnByPlugin = false;
+      sovPageConfig.country = sovPageConfig.country || this.detectCountryCode();
+    }
+  }
+
+  getPerformanceTime(): number {
+    throwErrorOnSSR({
+      methodName: "getPerformanceTime",
+      pageType: "LandingPage",
+      requiresWindow: true,
+    });
+    return window.performance?.now?.() || 0;
+  }
+
+  detectCountryCode(): CountryCodes | undefined {
+    return (
+      getCountryCodeFromHtmlTag() ||
+      getCountryFromDomain() ||
+      getCountryFromPagePath()
+    );
   }
 }
