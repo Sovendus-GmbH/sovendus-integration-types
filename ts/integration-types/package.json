@@ -1,26 +1,32 @@
 {
   "name": "sovendus-integration-types",
-  "version": "3.3.5",
+  "version": "3.3.14",
   "license": "MIT",
   "private": false,
   "description": "Sovendus Integration Types - checkout the docs at developer-hub.sovendus.com",
   "type": "module",
-  "main": "dist/v3/index.js",
-  "types": "dist/v3/index.d.ts",
   "files": [
-    "dist",
-    "src"
+    "dist/**/*",
+    "src/**/*"
   ],
+  "types": "./dist/v3/index.d.ts",
+  "main": "./dist/v3/index.mjs",
+  "module": "./dist/v3/index.mjs",
   "exports": {
     ".": {
-      "import": "./dist/v3/index.js",
-      "require": "./dist/v3/index.js"
+      "types": "./dist/v3/index.d.ts",
+      "import": "./dist/v3/index.mjs",
+      "require": "./dist/v3/index.cjs"
+    },
+    "./src": {
+      "types": "./src/v3/index.ts",
+      "import": "./src/v3/index.ts"
     },
     "./v2/*": "./dist/v2/*",
     "./v3/*": "./dist/v3/*"
   },
   "scripts": {
-    "build": "rm -rf ./dist && tsc --project ./tsconfig.json",
+    "build": "vite build",
     "lint": "cd .. && yarn lint:types",
     "release": "yarn install && yarn lint && yarn build && npm publish"
   },
@@ -38,7 +44,7 @@
     "types",
     "typescript"
   ],
-  "author": "Marcus Brandstaetter <techsupport@sovendus.com>",
+  "author": "Marcus Brandstaetter - Sovendus GmbH <techsupport@sovendus.com>",
   "contributors": [
     {
       "name": "Marcus Brandstaetter - Sovendus GmbH",
@@ -46,7 +52,8 @@
     }
   ],
   "devDependencies": {
-    "tsc": "^2.0.4",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "sovendus-builder": "^1.1.20",
+    "vite-plugin-dts": "^4.5.0"
   }
 }

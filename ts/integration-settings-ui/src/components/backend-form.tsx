@@ -3,14 +3,14 @@ import type { JSX } from "react";
 import React, { useEffect, useState } from "react";
 import type { SovendusAppSettings } from "sovendus-integration-types";
 
-import { cn } from "../lib/utils";
+import { cn } from "../utils/utils";
 import { SovendusCheckoutProducts } from "./checkout-products";
 import { ConfigurationDialog } from "./confirmation-dialog";
 import { Notification } from "./notification";
 import { SovendusOptimize } from "./optimize";
 import { EnabledOptimizeCountries } from "./optimize-country-options";
 import { ProductCard } from "./product-card";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "./shadcn/alert";
 import { SovendusVoucherNetwork } from "./voucher-network";
 import { EnabledVoucherNetworkCountries } from "./voucher-network-country-options";
 
@@ -35,7 +35,7 @@ export interface SovendusBackendFormProps {
 export const DEMO_REQUEST_URL =
   "https://online.sovendus.com/kontakt/demo-tour-kontaktformular/#";
 
-export default function SovendusBackendForm({
+export function SovendusBackendForm({
   currentStoredSettings: _currentStoredSettings,
   saveSettings,
   additionalSteps,

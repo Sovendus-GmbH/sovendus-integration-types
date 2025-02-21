@@ -7,17 +7,17 @@ import type {
 } from "sovendus-integration-types";
 import { COUNTRIES } from "sovendus-integration-types";
 
-import { cn } from "../lib/utils";
+import { cn } from "../utils/utils";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "./ui/accordion";
-import { Badge } from "./ui/badge";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
+} from "./shadcn/accordion";
+import { Badge } from "./shadcn/badge";
+import { Input } from "./shadcn/input";
+import { Label } from "./shadcn/label";
+import { Switch } from "./shadcn/switch";
 
 type CountryOptionsProps = {
   currentSettings: OptimizeSettings;

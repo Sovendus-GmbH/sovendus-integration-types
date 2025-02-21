@@ -12,6 +12,10 @@ export interface SovendusThankyouPageData {
   sovThankyouStatus: IntegrationDataType;
 }
 
+export interface SovendusThankyouWindow
+  extends Window,
+    SovendusThankyouPageData {}
+
 export interface SovendusThankYouPageConfig {
   settings: SovendusAppSettings;
   integrationType: string;
@@ -182,7 +186,7 @@ export interface SovendusConsumerType {
   consumerStreetWithNumber?: string | undefined;
   consumerCity?: string | undefined;
 
-  consumerCountry: CountryCodes | "UK"; // UK is a special case, can be GB or UK
+  consumerCountry: undefined | CountryCodes | "UK"; // UK is a special case, can be GB or UK
   // if possible pass on the language, we have a fallback but it might not be as accurate
   consumerLanguage: LanguageCodes | undefined;
 }

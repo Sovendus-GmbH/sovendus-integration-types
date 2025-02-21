@@ -2,10 +2,10 @@ import { ChevronRight, ExternalLink } from "lucide-react";
 import type { JSX } from "react";
 import React from "react";
 
-import { cn } from "../lib/utils";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { cn } from "../utils/utils";
+import { Badge } from "./shadcn/badge";
+import { Button } from "./shadcn/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./shadcn/card";
 
 interface ProductCardProps {
   title: string;

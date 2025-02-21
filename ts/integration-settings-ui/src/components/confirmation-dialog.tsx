@@ -2,8 +2,13 @@ import { X } from "lucide-react";
 import type { JSX } from "react";
 import React from "react";
 
-import { cn } from "../lib/utils";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { cn } from "../utils/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "./shadcn/dialog";
 
 interface ConfigurationDialogProps {
   open: boolean;

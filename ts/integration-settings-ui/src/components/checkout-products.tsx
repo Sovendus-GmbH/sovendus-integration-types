@@ -9,14 +9,14 @@ import {
 import { type Dispatch, type JSX, type SetStateAction } from "react";
 import type { SovendusAppSettings } from "sovendus-integration-types";
 
-import { cn } from "../lib/utils";
+import { cn } from "../utils/utils";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
-import { Alert, AlertDescription } from "./ui/alert";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Alert, AlertDescription } from "./shadcn/alert";
+import { Button } from "./shadcn/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./shadcn/card";
+import { Label } from "./shadcn/label";
+import { Switch } from "./shadcn/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./shadcn/tabs";
 
 interface SovendusCheckoutProductsProps {
   enabled: boolean;

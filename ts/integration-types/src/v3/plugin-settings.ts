@@ -4,7 +4,14 @@ export interface SovendusAppSettings {
   voucherNetwork: VoucherNetworkSettings;
   optimize: OptimizeSettings;
   checkoutProducts: boolean;
+  employeeBenefits: EmployeeBenefitsSettings;
   version: Versions.THREE;
+}
+
+export interface EmployeeBenefitsSettings {
+  isEnabled: false;
+  showWidgetOnDashboard: false;
+  addToSidebar: false;
 }
 
 export interface VoucherNetworkSettings {

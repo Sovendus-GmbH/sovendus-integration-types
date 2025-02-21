@@ -3,7 +3,7 @@ import { CheckCircle, XCircle } from "lucide-react";
 import type { JSX } from "react";
 import { useEffect, useState } from "react";
 
-import { cn } from "../lib/utils";
+import { cn } from "../utils/utils";
 
 interface NotificationProps {
   message: string;
@@ -47,8 +47,8 @@ export function Notification({
                 type === "success"
                   ? "bg-green-500"
                   : type === "error"
-                    ? "bg-red-500"
-                    : "bg-blue-500"
+                  ? "bg-red-500"
+                  : "bg-blue-500"
               } text-white`,
             )}
           >

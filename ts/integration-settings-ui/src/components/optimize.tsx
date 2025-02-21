@@ -15,7 +15,7 @@ import type {
 } from "sovendus-integration-types";
 import { COUNTRIES } from "sovendus-integration-types";
 
-import { cn } from "../lib/utils";
+import { cn } from "../utils/utils";
 import { type AdditionalSteps, DEMO_REQUEST_URL } from "./backend-form";
 import {
   CountryOptions,
@@ -27,14 +27,14 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "./ui/accordion";
-import { Alert, AlertDescription } from "./ui/alert";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+} from "./shadcn/accordion";
+import { Alert, AlertDescription } from "./shadcn/alert";
+import { Button } from "./shadcn/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./shadcn/card";
+import { Input } from "./shadcn/input";
+import { Label } from "./shadcn/label";
+import { Switch } from "./shadcn/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./shadcn/tabs";
 
 interface SovendusOptimizeProps {
   currentOptimizeSettings: OptimizeSettings;
@@ -66,7 +66,7 @@ export function SovendusOptimize({
               [field]: value,
             },
           },
-        }) satisfies SovendusAppSettings,
+        } satisfies SovendusAppSettings),
     );
   };
 
@@ -81,7 +81,7 @@ export function SovendusOptimize({
             ...prevState.optimize,
             settingsType: value === "global" ? "simple" : "country",
           },
-        }) satisfies SovendusAppSettings,
+        } satisfies SovendusAppSettings),
     );
   };
   const optimizeEnabled = isOptimizeEnabled(currentOptimizeSettings);

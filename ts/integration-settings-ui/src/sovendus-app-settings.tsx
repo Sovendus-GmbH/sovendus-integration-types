@@ -3,7 +3,7 @@ import "./app.css";
 import type { JSX } from "react";
 import type { SovendusAppSettings } from "sovendus-integration-types";
 
-import SovendusBackendForm from "./components/backend-form";
+import { SovendusBackendForm } from "./components/backend-form";
 
 export interface SovendusSettingsProps {
   currentStoredSettings: SovendusAppSettings;

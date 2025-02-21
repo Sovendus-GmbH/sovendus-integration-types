@@ -35,7 +35,33 @@ export function getOptimizeId(
 }
 
 export function getPerformanceTime(): number {
+  throwErrorOnSSR({
+    methodName: "getPerformanceTime",
+    pageType: "LandingPage",
+    requiresWindow: true,
+  });
   return window.performance?.now?.() || 0;
+}
+
+export function throwErrorOnSSR({
+  methodName,
+  requiresWindow,
+  requiresDocument,
+  pageType,
+}: {
+  methodName: string;
+  requiresWindow?: boolean;
+  requiresDocument?: boolean;
+  pageType: "LandingPage" | "ThankyouPage";
+}): void {
+  if (
+    (requiresDocument ? typeof document === "undefined" : false) ||
+    (requiresWindow ? typeof window === "undefined" : false)
+  ) {
+    throw new Error(
+      `Sovendus App [${pageType}] - ${methodName}: ${requiresWindow ? "window" : ""} ${requiresDocument ? "document" : ""} is not available in your context, you can override this method`,
+    );
+  }
 }
 
 export function loggerError(
@@ -57,12 +83,22 @@ export function loggerInfo(
 }
 
 function getCountryCodeFromHtmlTag(): CountryCodes | undefined {
+  throwErrorOnSSR({
+    methodName: "getCountryCodeFromHtmlTag",
+    pageType: "LandingPage",
+    requiresDocument: true,
+  });
   const lang = document.documentElement.lang;
   const countryCode = lang.split("-")[1];
   return countryCode ? (countryCode.toUpperCase() as CountryCodes) : undefined;
 }
 
 function getCountryFromDomain(): CountryCodes | undefined {
+  throwErrorOnSSR({
+    methodName: "getCountryFromDomain",
+    pageType: "LandingPage",
+    requiresWindow: true,
+  });
   const domainToCountry: {
     [key: string]: string | undefined;
   } = {
@@ -96,6 +132,11 @@ function getCountryFromDomain(): CountryCodes | undefined {
 }
 
 function getCountryFromPagePath(): CountryCodes | undefined {
+  throwErrorOnSSR({
+    methodName: "getCountryFromDomain",
+    pageType: "LandingPage",
+    requiresWindow: true,
+  });
   const path = window.location.pathname;
   const pathParts = path.split("/");
   const country = pathParts[1];

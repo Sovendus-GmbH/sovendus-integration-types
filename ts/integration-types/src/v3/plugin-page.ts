@@ -24,6 +24,8 @@ export const defaultSovendusPageConfig: SovendusPageConfig = {
   integrationType: "",
 } as const;
 
+export interface SovendusPageWindow extends Window, SovendusPageData {}
+
 export interface SovendusPageData {
   sovPageConfig: SovendusPageConfig;
   sovPageStatus: SovPageStatus;
