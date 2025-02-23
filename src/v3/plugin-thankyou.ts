@@ -60,17 +60,19 @@ export interface SovendusThankYouPageConfig {
   settings: SovendusAppSettings;
   integrationType: string;
   sovDebugLevel: SovDebugLevel | undefined;
-  orderData: {
-    sessionId?: string | undefined;
-    orderId?: string | undefined;
-    orderValue?: string | undefined;
-    orderCurrency?: SovendusOrderCurrencies | undefined;
-    // multiple coupon codes can be used
-    usedCouponCodes?: string[] | undefined;
-    // or only one
-    usedCouponCode?: string | undefined;
-  };
-  customerData: SovendusConsumerType;
+  orderData: SovendusConversionsDaa;
+  customerData: SovendusConsumerData;
+}
+
+export interface SovendusConversionsDaa {
+  sessionId?: string | undefined;
+  orderId?: string | undefined;
+  orderValue?: string | undefined;
+  orderCurrency?: SovendusOrderCurrencies | undefined;
+  // multiple coupon codes can be used
+  usedCouponCodes?: string[] | undefined;
+  // or only one
+  usedCouponCode?: string | undefined;
 }
 
 export interface IntegrationDataType {
@@ -152,7 +154,7 @@ export type PublicThankYouVariableInterface = {
 export interface SovendusPublicConversionWindow extends Window {
   // from partner provided
   sovIframes?: SovendusVNConversionsType[];
-  sovConsumer?: SovendusConsumerType;
+  sovConsumer?: SovendusConsumerData;
   AWIN?: AwinConversion;
 
   // legacy
@@ -178,7 +180,7 @@ export interface AwinConversion {
   };
 }
 
-export interface SovendusConsumerType {
+export interface SovendusConsumerData {
   consumerSalutation?: SovendusSalutation | undefined;
   consumerFirstName?: string | undefined;
   consumerLastName?: string | undefined;

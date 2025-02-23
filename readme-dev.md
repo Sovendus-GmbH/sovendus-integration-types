@@ -1,4 +1,4 @@
-# Sovendus-Plugins-Core Developer guide
+# Sovendus-Integration-Types Developer guide
 
 ## Contributing
 
@@ -7,14 +7,14 @@ If you want to contribute or report issues, please follow these steps:
 1. Fork the repository.
 2. Create a new branch for your feature or bugfix.
 3. Commit your changes and push your branch to your fork.
-4. Create a pull request to the main repository.
+4. Create a pull request to the main repository and make sure all tests pass.
 
 ## Building from Source
 
 To build the project from source, run:
 
 ```bash
-yarn setup
+yarn install
 yarn build
 ```
 
