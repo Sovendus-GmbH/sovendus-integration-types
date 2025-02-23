@@ -1765,7 +1765,7 @@ eslint-plugin-prettier@5.2.3:
     prettier-linter-helpers "^1.0.0"
     synckit "^0.9.1"
 
-eslint-plugin-react-compiler@^19.0.0-beta-21e868a-20250216:
+eslint-plugin-react-compiler@19.0.0-beta-21e868a-20250216:
   version "19.0.0-beta-21e868a-20250216"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-compiler/-/eslint-plugin-react-compiler-19.0.0-beta-21e868a-20250216.tgz#1758c77e6d6c7000c736fdff852c4773397db798"
   integrity sha512-LstAv6tKgZylMmJniWxQL9TOY9kwRddLnvBsoTbRsgUDROL5bsg0k5XHMaNJLyX8cxh4iafQ/WxAw5shNUf3GQ==
@@ -1777,7 +1777,7 @@ eslint-plugin-react-compiler@^19.0.0-beta-21e868a-20250216:
     zod "^3.22.4"
     zod-validation-error "^3.0.3"
 
-eslint-plugin-react-hooks@^5.1.0:
+eslint-plugin-react-hooks@5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-5.1.0.tgz#3d34e37d5770866c34b87d5b499f5f0b53bf0854"
   integrity sha512-mpJRtPgHN2tNAvZ35AMfqeB3Xqeo273QxrHJsbBEPWODRM4r0yB6jfoROqKEYrOn27UtRPpcpHc2UqyBSuUNTw==
@@ -3331,7 +3331,7 @@ source-map@~0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
-sovendus-builder@^1.1.20:
+sovendus-builder@1.1.20:
   version "1.1.20"
   resolved "https://registry.yarnpkg.com/sovendus-builder/-/sovendus-builder-1.1.20.tgz#65a99cf5d7d50531feae5b7496785e7faa395112"
   integrity sha512-EeJf3/7L3oMmy8bhxyNemM7MBkAjdSzy6YhsSQTidC/qDK+rpek3seInb728wNYi5h5cAiLvqGqGy+3iDa/JxA==
@@ -3564,7 +3564,7 @@ typescript@5.7.2:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.7.2.tgz#3169cf8c4c8a828cde53ba9ecb3d2b1d5dd67be6"
   integrity sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==
 
-typescript@^5.2.2, typescript@^5.7.3:
+typescript@5.7.3, typescript@^5.2.2:
   version "5.7.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.7.3.tgz#919b44a7dbb8583a9b856d162be24a54bf80073e"
   integrity sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==
@@ -3604,7 +3604,7 @@ uri-js@^4.2.2, uri-js@^4.4.1:
   dependencies:
     punycode "^2.1.0"
 
-vite-plugin-dts@^4.5.0:
+vite-plugin-dts@4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/vite-plugin-dts/-/vite-plugin-dts-4.5.0.tgz#a83899470dc3d423298755b615f1279abd49e0ac"
   integrity sha512-M1lrPTdi7gilLYRZoLmGYnl4fbPryVYsehPN9JgaxjJKTs8/f7tuAlvCCvOLB5gRDQTTKnptBcB0ACsaw2wNLw==
