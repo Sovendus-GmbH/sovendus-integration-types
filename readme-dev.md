@@ -28,4 +28,5 @@ yarn lint
 
 ## Publishing
 
-TODO
+1. Open a pull request to the main repository
+2. After the pull request is merged, a new version will be published. We bump the version, create a new tag and push it to the repository, then our pipeline will publish the new version to npm.

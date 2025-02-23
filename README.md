@@ -1,8 +1,26 @@
-# Sovendus Plugins Core
+# Sovendus Integration Types for Typescript
 
-This repository contains common utilities and tools used across all Sovendus Plugins. This repository is intended to be used as a dependency for all Sovendus Plugins projects.
+The types in this package are used across the code base for the Sovendus plugins and several variants of the integration.
 
-The typescript specific documentation can be found [here in the `ts` directory](./ts/readme-dev.md).
+## Installation
+
+### With yarn
+
+```bash
+yarn add sovendus-integration-types
+```
+
+### With npm
+
+```bash
+npm install sovendus-integration-types
+```
+
+### With bun
+
+```bash
+bun install sovendus-integration-types
+```
 
 ## Contributing
 
@@ -13,4 +31,4 @@ If you want to contribute or report issues, please follow these steps:
 3. Commit your changes and push your branch to your fork.
 4. Create a pull request to the main repository.
 
-See our developer guide here: [Developer Guide](./ts/readme-dev.md)
+See our developer guide here: [Developer Guide](../readme-dev.md)

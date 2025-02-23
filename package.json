@@ -27,8 +27,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "lint": "cd .. && yarn lint:types",
-    "release": "yarn install && yarn lint && yarn build && npm publish"
+    "lint": "cd .. && yarn lint:types"
   },
   "repository": {
     "type": "git",
