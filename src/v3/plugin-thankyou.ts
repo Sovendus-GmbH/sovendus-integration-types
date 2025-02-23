@@ -49,7 +49,7 @@ export const thankyouInterfaceData: {
 
 export interface SovendusThankyouPageData {
   sovThankyouConfig: SovendusThankYouPageConfig;
-  sovThankyouStatus: IntegrationDataType;
+  sovThankyouStatus: IntegrationData;
 }
 
 export interface SovendusThankyouWindow
@@ -60,11 +60,11 @@ export interface SovendusThankYouPageConfig {
   settings: SovendusAppSettings;
   integrationType: string;
   sovDebugLevel: SovDebugLevel | undefined;
-  orderData: SovendusConversionsDaa;
+  orderData: SovendusConversionsData;
   customerData: SovendusConsumerData;
 }
 
-export interface SovendusConversionsDaa {
+export interface SovendusConversionsData {
   sessionId?: string | undefined;
   orderId?: string | undefined;
   orderValue?: string | undefined;
@@ -75,7 +75,7 @@ export interface SovendusConversionsDaa {
   usedCouponCode?: string | undefined;
 }
 
-export interface IntegrationDataType {
+export interface IntegrationData {
   integrationScriptVersion: string;
   data: PublicThankYouCookieData | undefined;
   status: {
@@ -106,7 +106,7 @@ export interface SovendusThankYouPageStatus {
   countryCodePassedOnByPlugin: boolean;
 }
 
-export interface SovendusVNConversionsType {
+export interface SovendusVNConversion {
   trafficSourceNumber?: string | undefined | number;
   // shopId?: string | undefined | number;
   // shopNumber?: string | undefined | number;
@@ -145,7 +145,7 @@ export type PublicThankYouCookieInterface = {
 };
 
 export type PublicThankYouVariableInterface = {
-  [interfaceKey in keyof SovendusVNConversionsType]: {
+  [interfaceKey in keyof SovendusVNConversion]: {
     alias: string[];
     storeAll?: true;
   };
@@ -153,14 +153,14 @@ export type PublicThankYouVariableInterface = {
 
 export interface SovendusPublicConversionWindow extends Window {
   // from partner provided
-  sovIframes?: SovendusVNConversionsType[];
+  sovIframes?: SovendusVNConversion[];
   sovConsumer?: SovendusConsumerData;
   AWIN?: AwinConversion;
 
   // legacy
   [VariableIdentifiersType.legacy_integrationIdentifier_sovAbo]?:
-    | SovendusVNConversionsType[]
-    | SovendusVNConversionsType;
+    | SovendusVNConversion[]
+    | SovendusVNConversion;
   [VariableIdentifiersType.legacy_integrationIdentifier_gconData]?: [
     string,
     ExplicitAnyType,
