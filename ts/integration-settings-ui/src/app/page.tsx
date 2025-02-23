@@ -28,6 +28,7 @@ export default function Home(): JSX.Element {
   ): Promise<SovendusAppSettings> => {
     // wait for 1,5 seconds to simulate a real API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
+    // eslint-disable-next-line no-console
     console.log("Saving settings:", newSettings);
     return newSettings;
   };

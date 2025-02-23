@@ -1,13 +1,15 @@
+import type { ReleaseConfig } from "./release-tool/types";
+
 const releaseConfig: ReleaseConfig = {
-  package: {
-    name: "sovendus-plugins-core",
-    directory: "./",
-    release: false,
-    updateDeps: true,
-  },
-  subPackages: [
+  packages: [
     {
-      name: "sovendus-integration-types",
+      directory: "./",
+      release: false,
+      updateDeps: true,
+      version: "1.0.0",
+    },
+
+    {
       directory: "integration-types",
       updateDeps: true,
       release: true,
@@ -18,9 +20,9 @@ const releaseConfig: ReleaseConfig = {
           { folder: "integration-scripts" },
         ],
       },
+      version: "3.3.17",
     },
     {
-      name: "sovendus-integration-settings-ui",
       directory: "integration-settings-ui",
       updateDeps: true,
       release: true,
@@ -28,9 +30,9 @@ const releaseConfig: ReleaseConfig = {
         tagPrefix: "settings_ui_",
         foldersToScanAndBumpThisPackage: [],
       },
+      version: "3.4.2",
     },
     {
-      name: "sovendus-integration-scripts",
       directory: "integration-scripts",
       updateDeps: true,
       release: true,
@@ -38,6 +40,8 @@ const releaseConfig: ReleaseConfig = {
         tagPrefix: "scripts_",
         foldersToScanAndBumpThisPackage: [],
       },
+      version: "3.3.21",
     },
   ],
 };
+export default releaseConfig;

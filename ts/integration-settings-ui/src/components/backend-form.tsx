@@ -310,7 +310,15 @@ export function SovendusBackendForm({
         </ConfigurationDialog>
       </div>
     );
-  }, [currentStoredSettings, currentSettings, activeConfig, notificationState]);
+  }, [
+    notificationState,
+    zoomedVersion,
+    activeConfig,
+    currentSettings,
+    additionalSteps,
+    currentStoredSettings,
+    saveSettings,
+  ]);
 }
 
 function useSettingsSaveOnLoad(
@@ -320,5 +328,7 @@ function useSettingsSaveOnLoad(
   useEffect(() => {
     // Save settings in case there any settings migrations
     void saveSettings(currentStoredSettings);
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

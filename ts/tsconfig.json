@@ -39,11 +39,6 @@
     "declaration": true,
     "declarationMap": true
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "integration-settings-ui/vite.config.ts",
-    "integration-scripts/src/index.ts"
-  ],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["**/node_modules", "**/dist"]
 }

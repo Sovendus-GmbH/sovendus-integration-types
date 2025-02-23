@@ -80,7 +80,7 @@
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "sovendus-integration-types": "3.3.17"
+    "sovendus-integration-types": "3.4.3"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.8",
