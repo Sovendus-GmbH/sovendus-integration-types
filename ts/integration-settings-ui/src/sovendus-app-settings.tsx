@@ -1,5 +1,3 @@
-import "./app.css";
-
 import type { JSX } from "react";
 import type { SovendusAppSettings } from "sovendus-integration-types";
 

@@ -32,19 +32,15 @@ const buildConfig: BuildConfig = {
         ],
 
         buildOptions: {
+          cssCodeSplit: false,
+          cssMinify: false,
           lib: {
             entry: "src/index.ts",
             formats: ["es", "cjs"],
             fileName: (format) => `index.${format === "es" ? "mjs" : "cjs"}`,
           },
         },
-        otherOptions: {
-          resolve: {
-            alias: {
-              fsevents: false,
-            },
-          },
-        },
+
         rollupOptions: {
           output: {
             exports: "auto",
@@ -63,6 +59,7 @@ const buildConfig: BuildConfig = {
         },
       },
     },
+
     // {
     //   input: "src/components/backend-form.tsx",
     //   output: "dist/backend-form.js",

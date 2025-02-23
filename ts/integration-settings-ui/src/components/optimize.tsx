@@ -51,16 +51,30 @@ export function SovendusOptimize({
   setCurrentSettings,
   additionalSteps,
 }: SovendusOptimizeProps): JSX.Element {
-  const handleGlobalChange = (
-    field: "optimizeId" | "isEnabled",
-    value: string | boolean,
-  ): void => {
+  const handleGlobalChange = (value: string): void => {
+    setCurrentSettings((prevState) => {
+      const newSettings: OptimizeCountry = {
+        ...prevState.optimize.simple,
+        isEnabled: !!value,
+        optimizeId: value,
+      };
+      return {
+        ...prevState,
+        optimize: {
+          ...prevState.optimize,
+          settingsType: "simple",
+          simple: newSettings,
+        },
+      } satisfies SovendusAppSettings;
+    });
+  };
+
+  const handleGlobalToggle = (value: boolean): void => {
     setCurrentSettings((prevState) => {
       const newSettings: OptimizeCountry = {
         optimizeId: "",
-        isEnabled: false,
         ...prevState.optimize.simple,
-        [field]: value,
+        isEnabled: value && !!prevState.optimize.simple?.optimizeId,
       };
       newSettings.isEnabled = isOptimizeElementEnabled(newSettings, !!value);
       return {
@@ -255,7 +269,7 @@ export function SovendusOptimize({
                               currentOptimizeSettings.simple?.isEnabled || false
                             }
                             onCheckedChange={(checked): void =>
-                              handleGlobalChange("isEnabled", checked)
+                              handleGlobalToggle(checked)
                             }
                           />
                           <Label htmlFor="simple-id-enabled">
@@ -270,7 +284,7 @@ export function SovendusOptimize({
                               currentOptimizeSettings.simple?.optimizeId || ""
                             }
                             onChange={(e): void =>
-                              handleGlobalChange("optimizeId", e.target.value)
+                              handleGlobalChange(e.target.value)
                             }
                             placeholder="Enter Global Optimize ID"
                           />

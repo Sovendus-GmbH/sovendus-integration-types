@@ -92,6 +92,7 @@ export function CountryOptions({
                 [countryKey]: {
                   ...prevState.optimize?.countries?.ids[countryKey],
                   optimizeId: newOptimizeId,
+                  isEnabled: !!newOptimizeId,
                 },
               },
             },
@@ -216,7 +217,7 @@ export function isOptimizeElementEnabled(
       ? newEnableState
       : currentSettings?.isEnabled) &&
     currentSettings?.optimizeId &&
-    /^\d+$/.test(currentSettings.optimizeId)
+    !/^\d+$/.test(currentSettings.optimizeId)
   );
 }
 

@@ -1,3 +1,5 @@
+import "./app.css";
+
 import { BarChart2, Gift, ShoppingBagIcon } from "lucide-react";
 import type { JSX } from "react";
 import React, { useEffect, useMemo, useState } from "react";

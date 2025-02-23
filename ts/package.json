@@ -1,41 +1,41 @@
 {
-    "name": "sovendus-plugins-core",
-    "description": "Sovendus Integration Plugins Core used as a base for Sovendus Integration Plugins. Take a look at the README.md for more information.",
-    "private": true,
-    "scripts": {
-        "setup": "yarn install && cd integration-settings-ui && yarn install && cd ../integration-scripts && yarn install && cd ../integration-types && yarn install",
-        "build": "cd integration-settings-ui && yarn build && cd ../integration-scripts && yarn build && cd ../integration-types && yarn build",
-        "lint": "yarn lint:types && yarn lint:settings-ui && yarn lint:script",
-        "lint:types": "eslint ./integration-types --ext .ts,.tsx --config .eslintrc.json",
-        "lint:settings-ui": "eslint ./integration-settings-ui --ext .ts,.tsx --config .eslintrc.json",
-        "lint:script": "eslint ./integration-scripts --ext .ts,.tsx --config .eslintrc.json",
-        "release": "ts-node release-script.ts"
-    },
-    "devDependencies": {
-        "@types/eslint": "9.6.1",
-        "@types/node": "22.13.4",
-        "@types/react": "^19.0.8",
-        "@types/react-dom": "^19.0.3",
-        "@types/uuid": "10.0.0",
-        "eslint": "8.57.0",
-        "eslint-config-prettier": "10.0.1",
-        "eslint-plugin-import": "2.31.0",
-        "eslint-plugin-prettier": "5.2.3",
-        "eslint-plugin-simple-import-sort": "12.1.1",
-        "eslint-plugin-unused-imports": "4.1.4",
-        "postcss": "8.5.2",
-        "prettier": "3.5.1",
-        "prettier-eslint": "16.3.0",
-        "ts-node": "^10.9.2",
-        "typescript": "5.7.3",
-        "typescript-eslint": "8.24.0"
-    },
-    "updateIgnore": [
-        "eslint"
-    ],
-    "workspaces": [
-        "integration-types/*",
-        "integration-settings-ui/*",
-        "integration-scripts/*"
-    ]
+  "name": "sovendus-plugins-core",
+  "description": "Sovendus Integration Plugins Core used as a base for Sovendus Integration Plugins. Take a look at the README.md for more information.",
+  "private": true,
+  "scripts": {
+    "setup": "yarn install && cd integration-settings-ui && yarn install && cd ../integration-scripts && yarn install && cd ../integration-types && yarn install",
+    "build": "cd integration-settings-ui && yarn build && cd ../integration-scripts && yarn build && cd ../integration-types && yarn build",
+    "lint": "yarn lint:types && yarn lint:settings-ui && yarn lint:script",
+    "lint:types": "eslint ./integration-types --ext .ts,.tsx --config .eslintrc.json",
+    "lint:settings-ui": "eslint ./integration-settings-ui --ext .ts,.tsx --config .eslintrc.json",
+    "lint:script": "eslint ./integration-scripts --ext .ts,.tsx --config .eslintrc.json",
+    "release": "ts-node release-tool/index.ts"
+  },
+  "devDependencies": {
+    "@types/eslint": "9.6.1",
+    "@types/node": "22.13.4",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@types/uuid": "10.0.0",
+    "eslint": "8.57.0",
+    "eslint-config-prettier": "10.0.1",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-prettier": "5.2.3",
+    "eslint-plugin-simple-import-sort": "12.1.1",
+    "eslint-plugin-unused-imports": "4.1.4",
+    "postcss": "8.5.2",
+    "prettier": "3.5.1",
+    "prettier-eslint": "16.3.0",
+    "ts-node": "^10.9.2",
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.24.0"
+  },
+  "updateIgnore": [
+    "eslint"
+  ],
+  "workspaces": [
+    "integration-types/*",
+    "integration-settings-ui/*",
+    "integration-scripts/*"
+  ]
 }
