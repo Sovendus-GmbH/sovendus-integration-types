@@ -40,6 +40,6 @@
     "declaration": true,
     "declarationMap": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "sov_release.config.ts"],
   "exclude": ["./node_modules", "./dist"]
 }
