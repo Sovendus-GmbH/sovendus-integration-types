@@ -5,7 +5,7 @@ const releaseConfig: ReleaseConfig = {
     {
       directory: "./",
       updateDeps: true,
-      version: "3.3.21",
+      version: "3.3.22",
       release: true,
       releaseOptions: {
         foldersToScanAndBumpThisPackage: [
