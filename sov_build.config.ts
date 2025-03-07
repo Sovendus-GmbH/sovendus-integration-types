@@ -9,8 +9,8 @@ const buildConfig: BuildConfig = {
       options: {
         type: "vanilla",
         packageConfig: {
-          dtsEntryRoot: "src",
-          dtsInclude: ["src/**/*"],
+          dtsEntryRoot: "src/v3",
+          dtsInclude: ["src/v3/**/*"],
           isPackage: true,
         },
       },
