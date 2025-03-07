@@ -5,7 +5,9 @@
     "module": "Preserve",
     // "moduleResolution": "classic",
     "skipLibCheck": true,
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "outDir": "./dist",
     "rootDir": "./src",
     "noEmitOnError": true,
@@ -40,6 +42,14 @@
     "declaration": true,
     "declarationMap": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "sov_release.config.ts"],
-  "exclude": ["./node_modules", "./dist"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "sov_release.config.ts",
+    "sov_build.config.ts"
+  ],
+  "exclude": [
+    "./node_modules",
+    "./dist"
+  ]
 }

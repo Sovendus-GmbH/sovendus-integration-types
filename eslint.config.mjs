@@ -21,11 +21,7 @@ const baseConfig = [
   // TypeScript rules
   {
     ignores: [
-      "integration-settings-ui/.next",
-      "integration-scripts/dist",
-      "integration-types/dist",
-      "integration-settings-ui/dist",
-      "integration-settings-ui/postcss.config.mjs",
+      "eslint.config.mjs", "dist"
     ],
   },
 
