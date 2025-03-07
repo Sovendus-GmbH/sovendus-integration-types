@@ -26,7 +26,7 @@
     "./v3/*": "./dist/v3/*"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "sovendus-builder build",
     "lint": "eslint --fix",
     "test": "# TODO add some zod validation test",
     "pub": "sovendus-release-tool"
