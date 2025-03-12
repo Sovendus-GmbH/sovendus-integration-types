@@ -5,7 +5,7 @@ const releaseConfig: ReleaseConfig = {
     {
       directory: "./",
       updateDeps: true,
-      version: "3.3.26",
+      version: "3.3.27",
       release: true,
       lintAndBuild: true,
       test: false, // TODO add some zod validation test
