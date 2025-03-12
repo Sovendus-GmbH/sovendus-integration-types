@@ -56,3 +56,8 @@ export type SupportFormValues = z.infer<typeof supportFormSchema>;
 export type DemoFormValues = z.infer<typeof demoFormSchema>;
 
 export type ContactFormType = SupportFormValues | DemoFormValues;
+
+export enum ContactFormStatus {
+  SUPPORT = "support",
+  DEMO = "demo",
+}
