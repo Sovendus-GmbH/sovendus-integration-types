@@ -44,7 +44,7 @@ export const demoFormSchema = z.object({
   phone: z.string().min(1, {
     message: "Phone number is required.",
   }),
-  targetMarket: z.string().optional().default(""),
+  targetMarket: z.array(z.string()).optional().default([]),
   communicationLanguage: z.string().optional().default(""),
   interests: z.array(z.string()).optional().default([]),
   message: z.string().min(1, {
