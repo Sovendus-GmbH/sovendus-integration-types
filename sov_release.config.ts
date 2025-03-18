@@ -5,11 +5,11 @@ const releaseConfig: ReleaseConfig = {
     {
       directory: "./",
       updateDeps: true,
-      version: "3.3.28",
-      release: true,
-      lintAndBuild: true,
+      lint: true,
+      build: true,
       test: false, // TODO add some zod validation test
-      releaseOptions: {
+      release: {
+        version: "3.3.28",
         foldersToScanAndBumpThisPackage: [
           // scan whole dev env
           { folder: "../../../../" },
