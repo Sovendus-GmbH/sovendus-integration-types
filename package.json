@@ -18,6 +18,11 @@
       "import": "./dist/v3/index.mjs",
       "require": "./dist/v3/index.cjs"
     },
+    "./settings-only": {
+      "types": "./dist/v3/settings-only/index.d.ts",
+      "import": "./dist/v3/settings-only/index.mjs",
+      "require": "./dist/v3/settings-only/index.cjs"
+    },
     "./src": {
       "types": "./src/v3/index.ts",
       "import": "./src/v3/index.ts"

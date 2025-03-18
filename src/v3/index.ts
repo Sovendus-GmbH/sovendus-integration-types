@@ -1,4 +1,3 @@
-export * from "./contact-form";
 export * from "./countries";
 export * from "./general";
 export * from "./plugin-page";
