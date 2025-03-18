@@ -16,13 +16,13 @@ const buildConfig: BuildConfig = {
       },
     },
     {
-      input: "src/v3/settings-only/index.ts",
-      output: "dist/v3/settings-only/index",
+      input: "src/v3/settings-only-types/index.ts",
+      output: "dist/v3/settings-only-types/index",
       options: {
         type: "vanilla",
         packageConfig: {
-          dtsEntryRoot: "src/v3/settings-only",
-          dtsInclude: ["src/v3/settings-only/**/*"],
+          dtsEntryRoot: "src/v3/settings-only-types",
+          dtsInclude: ["src/v3/settings-only-types/**/*"],
           isPackage: true,
         },
       },
