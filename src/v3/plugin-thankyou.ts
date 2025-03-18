@@ -69,7 +69,7 @@ export interface SovendusThankYouPageConfig {
 export interface SovendusConversionsData {
   sessionId?: string | undefined;
   orderId?: string | undefined;
-  orderValue?: string | undefined;
+  orderValue?: number | undefined;
   orderCurrency?: SovendusOrderCurrencies | undefined;
   // multiple coupon codes can be used
   usedCouponCodes?: string[] | undefined;
