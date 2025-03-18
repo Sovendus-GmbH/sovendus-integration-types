@@ -1,5 +1,15 @@
 import type { CountryCodes, LanguageCodes } from "./countries";
 
+export interface SettingsUiWindow extends Window {
+  sovSettingsUi: {
+    currentSettings: SovendusAppSettings;
+    saveSettings: (
+      saveSettings: SovendusAppSettings,
+    ) => Promise<SovendusAppSettings>;
+    settingsContainerId: string;
+  };
+}
+
 export enum Versions {
   ONE = "1",
   TWO = "2",
