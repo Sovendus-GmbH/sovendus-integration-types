@@ -14,7 +14,7 @@ export const defaultSovendusThankyouPageConfig: SovendusThankYouPageConfig = {
   settings: defaultSovendusAppSettings,
   integrationType: "",
   sovDebugLevel: undefined,
-  iframeContainerId: undefined,
+  iframeContainerQuerySelector: undefined,
   orderData: {},
   customerData: {},
 } as const;
@@ -60,7 +60,7 @@ export interface SovendusThankyouWindow
 export interface SovendusThankYouPageConfig {
   settings: SovendusAppSettings;
   integrationType: string;
-  iframeContainerId?: string | undefined;
+  iframeContainerQuerySelector?: string | undefined;
   sovDebugLevel: SovDebugLevel | undefined;
   orderData: SovendusConversionsData;
   customerData: SovendusConsumerData;
