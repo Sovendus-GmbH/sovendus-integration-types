@@ -69,17 +69,7 @@ export interface SovendusThankYouPageConfig {
 export interface SovendusConversionsData {
   sessionId?: string | undefined;
   orderId?: string | undefined;
-  orderValue?: {
-    // either define netOrderValue
-    netOrderValue?: number | string | undefined;
-    // or define grossOrderValue, shippingValue and taxValue
-    grossOrderValue?: number | string | undefined;
-    shippingValue?: number | string | undefined;
-    // either taxValue or taxPercent
-    taxValue?: number | string | undefined;
-    taxPercent?: number | string | undefined;
-  };
-
+  orderValue?: OrderValueData;
   orderCurrency?: SovendusOrderCurrencies | undefined;
   // multiple coupon codes can be used
   usedCouponCodes?: string[] | undefined;
@@ -87,6 +77,16 @@ export interface SovendusConversionsData {
   usedCouponCode?: string | undefined;
 }
 
+export interface OrderValueData {
+  // either define netOrderValue
+  netOrderValue?: number | string | undefined;
+  // or define grossOrderValue, shippingValue and taxValue
+  grossOrderValue?: number | string | undefined;
+  shippingValue?: number | string | undefined;
+  // either taxValue or taxPercent
+  taxValue?: number | string | undefined;
+  taxPercent?: number | string | undefined;
+}
 export interface IntegrationData {
   integrationScriptVersion: string;
   data: PublicThankYouCookieData | undefined;
