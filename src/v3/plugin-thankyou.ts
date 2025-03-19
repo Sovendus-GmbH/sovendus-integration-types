@@ -69,12 +69,16 @@ export interface SovendusThankYouPageConfig {
 export interface SovendusConversionsData {
   sessionId?: string | undefined;
   orderId?: string | undefined;
-  // either define netOrderValue
-  netOrderValue?: number | string | undefined;
-  // or define grossOrderValue, shippingValue and taxValue
-  grossOrderValue?: number | string | undefined;
-  shippingValue?: number | string | undefined;
-  taxValue?: number | string | undefined;
+  orderValue?: {
+    // either define netOrderValue
+    netOrderValue?: number | string | undefined;
+    // or define grossOrderValue, shippingValue and taxValue
+    grossOrderValue?: number | string | undefined;
+    shippingValue?: number | string | undefined;
+    // either taxValue or taxPercent
+    taxValue?: number | string | undefined;
+    taxPercent?: number | string | undefined;
+  };
 
   orderCurrency?: SovendusOrderCurrencies | undefined;
   // multiple coupon codes can be used
