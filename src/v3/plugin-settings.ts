@@ -1,4 +1,5 @@
 import type { CountryCodes, LanguageCodes } from "./countries";
+import type { IframeContainerQuerySelectorSettings } from "./plugin-thankyou";
 
 export interface SettingsUiWindow extends Window {
   sovSettingsUi: {
@@ -33,7 +34,7 @@ export const defaultSovendusAppSettings: SovendusAppSettings = {
   },
 } as const;
 
-export const defaultIframeContainerId = "sovendus-container";
+export const defaultIframeContainerIdSelector = "#sovendus-container";
 
 export interface SovendusAppSettings {
   voucherNetwork: VoucherNetworkSettings;
@@ -58,7 +59,9 @@ export interface VoucherNetworkSettings {
 
 export interface VoucherNetworkSettingsCountries {
   fallBackIds: VoucherNetworkLanguage | undefined;
-  iframeContainerQuerySelector: string | undefined;
+  iframeContainerQuerySelector:
+    | IframeContainerQuerySelectorSettings
+    | undefined;
   ids: { [key in CountryCodes]?: VoucherNetworkCountry };
 }
 
@@ -89,5 +92,7 @@ export interface VoucherNetworkLanguage {
   isEnabled: boolean;
   trafficSourceNumber: string;
   trafficMediumNumber: string;
-  iframeContainerQuerySelector: string | undefined;
+  iframeContainerQuerySelector:
+    | IframeContainerQuerySelectorSettings
+    | undefined;
 }

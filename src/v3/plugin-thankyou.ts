@@ -19,35 +19,6 @@ export const defaultSovendusThankyouPageConfig: SovendusThankYouPageConfig = {
   customerData: {},
 } as const;
 
-// don't remove from interface, only add to it
-export const thankyouInterfaceData: {
-  cookieData: PublicThankYouCookieInterface;
-  windowVariableData: PublicThankYouVariableInterface;
-} = {
-  // keys that are used to look for values in cookies
-  cookieData: {
-    sovCouponCode: { cookieName: "sovCouponCode" },
-    orderValue: { cookieName: "sovOrderValue" },
-    orderCurrency: { cookieName: "sovOrderCurrency" },
-    orderId: { cookieName: "sovOrderId" },
-    sovReqToken: { cookieName: "sovReqToken" },
-    puid: { cookieName: "puid" },
-    sovDebugLevel: { cookieName: "sovDebugLevel", persistent: true },
-  },
-  // keys that are used to look for values in window[VariableIdentifiersType]
-  windowVariableData: {
-    trafficSourceNumber: {
-      alias: ["trafficSourceNumber", "shopId", "shopNumber"],
-    },
-    couponCode: { alias: ["couponCode", "usedCouponCode"] },
-    orderValue: { alias: ["orderValue"] },
-    orderCurrency: { alias: ["orderCurrency"] },
-    orderId: { alias: ["orderId"] },
-    sessionId: { alias: ["sessionId"] },
-    iframeContainerId: { alias: ["iframeContainerId"], storeAll: true },
-  },
-};
-
 export interface SovendusThankyouPageData {
   sovThankyouConfig: SovendusThankYouPageConfig;
   sovThankyouStatus: IntegrationData;
@@ -60,10 +31,16 @@ export interface SovendusThankyouWindow
 export interface SovendusThankYouPageConfig {
   settings: SovendusAppSettings;
   integrationType: string;
-  iframeContainerQuerySelector?: string | undefined;
+  iframeContainerQuerySelector?:
+    | IframeContainerQuerySelectorSettings
+    | undefined;
   sovDebugLevel: SovDebugLevel | undefined;
   orderData: SovendusConversionsData;
   customerData: SovendusConsumerData;
+}
+export interface IframeContainerQuerySelectorSettings {
+  selector: string;
+  where: "none" | InsertPosition;
 }
 
 export interface SovendusConversionsData {
@@ -148,20 +125,6 @@ export interface PublicThankYouCookieData extends SovendusPageUrlParams {
   orderCurrency: SovendusOrderCurrencies | undefined;
   orderId: string | undefined;
 }
-
-export type PublicThankYouCookieInterface = {
-  [interfaceKey in keyof PublicThankYouCookieData]: {
-    cookieName: string;
-    persistent?: boolean;
-  };
-};
-
-export type PublicThankYouVariableInterface = {
-  [interfaceKey in keyof SovendusVNConversion]: {
-    alias: string[];
-    storeAll?: true;
-  };
-};
 
 export interface SovendusPublicConversionWindow extends Window {
   // from partner provided
