@@ -34,7 +34,8 @@ export const defaultSovendusAppSettings: SovendusAppSettings = {
   },
 } as const;
 
-export const defaultIframeContainerIdSelector = "#sovendus-container";
+export const defaultIframeContainerQuerySelector: IframeContainerQuerySelectorSettings =
+  { selector: "#sovendus-container", where: "none" } as const;
 
 export interface SovendusAppSettings {
   voucherNetwork: VoucherNetworkSettings;
