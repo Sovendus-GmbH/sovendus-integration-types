@@ -60,22 +60,30 @@ export interface VoucherNetworkSettingsCountries {
   ids: { [key in CountryCodes]?: VoucherNetworkCountry };
 }
 
-export type OptimizeSettings =
-  | {
+export type OptimizeSettings<
+  TSettingsType extends SettingsType = SettingsType,
+> = TSettingsType extends SettingsType.SIMPLE
+  ? OptimizeSettingsSimple
+  : {
       settingsType: SettingsType.COUNTRY;
       countries: OptimizeSettingsCountries;
       simple?: never;
-    }
-  | {
-      settingsType: SettingsType.SIMPLE;
-      simple: OptimizeCountry;
-      countries?: never;
     };
 
+export interface OptimizeSettingsSimple {
+  settingsType: SettingsType.SIMPLE;
+  simple: OptimizeCountry;
+  countries?: never;
+}
+
 export interface OptimizeSettingsCountries {
-  fallBackEnabled: boolean;
-  fallBackId: string | undefined;
-  ids: { [key in CountryCodes]?: OptimizeCountry };
+  settingsType: SettingsType.COUNTRY;
+  countries: {
+    fallBackEnabled: boolean;
+    fallBackId: string | undefined;
+    ids: { [key in CountryCodes]?: OptimizeCountry };
+  };
+  simple?: never;
 }
 
 export enum SettingsType {
