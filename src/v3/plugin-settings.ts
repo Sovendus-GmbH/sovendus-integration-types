@@ -38,37 +38,37 @@ export interface EmployeeBenefitsSettings {
   addToSidebar: boolean;
 }
 
-export type VoucherNetworkSettings =
-  | {
-      settingType: SettingsType.SIMPLE;
-      simple: VoucherNetworkLanguage;
-      countries?: never;
-      cookieTracking?: boolean;
-    }
-  | {
-      settingType: SettingsType.COUNTRY;
-      countries: VoucherNetworkSettingsCountries;
-      simple?: never;
-      cookieTracking?: boolean;
-    };
+export type VoucherNetworkSettings<
+  TSettingsType extends SettingsType = SettingsType,
+> = TSettingsType extends SettingsType.SIMPLE
+  ? VoucherNetworkSettingsSimple
+  : VoucherNetworkSettingsCountries;
+
+export type VoucherNetworkSettingsSimple = {
+  settingType: SettingsType.SIMPLE;
+  simple: VoucherNetworkLanguage;
+  countries?: never;
+  cookieTracking?: boolean;
+};
 
 export interface VoucherNetworkSettingsCountries {
-  fallBackIds: VoucherNetworkLanguage | undefined;
-  iframeContainerQuerySelector:
-    | IframeContainerQuerySelectorSettings
-    | undefined;
-  ids: { [key in CountryCodes]?: VoucherNetworkCountry };
+  settingType: SettingsType.COUNTRY;
+  cookieTracking?: boolean;
+  countries: {
+    fallBackIds: VoucherNetworkLanguage | undefined;
+    iframeContainerQuerySelector:
+      | IframeContainerQuerySelectorSettings
+      | undefined;
+    ids: { [key in CountryCodes]?: VoucherNetworkCountry };
+  };
+  simple?: never;
 }
 
 export type OptimizeSettings<
   TSettingsType extends SettingsType = SettingsType,
 > = TSettingsType extends SettingsType.SIMPLE
   ? OptimizeSettingsSimple
-  : {
-      settingsType: SettingsType.COUNTRY;
-      countries: OptimizeSettingsCountries;
-      simple?: never;
-    };
+  : OptimizeSettingsCountries;
 
 export interface OptimizeSettingsSimple {
   settingsType: SettingsType.SIMPLE;
