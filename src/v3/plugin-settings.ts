@@ -18,45 +18,39 @@ export enum Versions {
 }
 
 export const defaultSovendusAppSettings: SovendusAppSettings = {
-  voucherNetwork: {
-    settingType: undefined,
-    cookieTracking: true,
-  },
-  optimize: {
-    settingsType: undefined,
-  },
-  checkoutProducts: true,
   version: Versions.THREE,
-  employeeBenefits: {
-    isEnabled: false,
-    showWidgetOnDashboard: false,
-    addToSidebar: false,
-  },
 } as const;
 
 export const defaultIframeContainerQuerySelector: IframeContainerQuerySelectorSettings =
   { selector: "#sovendus-container", where: "none" } as const;
 
 export interface SovendusAppSettings {
-  voucherNetwork: VoucherNetworkSettings;
-  optimize: OptimizeSettings;
-  checkoutProducts: boolean;
-  employeeBenefits: EmployeeBenefitsSettings;
+  voucherNetwork?: VoucherNetworkSettings;
+  optimize?: OptimizeSettings;
+  checkoutProducts?: boolean;
+  employeeBenefits?: EmployeeBenefitsSettings;
   version: Versions.THREE;
 }
 
 export interface EmployeeBenefitsSettings {
-  isEnabled: false;
-  showWidgetOnDashboard: false;
-  addToSidebar: false;
+  isEnabled: boolean;
+  showWidgetOnDashboard: boolean;
+  addToSidebar: boolean;
 }
 
-export interface VoucherNetworkSettings {
-  settingType: SettingsType;
-  countries?: VoucherNetworkSettingsCountries;
-  simple?: VoucherNetworkLanguage;
-  cookieTracking: boolean;
-}
+export type VoucherNetworkSettings =
+  | {
+      settingType: SettingsType.SIMPLE;
+      simple: VoucherNetworkLanguage;
+      countries?: never;
+      cookieTracking?: boolean;
+    }
+  | {
+      settingType: SettingsType.COUNTRY;
+      countries: VoucherNetworkSettingsCountries;
+      simple?: never;
+      cookieTracking?: boolean;
+    };
 
 export interface VoucherNetworkSettingsCountries {
   fallBackIds: VoucherNetworkLanguage | undefined;
@@ -66,11 +60,17 @@ export interface VoucherNetworkSettingsCountries {
   ids: { [key in CountryCodes]?: VoucherNetworkCountry };
 }
 
-export interface OptimizeSettings {
-  settingsType: SettingsType;
-  simple?: OptimizeCountry;
-  countries?: OptimizeSettingsCountries;
-}
+export type OptimizeSettings =
+  | {
+      settingsType: SettingsType.COUNTRY;
+      countries: OptimizeSettingsCountries;
+      simple?: never;
+    }
+  | {
+      settingsType: SettingsType.SIMPLE;
+      simple: OptimizeCountry;
+      countries?: never;
+    };
 
 export interface OptimizeSettingsCountries {
   fallBackEnabled: boolean;
@@ -78,7 +78,10 @@ export interface OptimizeSettingsCountries {
   ids: { [key in CountryCodes]?: OptimizeCountry };
 }
 
-export type SettingsType = "simple" | "country" | undefined;
+export enum SettingsType {
+  SIMPLE = "simple",
+  COUNTRY = "country",
+}
 
 export interface VoucherNetworkCountry {
   languages: { [key in LanguageCodes]?: VoucherNetworkLanguage };
