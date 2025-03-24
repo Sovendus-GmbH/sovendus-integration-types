@@ -18,6 +18,8 @@ export type ChannelsType = "overlay" | "integration";
 export const version1: VersionsType = "v1";
 export const latestVersion: VersionsType = version1;
 
+export const sovLoaderScriptId = "sovloader-script";
+
 export interface EventMessagePayloadType extends PublicApiSettingsType {
   version: VersionsType;
 }
