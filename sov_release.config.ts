@@ -7,9 +7,9 @@ const releaseConfig: ReleaseConfig = {
       updateDeps: true,
       lint: true,
       build: true,
-      test: false, // TODO add some zod validation test
+      test: false,
       release: {
-        version: "3.8.1",
+        version: "3.8.2",
         foldersToScanAndBumpThisPackage: [
           // scan whole dev env
           { folder: "../../../../" },
