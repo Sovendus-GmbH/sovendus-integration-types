@@ -26,6 +26,7 @@ export const defaultIframeContainerQuerySelector: IframeContainerQuerySelectorSe
 
 export interface SovendusAppSettings {
   voucherNetwork?: VoucherNetworkSettings;
+  rewards?: VoucherNetworkSettings;
   optimize?: OptimizeSettings;
   checkoutProducts?: boolean;
   employeeBenefits?: EmployeeBenefitsSettings;
