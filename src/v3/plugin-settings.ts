@@ -56,7 +56,7 @@ export interface VoucherNetworkSettingsCountries {
   cookieTracking?: boolean;
   countries: {
     fallBackIds: VoucherNetworkLanguage | undefined;
-    iframeContainerQuerySelector:
+    iframeContainerQuerySelector?:
       | IframeContainerQuerySelectorSettings
       | undefined;
     ids: { [key in CountryCodes]?: VoucherNetworkCountry };
