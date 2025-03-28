@@ -19,9 +19,9 @@
       "require": "./dist/v3/index.cjs"
     },
     "./settings-only": {
-      "types": "./dist/v3/settings-only-type/index.d.ts",
-      "import": "./dist/v3/settings-only-type/index.mjs",
-      "require": "./dist/v3/settings-only-type/index.cjs"
+      "types": "./dist/v3/settings-only-types/index.d.ts",
+      "import": "./dist/v3/settings-only-types/index.mjs",
+      "require": "./dist/v3/settings-only-types/index.cjs"
     },
     "./src": {
       "types": "./src/v3/index.ts",
