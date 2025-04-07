@@ -4,9 +4,9 @@ const buildConfig: BuildConfig = {
   foldersToClean: ["dist"],
   filesToCompile: [
     {
-      input: "src/v3/index.ts",
-      output: "dist/v3/index",
-      options: {
+      sovOptions: {
+        input: "src/v3/index.ts",
+        output: "dist/v3/index",
         type: "vanilla",
         packageConfig: {
           dtsEntryRoot: "src/v3",
@@ -16,9 +16,9 @@ const buildConfig: BuildConfig = {
       },
     },
     {
-      input: "src/v3/settings-only-types/index.ts",
-      output: "dist/v3/settings-only-types/index",
-      options: {
+      sovOptions: {
+        input: "src/v3/settings-only-types/index.ts",
+        output: "dist/v3/settings-only-types/index",
         type: "vanilla",
         packageConfig: {
           dtsEntryRoot: "src/v3/settings-only-types",
