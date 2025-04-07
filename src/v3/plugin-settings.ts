@@ -105,7 +105,7 @@ export interface VoucherNetworkLanguage {
   isEnabled: boolean;
   trafficSourceNumber: string;
   trafficMediumNumber: string;
-  iframeContainerQuerySelector:
+  iframeContainerQuerySelector?:
     | IframeContainerQuerySelectorSettings
     | undefined;
 }
