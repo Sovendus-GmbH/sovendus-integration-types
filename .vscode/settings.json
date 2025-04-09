@@ -2,7 +2,7 @@
   "cSpell.words": [
     "sovendus"
   ],
-  "editor.formatOnSave": true, // Format files on save
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
@@ -16,7 +16,7 @@
   "prettier.enable": false,
   "typescript.validate.enable": true,
   "typescript.suggest.autoImports": true,
-  "prettier.requireConfig": true, // Ensure Prettier uses your configuration file
+  "prettier.requireConfig": true,
   "[typescript]": {
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "explicit"
