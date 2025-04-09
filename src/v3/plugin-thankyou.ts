@@ -34,7 +34,7 @@ export interface SovendusThankYouPageConfig {
   iframeContainerQuerySelector?:
     | IframeContainerQuerySelectorSettings
     | undefined;
-  sovDebugLevel?: SovDebugLevel | undefined;
+  sovDebugLevel?: SovDebugLevel;
   orderData: SovendusConversionsData;
   customerData: SovendusConsumerData;
 }
