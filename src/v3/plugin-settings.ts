@@ -57,10 +57,10 @@ export type RewardsTriggerSettings<TSettingsType> =
     : RewardsSettingsCountries;
 
 export type RewardsBaseSettings = {
-  trigger: RewardsTriggerMatchSettings | RewardsTriggerBuiltInt;
+  trigger: RewardsTriggerMatchSettings | RewardsTriggerBuiltIn;
 };
 
-export type RewardsTriggerBuiltInt = "builtIn";
+export type RewardsTriggerBuiltIn = "builtIn";
 export interface RewardsTriggerMatchSettings extends RewardsBaseSettings {
   matchType: "contains" | "startsWith" | "endsWith" | "regex";
   matchValue: string;
