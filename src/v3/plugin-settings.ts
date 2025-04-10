@@ -48,7 +48,9 @@ export enum TriggerPages {
 
 export type RewardsSettings<TSettingsType extends SettingsType = SettingsType> =
   {
-    [triggerPage in TriggerPages]: RewardsTriggerSettings<TSettingsType>;
+    [triggerPage in TriggerPages]: {
+      pages: RewardsTriggerSettings<TSettingsType>;
+    };
   };
 
 export type RewardsTriggerSettings<TSettingsType> =
