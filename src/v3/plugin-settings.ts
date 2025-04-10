@@ -26,7 +26,7 @@ export const defaultIframeContainerQuerySelector: IframeContainerQuerySelectorSe
 
 export interface SovendusAppSettings {
   voucherNetwork?: VoucherNetworkSettings;
-  rewards?: VoucherNetworkSettings;
+  rewards?: RewardsSettings;
   optimize?: OptimizeSettings;
   checkoutProducts?: boolean;
   employeeBenefits?: EmployeeBenefitsSettings;
@@ -37,6 +37,51 @@ export interface EmployeeBenefitsSettings {
   isEnabled: boolean;
   showWidgetOnDashboard: boolean;
   addToSidebar: boolean;
+}
+
+export enum TriggerPages {
+  MY_ACCOUNT_DASHBOARD = "myAccountDashboard",
+  MY_ORDERS = "myOrders",
+  MY_ORDERS_DETAIL = "myOrdersDetail",
+  CUSTOM = "custom",
+}
+
+export type RewardsSettings<TSettingsType extends SettingsType = SettingsType> =
+  {
+    [triggerPage in TriggerPages]: RewardsTriggerSettings<TSettingsType>;
+  };
+
+export type RewardsTriggerSettings<TSettingsType> =
+  TSettingsType extends SettingsType.SIMPLE
+    ? RewardsSettingsSimple
+    : RewardsSettingsCountries;
+
+export type RewardsBaseSettings = {
+  trigger: RewardsTriggerMatchSettings | RewardsTriggerBuiltInt;
+};
+
+export type RewardsTriggerBuiltInt = "builtIn";
+export interface RewardsTriggerMatchSettings extends RewardsBaseSettings {
+  matchType: "contains" | "startsWith" | "endsWith" | "regex";
+  matchValue: string;
+}
+
+export interface RewardsSettingsSimple extends RewardsBaseSettings {
+  settingType: SettingsType.SIMPLE;
+  simple: VoucherNetworkLanguage;
+  countries?: never;
+}
+
+export interface RewardsSettingsCountries {
+  settingType: SettingsType.COUNTRY;
+  countries: {
+    fallBackIds: VoucherNetworkLanguage | undefined;
+    iframeContainerQuerySelector?:
+      | IframeContainerQuerySelectorSettings
+      | undefined;
+    ids: { [key in CountryCodes]?: VoucherNetworkCountry };
+  };
+  simple?: never;
 }
 
 export type VoucherNetworkSettings<
