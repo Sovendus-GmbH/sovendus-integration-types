@@ -59,7 +59,7 @@ export const COUNTRIES: CountryMap = {
   // [CountryCodes.PT]: "Portugal",
   [CountryCodes.ES]: "Spain",
   [CountryCodes.SE]: "Sweden",
-  [CountryCodes.CH]: "Switzerland French",
+  [CountryCodes.CH]: "Switzerland",
   [CountryCodes.GB]: "United Kingdom",
 };
 
