@@ -74,7 +74,8 @@ export interface IntegrationData {
     integrationParametersLoaded: boolean;
     checkoutProductsPixelFired: boolean;
     loadedOptimize: boolean;
-    voucherNetworkLinkTrackingSuccess: boolean;
+    voucherNetworkCookieBasedVoucherFound: boolean;
+    voucherNetworkCouponCodeSent: boolean;
     voucherNetworkIframeContainerFound: boolean;
     voucherNetworkIframeContainerIdFound: boolean;
     integrationLoaderVnCbStarted: boolean;
