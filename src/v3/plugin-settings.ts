@@ -77,7 +77,7 @@ export interface RewardsSettingsSimple extends RewardsBaseSettings {
 export interface RewardsSettingsCountries {
   settingType: SettingsType.COUNTRY;
   countries: {
-    fallBackIds: VoucherNetworkLanguage | undefined;
+    fallBackIds?: VoucherNetworkLanguage | undefined;
     iframeContainerQuerySelector?:
       | IframeContainerQuerySelectorSettings
       | undefined;
@@ -103,7 +103,7 @@ export interface VoucherNetworkSettingsCountries {
   settingType: SettingsType.COUNTRY;
   cookieTracking?: boolean;
   countries: {
-    fallBackIds: VoucherNetworkLanguage | undefined;
+    fallBackIds?: VoucherNetworkLanguage | undefined;
     iframeContainerQuerySelector?:
       | IframeContainerQuerySelectorSettings
       | undefined;
