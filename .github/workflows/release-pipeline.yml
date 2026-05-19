@@ -34,6 +34,19 @@ jobs:
 
       # - name: Run tests
       #   run: yarn test
+      
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Run Snyk Test
+        run: snyk test --severity-threshold=high --project-name="/github/${{ github.repository }}" --file=yarn.lock 
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
+
+      - name: Run Snyk Monitor
+        run: snyk monitor --project-name="/github/${{ github.repository }}" --file=yarn.lock
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
 
       - name: Build package
         run: yarn build
@@ -63,19 +76,6 @@ jobs:
 
       - name: Build package
         run: yarn build
-
-      - name: Install Snyk CLI
-        run: npm install -g snyk
-
-      - name: Run Snyk
-        run: snyk test --severity-threshold=high --project-name="/github/${{ github.repository }}" --file=yarn.lock 
-        env:
-          SNYK_API_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
-
-      - name: Run Snyk
-        run: snyk monitor --project-name="/github/${{ github.repository }}" --file=yarn.lock
-        env:
-          SNYK_API_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
 
       - name: Publish to npm
         run: npm publish
