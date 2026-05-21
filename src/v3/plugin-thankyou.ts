@@ -52,7 +52,7 @@ export interface SovendusConversionsData {
   usedCouponCodes?: string[] | undefined;
   // or only one
   usedCouponCode?: string | undefined;
-  hasConsent?: boolean;
+  hasConsent?: boolean | undefined;
 }
 
 export interface OrderValueData {
@@ -111,7 +111,7 @@ export interface SovendusVNConversion {
   iframeContainerId?: string;
   integrationType?: string;
   // alreadyExecuted?: boolean;
-  hasConsent?: boolean;
+  hasConsent?: boolean | undefined;
 }
 
 export type RedemptionApiRequestData = {

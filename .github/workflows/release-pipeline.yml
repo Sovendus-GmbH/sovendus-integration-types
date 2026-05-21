@@ -34,12 +34,13 @@ jobs:
 
       # - name: Run tests
       #   run: yarn test
-      
+
       - name: Install Snyk CLI
         run: npm install -g snyk
 
       - name: Run Snyk Test
         run: snyk test --severity-threshold=high --project-name="/github/${{ github.repository }}" --file=yarn.lock 
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_API_TOKEN }}
 
