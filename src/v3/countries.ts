@@ -15,6 +15,7 @@ export enum CountryCodes {
   SE = "SE",
   CH = "CH",
   GB = "GB",
+  CZ = "CZ",
 }
 
 export enum LanguageCodes {
@@ -30,6 +31,7 @@ export enum LanguageCodes {
   PT = "PT",
   ES = "ES",
   SV = "SV",
+  CS = "CS",
 }
 
 export type CountryMap = {
@@ -61,6 +63,7 @@ export const COUNTRIES: CountryMap = {
   [CountryCodes.SE]: "Sweden",
   [CountryCodes.CH]: "Switzerland",
   [CountryCodes.GB]: "United Kingdom",
+  [CountryCodes.CZ]: "Czechia",
 };
 
 export const LANGUAGES_BY_COUNTRIES: CountryLanguageMap = {
@@ -87,4 +90,5 @@ export const LANGUAGES_BY_COUNTRIES: CountryLanguageMap = {
     [LanguageCodes.IT]: "Switzerland Italian",
   },
   [CountryCodes.GB]: { [LanguageCodes.EN]: "United Kingdom" },
+  [CountryCodes.CZ]: { [LanguageCodes.CS]: "Czechia" },
 };
